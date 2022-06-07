@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 //		Symbol Deriving Graph
 //
 //				  -
-//		U_FROM	  -		U_TO
+//		U1	  -		U2
 //				  -
 //	-ve	<-------------------> +ve
 //				  -
@@ -14,25 +14,25 @@ const mongoose = require("mongoose")
 let MessagesSchema = mongoose.Schema({
 	time: Date,
 	content: String,
-	sender: Boolean				// 1 = Sent by userTo
-								// 0  = Sent by userFrom
+	sender: Boolean				// 1 = Sent by user2
+								// 0  = Sent by user1
 })
 
 let RelationSchema = mongoose.Schema({
-	userFrom: String,
-	userTo: String,
-	stat: Number,			// -1 = Liked as (U_TO -> U_FROM)
-							// 1 = Liked as  (U_FROM -> U_TO)
+	user1: String,
+	user2: String,
+	stat: Number,			// -1 = Liked as (U2 -> U1)
+							// 1 = Liked as  (U1 -> U2)
 							// 0 = Matched
 
-	unread_count: Number,	// -1 = Sent by (U_TO -> U_FROM)
-							// 1 = Sent by  (U_FROM -> U_TO)
+	unread_count: Number,	// -1 = Sent by (U2 -> U1)
+							// 1 = Sent by  (U1 -> U2)
 							// 0 = All read
 
 	messages: {
 		msg: [MessagesSchema],
-		clear: Boolean		// 1 = Clear for U_TO
-							// 0 = Clear for U_FROM
+		clear: Boolean		// 1 = Clear for U2
+							// 0 = Clear for U1
 	}
 })
 
