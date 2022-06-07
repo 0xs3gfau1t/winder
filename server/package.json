@@ -4,8 +4,8 @@
   "description": "Tinder ko bau Winder",
   "main": "Server.js",
   "scripts": {
-    "start": "node Server.js",
-    "devStart": "nodemon Server.js"
+    "start": "node src/index.js",
+    "devStart": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "mongoose": "^6.3.5",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "socket.io": "^4.5.1"
   }
 }

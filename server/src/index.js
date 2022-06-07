@@ -1,37 +1,31 @@
+const path = require("path")
+
 // Import all environment variables from .env
 // Requires dotenv module
-require('dotenv').config()
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
 
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-
-const app = express();
-
-// Configure middlewares
-app.use(bodyParser.urlencoded({ extended: "false" }));
-app.use(bodyParser.json());
-
-
-/*
-		Connect to Database at the beginning
-		Because all other functions depend on this
-		Or make seperate file to initiate connection
-		and export all needed functions?
-*/
-// mongoose.connect(process.env.MONGO_URI,
-//				 { useNewUrlParser: true, useUnifiedTopology: true });
+const app = require("./Config/app")
+const server = require("http").createServer(app)
+const io = require("socket.io")(server, { cors: { origin: "*" } })
 
 // Routing each endpoint to respective routers
-app.use("/auth", require('./Auth.js'));
-app.use("/messages", require('./Messages.js'));
-app.use("/notification", require('./Notifications.js'));
-app.use("/settings", require('./Settings.js'));
-app.use("/explore", require('./Explore.js'));
-app.use("/profile", require('./Profile.js'));
+app.use("/auth", require("./Routes/Auth.js"))
+app.use("/messages", require("./Routes/Messages.js"))
+app.use("/notification", require("./Routes/Notifications.js"))
+app.use("/settings", require("./Routes/Settings.js"))
+app.use("/explore", require("./Routes/Explore.js"))
+app.use("/profile", require("./Routes/Profile.js"))
 
+// IO connection
+io.on("connection", socket => {
+	console.log(`User connected with socket id: ${socket.id}`)
+
+	socket.on("disconnect", payload => {
+		console.log(`User with socket id: ${socket.id} disconnected`)
+	})
+})
 
 // Start the server specied in PORT from .env
-app.listen(process.env.PORT, ()=>{
-	console.log("Lisening in port "+process.env.PORT);
+server.listen(process.env.PORT || 4000, () => {
+	console.log("Lisening in port " + (process.env.PORT || 4000))
 })
