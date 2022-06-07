@@ -2,10 +2,9 @@ const { verifyToken } = require("../Utils/jwtUtil")
 
 /* 
         This is a middleware used for verifying the jwt.
-        The token is received in 'Authorization' header
-        of the request[Bearer <token>]. The data contained
-        by the token is then available in `userdata`
-        property of the request object.
+        The token is received in 'accessToken' cookies of 
+		the request. The data contained by the token is then
+		available in `userdata` property of the request object.
 */
 
 module.exports = function authenticateToken(req, res, next) {
