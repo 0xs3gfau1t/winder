@@ -1,46 +1,78 @@
 const mongoose = require("mongoose")
 
+const REQUIRED_PASSIONS = 3
 
-//		Symbol Deriving Graph
-//
-//				  -
-//		U1	  -		U2
-//				  -
-//	-ve	<-------------------> +ve
-//				  -
-//				  -
-//				  -
-
-let messagesSchema = mongoose.Schema({
-	time: Date,
-	content: String,
-	sender: Boolean				// 1 = Sent by user2
-								// 0  = Sent by user1
-})
-
-messagesModel = mongoose.model("Messages", messagesSchema);
-
-let relationSchema = mongoose.Schema({
-	user1: String,
-	user2: String,
-	stat: Number,			// -1 = Liked as (U2 -> U1)
-							// 1 = Liked as  (U1 -> U2)
-							// 0 = Matched
-
-	unread_count: Number,	// -1 = Sent by (U2 -> U1)
-							// 1 = Sent by  (U1 -> U2)
-							// 0 = All read
-
-	messages: {
-		msg: [{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Messages"
-		}],
-		clear: Boolean		// 1 = Clear for U2
-							// 0 = Clear for U1
+let userPublicSchema = mongoose.Schema({
+	name: {
+		type: String,
+		required: true
+	},
+	university: {
+		type: String,
+		required: true
+	},
+	gender: {
+		type: Number,	// (F, N, M) = (-1, 0, 1)
+		required: true
+	},
+	program: {
+		type: String,
+		required: true
+	},
+	batch: {
+		type: Number,
+		required: true
+	},
+	bio: {
+		type: String,
+	},
+	passion: {
+		type: [String],
+		validate: [
+			size => size.length>=REQUIRED_PASSIONS,
+			`Passions must be greater than ${REQUIRED_PASSIONS}`
+		]
 	}
 })
-relationModel = mongoose.model("Relation", relationSchema);
+pubModel = mongoose.model("Public", userPublicSchema);
 
-module.exports.relationModel = relationModel;
-module.exports.messagesModel = messagesModel;
+let userConfSchema = mongoose.Schema({
+	genderPreference: {
+		type: Number,	// 	(F, N, M) = (-1, 0, 1)
+		required: true
+	}
+})
+confModel = mongoose.model("Conf", userConfSchema);
+
+let userSchema = mongoose.Schema({
+	email:{
+		type: String,
+		required: true
+	},
+	dob:{
+		type: Date,
+		required: true
+	},
+	createdDate:{
+		type: Date,
+		required: true
+	},
+	refreshToken: {
+		type: String,
+	},
+	pubDetails:{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Public",
+		required: true
+	},
+	confDetails:{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Conf",
+		required: true
+	}
+})
+userModel = mongoose.model("User", userSchema);
+
+module.exports.userModel = userModel;
+module.exports.userConfModel = confModel;
+module.exports.userPublicModel = pubModel;
