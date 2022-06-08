@@ -18,6 +18,8 @@ let MessagesSchema = mongoose.Schema({
 								// 0  = Sent by user1
 })
 
+messages_model = mongoose.model("Messages", MessagesSchema);
+
 let RelationSchema = mongoose.Schema({
 	user1: String,
 	user2: String,
@@ -30,12 +32,15 @@ let RelationSchema = mongoose.Schema({
 							// 0 = All read
 
 	messages: {
-		msg: [MessagesSchema],
+		msg: [{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Messages"
+		}],
 		clear: Boolean		// 1 = Clear for U2
 							// 0 = Clear for U1
 	}
 })
+relation_model = mongoose.model("Relation", RelationSchema);
 
-
-module.exports.relationSchema = RelationSchema;
-module.exports.messagesSchema = MessagesSchema;
+module.exports.relationModel = relation_model;
+module.exports.messagesModel = messages_model;

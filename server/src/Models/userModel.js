@@ -28,9 +28,13 @@ let UserPublicSchema = mongoose.Schema({
 	},
 	passion: {
 		type: [String],
-		validate: [(size)=>{return size.length<=REQUIRED_PASSIONS}, `Passions must be greater than ${REQUIRED_PASSIONS}`]
+		validate: [
+			size => size.length>=REQUIRED_PASSIONS,
+			`Passions must be greater than ${REQUIRED_PASSIONS}`
+		]
 	}
 })
+pub_model = mongoose.model("Public", UserPublicSchema);
 
 let UserConfSchema = mongoose.Schema({
 	gender_preference: {
@@ -38,6 +42,7 @@ let UserConfSchema = mongoose.Schema({
 		required: true
 	}
 })
+conf_model = mongoose.model("Conf", UserConfSchema);
 
 let UserSchema = mongoose.Schema({
 	email:{
@@ -52,16 +57,22 @@ let UserSchema = mongoose.Schema({
 		type: Date,
 		required: true
 	},
+	refresh_token: {
+		type: String,
+	},
 	pub_details:{
-		type: UserPublicSchema,
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Public",
 		required: true
 	},
 	conf_details:{
-		type: UserConfSchema,
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Conf",
 		required: true
 	}
 })
+user_model = mongoose.model("User", UserSchema);
 
-module.exports.userSchema = UserSchema;
-module.exports.userConfSchema = UserConfSchema;
-module.exports.userPublicSchema = UserPublicSchema;
+module.exports.userModel = user_model;
+module.exports.userConfModel = conf_model;
+module.exports.userPublicModel = pub_model;
