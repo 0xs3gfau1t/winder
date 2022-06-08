@@ -16,6 +16,8 @@ app.use("/settings", require("./Routes/Settings.js"))
 app.use("/explore", require("./Routes/Explore.js"))
 app.use("/profile", require("./Routes/Profile.js"))
 
+
+
 // IO connection
 io.on("connection", socket => {
 	console.log(`User connected with socket id: ${socket.id}`)
