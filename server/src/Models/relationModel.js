@@ -11,16 +11,16 @@ const mongoose = require("mongoose")
 //				  -
 //				  -
 
-let MessagesSchema = mongoose.Schema({
+let messagesSchema = mongoose.Schema({
 	time: Date,
 	content: String,
 	sender: Boolean				// 1 = Sent by user2
 								// 0  = Sent by user1
 })
 
-messages_model = mongoose.model("Messages", MessagesSchema);
+messagesModel = mongoose.model("Messages", messagesSchema);
 
-let RelationSchema = mongoose.Schema({
+let relationSchema = mongoose.Schema({
 	user1: String,
 	user2: String,
 	stat: Number,			// -1 = Liked as (U2 -> U1)
@@ -40,7 +40,7 @@ let RelationSchema = mongoose.Schema({
 							// 0 = Clear for U1
 	}
 })
-relation_model = mongoose.model("Relation", RelationSchema);
+relationModel = mongoose.model("Relation", relationSchema);
 
-module.exports.relationModel = relation_model;
-module.exports.messagesModel = messages_model;
+module.exports.relationModel = relationModel;
+module.exports.messagesModel = messagesModel;
