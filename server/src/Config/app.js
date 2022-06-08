@@ -9,5 +9,6 @@ app.use(
 		extended: true,
 	})
 )
+app.use(require('cookie-parser')())
 
 module.exports = app
