@@ -16,10 +16,6 @@ app.use("/settings", require("./Routes/Settings.js"))
 app.use("/explore", require("./Routes/Explore.js"))
 app.use("/profile", require("./Routes/Profile.js"))
 
-// Using this route to test database
-// Remove after database operations are successful
-app.use("/database", require("./Routes/Database.js"))
-
 
 
 // IO connection
