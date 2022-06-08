@@ -9,6 +9,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, '/static'),
     },
+    historyApiFallback: true,
     compress: true,
     port: 3000,
   },

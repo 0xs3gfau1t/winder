@@ -28,6 +28,10 @@ const Wrapper = styled.main`
         color: var(--primary-500);
     }
   }
+  h3{
+    font-weight:700;
+    text-align: center;
+  }
   p {
     color: var(--grey-600);
   }

@@ -1,11 +1,22 @@
 import React from 'react';
-import Landing from './pages/Landing';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Landing, Login, Error } from './pages';
+
 import './app.css'
 const App = () => {
 	return (
-		<>
-			<Landing/>
-		</>
+    <Router>
+      {/* <nav>
+        <Link to='/' >Dashbaord</Link>
+        <Link to='/landing' >Landing</Link>
+        <Link to='/login' >Login</Link>
+        </nav> */}
+      <Routes>
+        <Route path='/' element={<Landing />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='*' element={<Error />} />
+      </Routes>
+    </Router>
 	)
 }
 

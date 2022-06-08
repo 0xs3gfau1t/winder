@@ -20,7 +20,7 @@ html {
   --primary-400: #38bec9;
   --primary-500: #f24f1ee3;
   --primary-600: #14919b;
-  --primary-700: #0e7c86;
+  --primary-700: #cc3b0fcb;
   --primary-800: #0a6c74;
   --primary-900: #F24E1E;
 
@@ -248,7 +248,10 @@ ul {
 .form-row {
   margin-bottom: 1rem;
 }
-
+.form-col{
+  display: flex;
+  justify-content: space-around;
+}
 .form-textarea {
   height: 7rem;
 }
@@ -300,7 +303,7 @@ ul {
   margin: 0 auto;
 }
 .full-page {
-  min-height: 100vh;
+  min-height: 90vh;
 }
 
 .coffee-info {
