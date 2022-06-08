@@ -16,7 +16,7 @@ Not store in buffer and execute after connection made
 		Or make seperate file to initiate connection
 		and export all needed functions?
 */
-db_instance = mongoose.connect(process.env.MONGO_URI,
+mongoose.connect(process.env.MONGO_URI,
 				 {
 				 	useNewUrlParser: true,
 				 	useUnifiedTopology: true,
@@ -25,4 +25,4 @@ db_instance = mongoose.connect(process.env.MONGO_URI,
 				.catch(err=>{console.log(`Cannot connect: ${err}`)});
 
 
-module.exports = db_instance
+module.exports = mongoose
