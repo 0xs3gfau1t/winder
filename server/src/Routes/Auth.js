@@ -1,33 +1,10 @@
-const path = require("path")
-require("dotenv").config({ path: path.resolve(__dirname, "../../.env") })
-
 const express = require("express")
 const bcrypt = require("bcrypt")
-
-const { generateToken } = require("../Utils/jwtUtil")
-
 const router = express.Router()
 
-let dummy_user_table = [
-	{
-		_id: 0,
-		email: "elliot@evil.com",
-		hashedpassword:
-			"$2b$10$rjZoVBVx9NlKf7Muakgag.Gm50Vuo1wNKaYRVExlbEUPIaFJ9bFAC",
-	}, // "Hello Friend"
-	{
-		_id: 1,
-		email: "rinki@gmail.com",
-		hashedpassword:
-			"$2b$10$xb/9fiNvVQOw7.A3f6ZlX.j6AEis1ldP1NT10Pcbv1glXd8rb.uVS",
-	}, // "rinkiyaKePapa"
-	{
-		_id: 2,
-		email: "lalipop@lel.com",
-		hashedpassword:
-			"$2b$10$WZPJydTE7gCfB12HU/fPI.K506hbX/X/C9ujjbTYufeqU7qtxZAue",
-	}, // "kamariya"
-]
+const { generateToken } = require("../Utils/jwtUtil")
+const { user_model } = require("../Models/userModel")
+const authenticateToken = require("../Middlewares/authenticateToken")
 
 router.post("/register", async (req, res) => {
 	const { email, password } = req.body
@@ -37,21 +14,25 @@ router.post("/register", async (req, res) => {
 			error: "Either email or password is missing.",
 		})
 
-	const user = dummy_user_table.filter(entry => entry.email === email)
+	const userCount = await user_model.count({ email })
 
-	if (user.length)
+	if (userCount)
 		return res.status(400).json({
 			success: false,
 			error: "User already exists with this email.",
 		})
 
 	const hashedpassword = await bcrypt.hash(password, 10)
-	const _id = dummy_user_table.length
-	dummy_user_table.push({ _id, email, hashedpassword })
+	const new_user = user_model({ email, password: hashedpassword })
 
-	const userdata = { _id }
+	const userdata = { _id: new_user._id }
 	const accessToken = generateToken(userdata)
+	const refreshToken = generateToken(userdata, "1d")
 	res.cookie("accessToken", accessToken)
+	res.cookie("refreshToken", refreshToken)
+
+	new_user.refresh_token = refreshToken
+	await new_user.save()
 
 	return res.json({ success: true })
 })
@@ -64,7 +45,9 @@ router.post("/login", async (req, res) => {
 			error: "Either email or password is missing.",
 		})
 
-	const user = dummy_user_table.filter(entry => entry.email === email)
+	const user = await user_model
+		.find({ email }, { email: 1, password: 1, refresh_token: 1 })
+		.limit(1)
 
 	if (!user.length)
 		return res.status(400).json({
@@ -72,15 +55,36 @@ router.post("/login", async (req, res) => {
 			error: "No user with this email.",
 		})
 
-	if (await bcrypt.compare(password, user[0].hashedpassword)) {
-		const userdata = { email: user[0]._id }
+	if (await bcrypt.compare(password, user[0].password)) {
+		const userdata = { _id: user[0]._id }
 		const accessToken = generateToken(userdata)
+		const refreshToken = generateToken(userdata, "1d")
 		res.cookie("accessToken", accessToken)
+		res.cookie("refreshToken", refreshToken)
+
+		user[0].refresh_token = refreshToken
+		user[0].save()
 
 		return res.json({ success: true })
 	}
 
 	return res.status(400).json({ success: false, error: "Invalid password" })
+})
+
+router.delete("/logout", authenticateToken, async (req, res) => {
+	const user = await user_model.find({ _id: req.userdata._id }).limit(1)
+	if (!user)
+		return res
+			.status(400)
+			.json({ success: false, error: "User not found." })
+
+	user[0].refresh_token = ""
+	user[0].save()
+
+	res.cookie("accessToken", "")
+	res.cookie("refreshToken", "")
+
+	return res.json({ success: true })
 })
 
 module.exports = router

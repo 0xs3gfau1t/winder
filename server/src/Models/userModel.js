@@ -49,13 +49,17 @@ let UserSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
+	password:{
+		type: String,
+		required: true
+	},
 	dob:{
 		type: Date,
-		required: true
+		// required: true
 	},
 	created_date:{
 		type: Date,
-		required: true
+		// required: true
 	},
 	refresh_token: {
 		type: String,
@@ -63,16 +67,14 @@ let UserSchema = mongoose.Schema({
 	pub_details:{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Public",
-		required: true
+		// required: true
 	},
 	conf_details:{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Conf",
-		required: true
+		// required: true
 	}
 })
 user_model = mongoose.model("User", UserSchema);
 
-module.exports.userModel = user_model;
-module.exports.userConfModel = conf_model;
-module.exports.userPublicModel = pub_model;
+module.exports = {user_model, conf_model, pub_model}

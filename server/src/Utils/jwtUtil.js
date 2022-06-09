@@ -1,9 +1,7 @@
 const { sign, verify } = require("jsonwebtoken")
 
-function generateToken(userdata) {
-	return sign(userdata, process.env.ACCESS_TOKEN_SECRET, {
-		expiresIn: '10m',
-	})
+function generateToken(userdata, expiresIn = "5s") {
+	return sign(userdata, process.env.ACCESS_TOKEN_SECRET, { expiresIn })
 }
 
 function verifyToken(token) {
@@ -15,5 +13,4 @@ function verifyToken(token) {
 	}
 }
 
-exports.generateToken = generateToken
-exports.verifyToken = verifyToken
+module.exports = { generateToken, verifyToken }
