@@ -8,6 +8,9 @@ const app = require("./Config/app")
 const server = require("http").createServer(app)
 const io = require("socket.io")(server, { cors: { origin: "*" } })
 
+// Connect to the database
+require('./Config/db')()
+
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
 app.use("/messages", require("./Routes/Messages.js"))
