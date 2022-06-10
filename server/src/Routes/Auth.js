@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 const router = express.Router()
 
 const { generateToken } = require("../Utils/jwtUtil")
-const { user_model } = require("../Models/userModel")
+const { userModel } = require("../Models/userModel")
 const authenticateToken = require("../Middlewares/authenticateToken")
 
 router.post("/register", async (req, res) => {
@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
 			error: "Either email or password is missing.",
 		})
 
-	const userCount = await user_model.count({ email })
+	const userCount = await userModel.count({ email })
 
 	if (userCount)
 		return res.status(400).json({
@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
 		})
 
 	const hashedpassword = await bcrypt.hash(password, 10)
-	const new_user = user_model({ email, password: hashedpassword })
+	const new_user = userModel({ email, password: hashedpassword })
 
 	const userdata = { _id: new_user._id }
 	const accessToken = generateToken(userdata)
@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
 	res.cookie("accessToken", accessToken)
 	res.cookie("refreshToken", refreshToken)
 
-	new_user.refresh_token = refreshToken
+	new_user.refreshToken = refreshToken
 	await new_user.save()
 
 	return res.json({ success: true })
@@ -45,8 +45,8 @@ router.post("/login", async (req, res) => {
 			error: "Either email or password is missing.",
 		})
 
-	const user = await user_model
-		.find({ email }, { email: 1, password: 1, refresh_token: 1 })
+	const user = await userModel
+		.find({ email }, { email: 1, password: 1, refreshToken: 1 })
 		.limit(1)
 
 	if (!user.length)
@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
 		res.cookie("accessToken", accessToken)
 		res.cookie("refreshToken", refreshToken)
 
-		user[0].refresh_token = refreshToken
+		user[0].refreshToken = refreshToken
 		user[0].save()
 
 		return res.json({ success: true })
@@ -72,13 +72,13 @@ router.post("/login", async (req, res) => {
 })
 
 router.delete("/logout", authenticateToken, async (req, res) => {
-	const user = await user_model.find({ _id: req.userdata._id }).limit(1)
+	const user = await userModel.find({ _id: req.userdata._id }).limit(1)
 	if (!user)
 		return res
 			.status(400)
 			.json({ success: false, error: "User not found." })
 
-	user[0].refresh_token = ""
+	user[0].refreshToken = ""
 	user[0].save()
 
 	res.cookie("accessToken", "")

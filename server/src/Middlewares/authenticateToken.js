@@ -1,4 +1,4 @@
-const { user_model } = require("../Models/userModel")
+const { userModel } = require("../Models/userModel")
 const { verifyToken, generateToken } = require("../Utils/jwtUtil")
 
 /* 
@@ -37,8 +37,8 @@ module.exports = async function authenticateToken(req, res, next) {
 			.status(400)
 			.json({ success: false, error: "Refresh token missing." })
 
-	const userCount = await user_model.count({
-		refresh_token: refreshToken,
+	const userCount = await userModel.count({
+		refreshToken,
 	})
 
 	// Expired session
@@ -48,7 +48,8 @@ module.exports = async function authenticateToken(req, res, next) {
 			.json({ success: false, error: "Session expired" })
 	}
 
-	const { data: refreshData, expired: refreshExpired } = verifyToken(refreshToken)
+	const { data: refreshData, expired: refreshExpired } =
+		verifyToken(refreshToken)
 
 	// Valid refresh token
 	if (refreshData) {
@@ -65,7 +66,7 @@ module.exports = async function authenticateToken(req, res, next) {
 			.json({ success: false, error: "Invalid refresh token" })
 
 	// Expired refresh token
-	user_model.deleteOne({ refresh_token: refreshToken })
+	userModel.deleteOne({ refreshToken })
 	return res
 		.status(400)
 		.json({ success: false, error: "Access token expired." })
