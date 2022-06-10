@@ -35,6 +35,7 @@ const availableOptions = {
 		"Yoga",
 	],
 	genderPreference: [-1, 0, 1],
+	agePreference: [18, 50]
 }
 
 const randomString = (max, min) => {
@@ -68,6 +69,9 @@ const populateDB = async count => {
 
 		var userConf = confModel({
 			genderPreference: randomProp(availableOptions.genderPreference),
+			programPreference: randomProp(availableOptions.program),
+			universityPreference: randomProp(availableOptions.university),
+			agePreference: [18, 40]
 		})
 
 		let email = randomString(6, 15)
@@ -81,6 +85,8 @@ const populateDB = async count => {
 		var User = userModel({
 			email,
 			password: await bcrypt.hash(password, 10),
+			dob: new Date(),
+			createdDate: new Date(),
 			pubDetails: userPublic._id,
 			confDetails: userConf._id,
 		})

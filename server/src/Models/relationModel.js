@@ -42,5 +42,4 @@ let relationSchema = mongoose.Schema({
 })
 relationModel = mongoose.model("Relation", relationSchema);
 
-module.exports.relationModel = relationModel;
-module.exports.messagesModel = messagesModel;
+module.exports = { messagesModel, relationModel };

@@ -7,7 +7,7 @@ const { userModel } = require("../Models/userModel")
 const authenticateToken = require("../Middlewares/authenticateToken")
 
 router.post("/register", async (req, res) => {
-	const { email, password } = req.body
+	const { email, password, dob } = req.body
 	if (!email || !password)
 		return res.status(400).json({
 			success: false,
@@ -23,7 +23,12 @@ router.post("/register", async (req, res) => {
 		})
 
 	const hashedpassword = await bcrypt.hash(password, 10)
-	const new_user = userModel({ email, password: hashedpassword })
+	const new_user = userModel({ 
+		email,
+		password: hashedpassword,
+		dob: dob,
+		createdDate: new Date()
+	})
 
 	const userdata = { _id: new_user._id }
 	const accessToken = generateToken(userdata)

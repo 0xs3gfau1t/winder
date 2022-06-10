@@ -7,6 +7,10 @@ let UserPublicSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
+	username: {
+		type: String,
+		required: true
+	},
 	university: {
 		type: String,
 		required: true
@@ -39,6 +43,15 @@ let UserConfSchema = mongoose.Schema({
 	genderPreference: {
 		type: Number,	// 	(F, N, M) = (-1, 0, 1)
 		required: true
+	},
+	programPreference: {
+		type: String
+	},
+	universityPreference: {
+		type: String
+	},
+	agePreference: {
+		type: [Number]	// [min, max]
 	}
 })
 
@@ -53,11 +66,11 @@ let UserSchema = mongoose.Schema({
 	},
 	dob:{
 		type: Date,
-		// required: true
+		required: true
 	},
 	createdDate:{
 		type: Date,
-		// required: true
+		required: true
 	},
 	refreshToken: {
 		type: String,
