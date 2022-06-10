@@ -16,13 +16,20 @@ Not store in buffer and execute after connection made
 		Or make seperate file to initiate connection
 		and export all needed functions?
 */
-mongoose.connect(process.env.MONGO_URI,
-				 {
-				 	useNewUrlParser: true,
-				 	useUnifiedTopology: true,
-				 })
-				.then(()=>{console.log("Connected")})
-				.catch(err=>{console.log(`Cannot connect: ${err}`)});
 
-
-module.exports = mongoose
+// If connecting to mongoatlas remove authSource, user and pass options
+module.exports = async () => {
+	try {
+		await mongoose.connect(process.env.MONGO_URI, {
+			authSource: "admin",
+			user: process.env.MONGO_USER,
+			pass: process.env.MONGO_PASS,
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		})
+		console.log("Connected to the database.")
+		return mongoose
+	} catch (err) {
+		console.log(err)
+	}
+}

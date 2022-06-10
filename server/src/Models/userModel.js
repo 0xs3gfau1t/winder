@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const REQUIRED_PASSIONS = 3
+const REQUIREDPASSIONS = 3
 
 let UserPublicSchema = mongoose.Schema({
 	name: {
@@ -29,50 +29,53 @@ let UserPublicSchema = mongoose.Schema({
 	passion: {
 		type: [String],
 		validate: [
-			size => size.length>=REQUIRED_PASSIONS,
-			`Passions must be greater than ${REQUIRED_PASSIONS}`
+			size => size.length>=REQUIREDPASSIONS,
+			`Passions must be greater than ${REQUIREDPASSIONS}`
 		]
 	}
 })
-pub_model = mongoose.model("Public", UserPublicSchema);
 
 let UserConfSchema = mongoose.Schema({
-	gender_preference: {
+	genderPreference: {
 		type: Number,	// 	(F, N, M) = (-1, 0, 1)
 		required: true
 	}
 })
-conf_model = mongoose.model("Conf", UserConfSchema);
 
 let UserSchema = mongoose.Schema({
 	email:{
 		type: String,
 		required: true
 	},
+	password:{
+		type: String,
+		required: true
+	},
 	dob:{
 		type: Date,
-		required: true
+		// required: true
 	},
-	created_date:{
+	createdDate:{
 		type: Date,
-		required: true
+		// required: true
 	},
-	refresh_token: {
+	refreshToken: {
 		type: String,
 	},
-	pub_details:{
+	pubDetails:{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Public",
-		required: true
+		// required: true
 	},
-	conf_details:{
+	confDetails:{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Conf",
-		required: true
+		// required: true
 	}
 })
-user_model = mongoose.model("User", UserSchema);
 
-module.exports.userModel = user_model;
-module.exports.userConfModel = conf_model;
-module.exports.userPublicModel = pub_model;
+pubModel = mongoose.model("Public", UserPublicSchema);
+confModel = mongoose.model("Conf", UserConfSchema);
+userModel = mongoose.model("User", UserSchema);
+
+module.exports = {userModel, confModel, pubModel}
