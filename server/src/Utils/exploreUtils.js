@@ -1,7 +1,7 @@
+require('dotenv').config();
 const { notificationModel } = require('../Models/notificationModel');
 const { userModel } = require('../Models/userModel');
 const { messagesModel, relationModel } = require('../Models/relationModel');
-const { parse } = require('dotenv');
 
 const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT;
 
@@ -114,16 +114,16 @@ async function updateAcceptStatus(from, to){
 
     // Check if this user has been liked previously
     let previouslyLiked = await relationModel.findOne({
-        user1: to,
-        user2: from
+        users: [to, from]
     });
 
     // If yes, send a match: true response
     if(previouslyLiked !== null){
-        await previouslyLiked({
+        console.log("User is previously liked");
+        await previouslyLiked.updateOne({
             stat: 1,
             unreadCount: 0
-        }).save();
+        });
 
         //
         // Send push notification to user1 i.e. current user2
@@ -131,10 +131,10 @@ async function updateAcceptStatus(from, to){
 
         r.matched = true;
     }else{
+        console.log("User was not liked previously");
         // Else, send a match: false response and update match stat for opposite user
         await relationModel({
-            user1: from,
-            user2: to,
+            users: [from, to],
             stat: 0,
         }).save();
     }
