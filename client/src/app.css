@@ -59,7 +59,7 @@ html {
   --letterSpacing: 1px;
   --transition: 0.3s ease-in-out all;
   --max-width: 1120px;
-  --fixed-width: 500px;
+  --fixed-width: 600px;
   --fluid-width: 90vw;
   --breakpoint-lg: 992px;
   --nav-height: 6rem;
@@ -215,8 +215,7 @@ ul {
 /* form */
 
 .form {
-  width: 90vw;
-  max-width: var(--fixed-width);
+  /* max-width: var(--fixed-width); */
   background: var(--white);
   border-radius: var(--borderRadius);
   border-top: 7px solid var(--primary-700);
@@ -267,6 +266,9 @@ ul {
   color: var(--red-dark);
   letter-spacing: var(--letterSpacing);
   text-transform: capitalize;
+}
+.radio{
+  @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600
 }
 /* alert */
 

@@ -1,19 +1,17 @@
 const path = require('path')
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     output: {
-        path: path.join(__dirname, ''),
+        path: path.join(__dirname, '/static'),
         filename: 'main.js',
     },
     devServer: {
     static: {
-      directory: path.join(__dirname, '/static'),
+      directory: path.join(__dirname, '/src'),
     },
-    historyApiFallback: true,
     compress: true,
-    port: 3000,
+    port: 8000,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -23,12 +21,8 @@ module.exports = {
         use: 'babel-loader'
       },
       {
-        test: /\.css$/,
-        use: [
-            MiniCssExtractPlugin.loader,
-            "css-loader",
-            "postcss-loader",
-            ],
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader","postcss-loader"],
       },
       {
         test: /\.(svg|png|jpe?g|gif)$/i,
@@ -39,9 +33,5 @@ module.exports = {
         ],
       },
     ]
-  },
-  plugins: [
-    new MiniCssExtractPlugin(),
-    new HtmlWebPackPlugin({ template: './src/index.html' })
-]
+  }
 }
