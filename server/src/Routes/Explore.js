@@ -3,18 +3,21 @@ require('dotenv').config()
 const express = require('express');
 
 const router = express.Router();
-const auth = require('../Middlewares/authenticateToken')
 
-router.get("/", auth ,(req, res)=>{
-		let disclosable_profile_info = {
-			"Name": "Hency",
-			"University": "Hemlo University",
-		}
-		res.send({
-			profile1: disclosable_profile_info,
-			profile2: disclosable_profile_info,
-			profile3: disclosable_profile_info,
-		});
-	})
+const auth = require('../Middlewares/authenticateToken');
 
-module.exports = router
+const { getList, updateAcceptStatus } = require('../Utils/exploreUtils');
+
+router.get("/", auth ,async (req, res)=>{
+	res.json(
+		await getList(req.userdata._id)
+	);
+});
+
+router.post("/accept", auth, async (req, res) =>{
+	res.json(
+		await updateAcceptStatus(req.userdata._id, req.body.whom)
+	);
+});
+
+module.exports = router;
