@@ -21,12 +21,16 @@ let messagesSchema = mongoose.Schema({
 messagesModel = mongoose.model("Messages", messagesSchema);
 
 let relationSchema = mongoose.Schema({
-	user1: String,
-	user2: String,
-	stat: Number,			// -1 = Liked as (U2 -> U1)
-							// 1 = Liked as  (U1 -> U2)
-							// 0 = Matched
-
+	users: {
+		type: [String],
+		validate: [
+			size => size.length===2,
+			"Relation should contain two parties"
+		]
+	},
+	stat: Boolean,			// 0 = Liked as  (U1 -> U2)
+							// 1 = Matched
+							
 	unreadCount: Number,	// -1 = Sent by (U2 -> U1)
 							// 1 = Sent by  (U1 -> U2)
 							// 0 = All read
