@@ -1,20 +1,27 @@
 import React,{useState, useEffect} from 'react';
+import DatePicker from "react-datepicker";
 import Wrapper from '../assets/wrappers/LandingPage';
 import { Logo, FormRow, Alert } from '../components';
+import { displayAlert} from '../actions/misc';
+import { useDispatch, useSelector } from "react-redux";
 
+import "react-datepicker/dist/react-datepicker.css";
 
 const initialState = {
   name: '',
   lastName:'',
   email: '',
   password: '',
+  password2: '',
+  dob: new Date(2004, 5, 11),
   isMember: true,
-  showAlert:false,
   isLoading: false
 }
 
 const Login = () => {
   const [values, setValues] = useState(initialState)
+  const alert = useSelector(state => state.misc)
+  const dispatch = useDispatch()
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember })
@@ -22,23 +29,27 @@ const Login = () => {
 
   const onSubmit = (e)=>{
     e.preventDefault(); 
-    const {name, email, password, isMember} = values;
+    const {name, email, password, password2, isMember} = values;
+    if(password!==password2){
+      let message = "Paswords didn't match. Don't get too desparate to find love"
+      dispatch(displayAlert(message))
+    }
     if(!email|| !password || (!isMember && !name)){
-      displayAlert();
       return
     }
-    console.log(values);
   }
   const handleChange = (e) => {
-    console.log(e.target.value)
     setValues({ ...values, [e.target.name]: e.target.value })
+  }
+  const setDOB = (date)=>{
+    setValues({...values, 'dob':date})
   }
   return (
     <Wrapper className='full-page'>
       <form className={`form ${values.isMember?'max-w-md':'max-w-2xl'}`} onSubmit={onSubmit}>
         <Logo />
         <h3>{values.isMember ? 'Login' : 'Register'}</h3>
-        {values.showAlert && <Alert />}
+        {alert.showAlert && <Alert />}
         {/* name input */}
         {!values.isMember && (
           <div className='grid grid-cols-2 gap-4'>
@@ -78,8 +89,8 @@ const Login = () => {
           </div>
         </div>
         <div className='grid grid-row-2'>
-            <label htmlFor='age' className='form-label'>Age</label>
-            <input type="number" name="age" size={2} min={18} max={100} className="w-0 form-input"/>
+            <label htmlFor='age' className='form-label'>Date of Birth</label>
+            <DatePicker name='dob' selected={values.dob} onChange={Date => setDOB(Date)} className='form-input'/>
           </div>    
         </div>
         }
@@ -101,8 +112,8 @@ const Login = () => {
           <FormRow
           type='password'
           labelText='Confirm Password'
-          name='password'
-          value={values.password}
+          name='password2'
+          value={values.password2}
           handleChange={handleChange}
         />)}
         <button type='submit' className='btn btn-block'>
