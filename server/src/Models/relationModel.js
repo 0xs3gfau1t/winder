@@ -45,31 +45,12 @@ let relationSchema = mongoose.Schema({
 		 0: both user have 0 unread messages
 	 */
 	unreadCount: Number,
-	messages: {
-		msg: [
-			{
-				type: mongoose.Types.ObjectId,
-				ref: "Messages",
-			},
-		],
-		/*
-		 	|---------------------------------------------------------------|
-			|user[0]|user[1]|value	|meaning								|
-			|-------|-------|-------|---------------------------------------|
-			|0		|0		|0		|messages not cleared for both users	|
-			|0		|1		|1		|messages cleared for user[1]			|
-			|1		|0		|2		|messages cleared for user[0]			|
-			|1		|1		|3		|messages cleared for both users		|
-			|---------------------------------------------------------------|
-		 */
-		clear: {
-			type: Number,
-			validate: [
-				clearValue => clearValue < 4 && clearValue >= 0,
-				"clearValue must be in range of [0, 3]",
-			],
+	messages: [
+		{
+			type: mongoose.Types.ObjectId,
+			ref: "Messages",
 		},
-	},
+	],
 })
 relationModel = mongoose.model("Relation", relationSchema)
 

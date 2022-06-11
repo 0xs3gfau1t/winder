@@ -21,31 +21,32 @@ const getMessages = async (req, res) => {
 		if (!(cursor instanceof Date && !isNaN(cursor)))
 			return res
 				.status(400)
-				.json({ success: false, error: "invalid cursor date" })
+				.json({ success: false, error: "Invalid cursor." })
 	}
 
-	const paginationMatch = cursor ? { createdAt: { $lt: cursor } } : {}
+	const paginationMatch = cursor ? { createdAt: { $lte: cursor } } : {}
 
 	try {
-		const relation = await relationModel
+		var relation = await relationModel
 			.findOne(
 				{ users: { $all: [req.userdata._id, id] }, stat: 0 },
 				{ messages: 1 }
 			)
 			.populate({
-				path: "messages.msg",
+				path: "messages",
 				select: ["content", "sender", "createdAt"],
 				match: paginationMatch,
-				options: { limit: 31, sort: { createdAt: -1 } },
+				options: { limit: 11, sort: { createdAt: -1 } },
 			})
-		const more = relation.messages.msg.length === 31
+		const more = relation.messages.length === 11
 		const nextCursor = more
-			? relation.messages.msg[10].createdAt
+			? relation.messages[10].createdAt
 			: undefined
+		more && relation.messages.pop()
 
 		res.json({ success: true, nextCursor, data: relation.messages })
 	} catch (err) {
-		console.log(err.message)
+		console.log(err)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
 	}
 }
@@ -55,16 +56,19 @@ const sendMessage = async (req, res) => {
 	const { content } = req.body
 	try {
 		var relation = await relationModel.findOne({
-			users: { $all: [req.userdata._id, id], stat: 0 },
+			users: { $all: [req.userdata._id, id] },
+			stat: 0,
 		})
-		const msg = new messagesModel({ content, sender: req.userdata._id })
+		const sender = relation.users[1] === req.userdata._id
+		const msg = new messagesModel({ content, sender })
 		await msg.save()
 		relation.messages.push(msg._id)
 		await relation.save()
+		res.json({ success: true, id: msg._id })
 	} catch (err) {
+		console.log(err.message)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
 	}
-	res.json({ success: true, id })
 }
 
 module.exports = { getConvoList, getMessages, sendMessage }

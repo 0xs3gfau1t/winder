@@ -106,7 +106,7 @@ const populateMessage = async count => {
 		users: [user1, user2],
 		stat: 0,
 		unreadCount: 0,
-		messages: { msg: [], clear: 0 },
+		messages: [],
 	})
 
 	for (let i = 0; i < count; i++) {
@@ -115,7 +115,7 @@ const populateMessage = async count => {
 			sender: randomProp([0, 1]),
 		})
 
-		relation.messages.msg.push(msg)
+		relation.messages.push(msg)
 
 		console.log(`Created message ${i + 1}/${count}`)
 	}
