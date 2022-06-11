@@ -15,10 +15,6 @@ let userSchema = mongoose.Schema({
 		type: Date,
 		required: true
 	},
-	createdDate:{
-		type: Date,
-		required: true
-	},
 	refreshToken: {
 		type: String,
 	},
@@ -69,7 +65,7 @@ let userSchema = mongoose.Schema({
 			`Passions must be greater than ${REQUIREDPASSIONS}`
 		]
 	}
-})
+}, {timestamps: true})
 
 userModel = mongoose.model("User", userSchema);
 
