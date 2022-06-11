@@ -26,7 +26,8 @@ messagesModel = mongoose.model("Messages", messagesSchema)
 
 let relationSchema = mongoose.Schema({
 	users: {
-		type: [mongoose.SchemaTypes.ObjectId],
+		type: [mongoose.Types.ObjectId],
+		ref: "User",
 		validate: [
 			users => users.length === 2,
 			"There can only be two users in a relationship",
@@ -47,7 +48,7 @@ let relationSchema = mongoose.Schema({
 	messages: {
 		msg: [
 			{
-				type: mongoose.SchemaType.ObjectId,
+				type: mongoose.Types.ObjectId,
 				ref: "Messages",
 			},
 		],
@@ -57,7 +58,7 @@ let relationSchema = mongoose.Schema({
 			|-------|-------|-------|---------------------------------------|
 			|0		|0		|0		|messages not cleared for both users	|
 			|0		|1		|1		|messages cleared for user[1]			|
-			|1		|0		|2		|messages cleared for user[2]			|
+			|1		|0		|2		|messages cleared for user[0]			|
 			|1		|1		|3		|messages cleared for both users		|
 			|---------------------------------------------------------------|
 		 */

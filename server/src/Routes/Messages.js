@@ -5,8 +5,8 @@ const { getConvoList, getMessages, sendMessage } = require('../Controllers/messa
 
 const router = express.Router();
 
-router.get("/", getConvoList)
 router.get("/:id", getMessages)
 router.post("/:id", sendMessage)
+router.get("/", getConvoList)
 
 module.exports = router
