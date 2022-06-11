@@ -16,7 +16,6 @@ io.on("connection", onConnectionHandler)
 require("./Config/db")()
 
 // Routing each endpoint to respective routers
-app.use("/", (req, res) => res.sendFile("./src/index.html", { root: "." }))
 app.use("/auth", require("./Routes/Auth.js"))
 app.use("/messages", require("./Routes/Messages.js"))
 app.use("/notification", require("./Routes/Notifications.js"))

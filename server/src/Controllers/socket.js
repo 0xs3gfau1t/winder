@@ -13,7 +13,9 @@ const onConnectionHandler = socket => {
 			console.log(`User ${data._id} added to activeUsers list.`)
 			callback({ success: true })
 		} else {
-			console.error(`Failed to add User ${data._id} to activeUser list due to failed authorization.`)
+			console.error(
+				`Failed to add User ${data._id} to activeUser list due to failed authorization.`
+			)
 			callback({ success: false })
 		}
 	})
@@ -28,6 +30,17 @@ const onConnectionHandler = socket => {
 		}
 		console.log(`User ${payload._id} is offline.`)
 		callback({ status: "sent" })
+	})
+
+	socket.on("notify", payload => {
+		const receiverSock = acitveUsers.get(payload.receiver)
+		if (receiverSock !== undefined) {
+			socket.to(receiverSock).emit("notification", {
+				title: payload.title,
+				content: payload.content,
+				type: payload.type,
+			})
+		}
 	})
 
 	socket.on("disconnect", payload => {
