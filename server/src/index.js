@@ -15,9 +15,11 @@ io.on("connection", onConnectionHandler)
 // Connect to the database
 require("./Config/db")()
 
+const authenticateToken = require("./Middlewares/authenticateToken")
+
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
-app.use("/messages", require("./Routes/Messages.js"))
+app.use("/messages", authenticateToken, require("./Routes/Messages.js"))
 app.use("/notification", require("./Routes/Notifications.js"))
 app.use("/settings", require("./Routes/Settings.js"))
 app.use("/explore", require("./Routes/Explore.js"))
