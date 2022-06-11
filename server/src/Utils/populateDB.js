@@ -1,8 +1,11 @@
 require("../Config/db")()
 
+ObjectId = require("mongoose").Types.ObjectId
+
 const fs = require("fs")
 const bcrypt = require("bcrypt")
 const { userModel } = require("../Models/userModel")
+const { relationModel, messagesModel } = require("../Models/relationModel")
 
 const availableOptions = {
 	university: ["TU", "PU", "KU", "PoU"],
@@ -36,7 +39,7 @@ const availableOptions = {
 	],
 	genderPreference: [-1, 0, 1],
 	agePreference: [18, 50],
-	dob: [1990, 1999, 1995, 2000, 1980, 1993, 2002, 2003, 2005]
+	dob: [1990, 1999, 1995, 2000, 1980, 1993, 2002, 2003, 2005],
 }
 
 const randomString = (max, min) => {
@@ -56,7 +59,6 @@ const randomProp = arr => {
 
 const populateDB = async count => {
 	for (let i = 0; i < count; i++) {
-
 		let email = randomString(6, 15)
 		let password = randomString(4, 8)
 		fs.appendFile(
@@ -67,7 +69,7 @@ const populateDB = async count => {
 
 		var user = userModel({
 			name: randomString(4, 15),
-			username: randomString(5,10),
+			username: randomString(5, 10),
 			university: randomProp(availableOptions.university),
 			gender: randomProp(availableOptions.gender),
 			program: randomProp(availableOptions.program),
@@ -88,8 +90,37 @@ const populateDB = async count => {
 
 		await user.save()
 
-		console.log(`Saved user ${i+1}/${count}`)
+		console.log(`Saved user ${i + 1}/${count}`)
 	}
 }
 
-populateDB(100)
+const populateMessage = async count => {
+	var userIds = await userModel.find({}, { _id: 1 })
+	userIds = userIds.map(userId => userId._id)
+
+	const user1 = randomProp(userIds)
+	const user2 = randomProp(userIds.filter(user => user._id !== user1))
+	console.log({ user1, user2 })
+
+	const relation = await relationModel.create({
+		users: [user1, user2],
+		stat: 0,
+		unreadCount: 0,
+		messages: { msg: [], clear: 0 },
+	})
+
+	for (let i = 0; i < count; i++) {
+		var msg = await messagesModel.create({
+			content: randomString(40, 10),
+			sender: randomProp([0, 1]),
+		})
+
+		relation.messages.msg.push(msg)
+
+		console.log(`Created message ${i + 1}/${count}`)
+	}
+	await relation.save()
+}
+
+// populateDB(100)
+populateMessage(100)
