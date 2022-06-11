@@ -2,7 +2,7 @@ require("../Config/db")()
 
 const fs = require("fs")
 const bcrypt = require("bcrypt")
-const { userModel, confModel, pubModel } = require("../Models/userModel")
+const { userModel } = require("../Models/userModel")
 
 const availableOptions = {
 	university: ["TU", "PU", "KU", "PoU"],
@@ -35,7 +35,8 @@ const availableOptions = {
 		"Yoga",
 	],
 	genderPreference: [-1, 0, 1],
-	agePreference: [18, 50]
+	agePreference: [18, 50],
+	dob: [1990, 1999, 1995, 2000, 1980, 1993, 2002, 2003, 2005]
 }
 
 const randomString = (max, min) => {
@@ -55,24 +56,6 @@ const randomProp = arr => {
 
 const populateDB = async count => {
 	for (let i = 0; i < count; i++) {
-		var userPublic = pubModel({
-			name: randomString(4, 15),
-			university: randomProp(availableOptions.university),
-			gender: randomProp(availableOptions.gender),
-			program: randomProp(availableOptions.program),
-			batch: randomProp(availableOptions.batch),
-			bio: randomString(40, 10),
-			passion: [...Array(3)].map((_, i) =>
-				randomProp(availableOptions.passion)
-			),
-		})
-
-		var userConf = confModel({
-			genderPreference: randomProp(availableOptions.genderPreference),
-			programPreference: randomProp(availableOptions.program),
-			universityPreference: randomProp(availableOptions.university),
-			agePreference: [18, 40]
-		})
 
 		let email = randomString(6, 15)
 		let password = randomString(4, 8)
@@ -82,18 +65,28 @@ const populateDB = async count => {
 			err => console.log(err ? "Creds not saved" : "")
 		)
 
-		var User = userModel({
+		var user = userModel({
+			name: randomString(4, 15),
+			username: randomString(5,10),
+			university: randomProp(availableOptions.university),
+			gender: randomProp(availableOptions.gender),
+			program: randomProp(availableOptions.program),
+			batch: randomProp(availableOptions.batch),
+			bio: randomString(40, 10),
+			passion: [...Array(3)].map((_, i) =>
+				randomProp(availableOptions.passion)
+			),
+			genderPreference: randomProp(availableOptions.genderPreference),
+			programPreference: randomProp(availableOptions.program),
+			universityPreference: randomProp(availableOptions.university),
+			agePreference: [18, 40],
 			email,
 			password: await bcrypt.hash(password, 10),
-			dob: new Date(),
+			dob: randomProp(availableOptions.dob),
 			createdDate: new Date(),
-			pubDetails: userPublic._id,
-			confDetails: userConf._id,
 		})
 
-		await userPublic.save()
-		await userConf.save()
-		await User.save()
+		await user.save()
 
 		console.log(`Saved user ${i+1}/${count}`)
 	}

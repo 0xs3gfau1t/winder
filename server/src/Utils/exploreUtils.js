@@ -1,60 +1,82 @@
 const { notificationModel } = require('../Models/notificationModel');
-const { userModel, pubModel, confModel } = require('../Models/userModel');
+const { userModel } = require('../Models/userModel');
 const { messagesModel, relationModel } = require('../Models/relationModel');
+const { parse } = require('dotenv');
 
 const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT;
 
+// Temporary map to keep track of pagination status
+// Find a way to implement it in persistence mannder efficiently
+// Also, make it accept pagination direction so that
+// We can make a premium feature out of it
 var paginationStatus = new Map()
 
 async function getFilterParamaters(id){
     const user = await userModel.findOne({_id: id}).exec();
     
     // Get filters enabled by user
-    let filters = {};
-    let f = await confModel.findOne({_id: user.confDetails}).exec();
-    
-    if(f){
-       if(f.programPreference)         filters.program     = "BCT";
-       if(f.universityPreference)      filters.university  = "TU";
-//        if(f.programPreference)         filters.program     = f.programPreference;
-//        if(f.universityPreference)      filters.university  = f.universityPreference;
-//        if(f.genderPreference)         filters.gender      = f.genderPreference;
-    }
-
+    let filters = {} 
+    if(user.programPreference)         filters.program     = "BCT";
+    if(user.universityPreference)      filters.university  = "TU";
+    // if(user.programPreference)         filters.program     = user.programPreference;
+    // if(user.universityPreference)      filters.university  = user.universityPreference;
+    // if(user.genderPreference)         filters.gender      = user.genderPreference;
     
     return [
-        f.agePreference,
+        user.agePreference,
         filters
     ];
+}
+
+function parseBoundedDates(ageList){
+    const currentDate = new Date();
+
+    let nearestDate = new Date()
+                            .setFullYear(
+                                currentDate.getFullYear() - ageList[0]
+                            );
+    nearestDate = new Date(nearestDate);
+
+    let farthestDate = new Date()
+                            .setFullYear(
+                                currentDate.getFullYear() - ageList[1]
+                            );
+    farthestDate = new Date(farthestDate);
+
+    return [nearestDate, farthestDate];
 }
 
 async function getList(id, page){
     // Get applied filters by user with id: id
     const [ agePreference, filters ] = await getFilterParamaters(id);
     
-    // Temporary list to keep track of pagination status
-    // Find a way to implement it in persistence mannder efficiently
-    // Also, make it accept pagination direction so that
-    // We can make a premium feature out of it
+    const [ lowerAgeLimit, upperAgeLimit ] = parseBoundedDates(agePreference);
 
-
-    //
-    // Apply this technique to make a pagination middleware someday
-    //
     let userList;
+    const returnableData = {
+        // Data to be shown in result
+        name: 1, university: 1, program:1, batch: 1,
+        bio: 1, passion: 1
+    };
+    const ageFilter = {
+        $gt: lowerAgeLimit,
+        $lt: upperAgeLimit
+    };
+    const paginationFilter = {
+        $ne: id,
+        $gt: paginationStatus.get(id)
+    };
+
     if(paginationStatus.has(id)){
         console.log("Has pagination status", paginationStatus);
-        userList = await pubModel.find({
+        userList = await userModel.find({
                                         ...filters,
-                                        _id: {
-                                            $gt: paginationStatus.get(id)
-                                        }
-                                        })   // Add age filter after computing
-                                        .sort({_id: 1})
-                                        .limit(PAGINATION_LIMIT)
-                                        .select({
-                                        __v: 0
-                                        }).exec()
+                                        _id: paginationFilter,
+                                        age: ageFilter
+                                    }, returnableData)
+                                    .sort({_id: 1})
+                                    .limit(PAGINATION_LIMIT)
+                                    .exec();
         if(userList.length < PAGINATION_LIMIT){
             console.log("Last page", paginationStatus);
 
@@ -71,16 +93,17 @@ async function getList(id, page){
         }
     }else{
         console.log("No pagination. Creating one for ", id);
-        userList = await pubModel.find({...filters})
+        userList = await userModel.find({
+                                        ...filters,
+                                        age: ageFilter
+                                    }, returnableData)
                                 .sort({_id: 1})
                                 .limit(PAGINATION_LIMIT)
-                                .select({__v: 0})
                                 .exec()
         paginationStatus.set(
             id,userList[PAGINATION_LIMIT-1]._id.toString()
             )
     }
-    console.log(paginationStatus);
 
     return userList;
 }
@@ -96,7 +119,6 @@ async function updateAcceptStatus(from, to){
     });
 
     // If yes, send a match: true response
-    console.log(previouslyLiked)
     if(previouslyLiked !== null){
         await previouslyLiked({
             stat: 1,
