@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 
-
 //		Symbol Deriving Graph
 //
 //				  -
@@ -11,39 +10,48 @@ const mongoose = require("mongoose")
 //				  -
 //				  -
 
-let messagesSchema = mongoose.Schema({
-	time: Date,
-	content: String,
-	sender: Boolean				// 1 = Sent by user2
-								// 0  = Sent by user1
-})
+let messagesSchema = mongoose.Schema(
+	{
+		content: String,
+		/*
+	 		false: sent by user[0]
+		 	 true: sent by user[1]
+	 	*/
+		sender: Boolean,
+	},
+	{ timestamps: true }
+)
 
-messagesModel = mongoose.model("Messages", messagesSchema);
+messagesModel = mongoose.model("Messages", messagesSchema)
 
 let relationSchema = mongoose.Schema({
 	users: {
-		type: [String],
+		type: [mongoose.Types.ObjectId],
+		ref: "User",
 		validate: [
-			size => size.length===2,
-			"Relation should contain two parties"
-		]
+			users => users.length === 2,
+			"There can only be two users in a relationship",
+		],
 	},
-	stat: Boolean,			// 0 = Liked as  (U1 -> U2)
-							// 1 = Matched
-							
-	unreadCount: Number,	// -1 = Sent by (U2 -> U1)
-							// 1 = Sent by  (U1 -> U2)
-							// 0 = All read
-
-	messages: {
-		msg: [{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Messages"
-		}],
-		clear: Boolean		// 1 = Clear for U2
-							// 0 = Clear for U1
-	}
+	/*
+		-1: user[1] sent like first, and waiting for approval of user[0]
+		+1: user[0] sent like first, and waiting for approval of user[1]
+		 0: both approved
+	 */
+	stat: Number,
+	/*
+		-n: user[1] sent n messages that are unread by user[0]
+		+n: user[0] sent n messages that are unread by user[1]
+		 0: both user have 0 unread messages
+	 */
+	unreadCount: Number,
+	messages: [
+		{
+			type: mongoose.Types.ObjectId,
+			ref: "Messages",
+		},
+	],
 })
-relationModel = mongoose.model("Relation", relationSchema);
+relationModel = mongoose.model("Relation", relationSchema)
 
-module.exports = { messagesModel, relationModel };
+module.exports = { messagesModel, relationModel }
