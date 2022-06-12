@@ -1,7 +1,6 @@
 require('dotenv').config();
-const { notificationModel } = require('../Models/notificationModel');
 const { userModel } = require('../Models/userModel');
-const { messagesModel, relationModel } = require('../Models/relationModel');
+const { relationModel } = require('../Models/relationModel');
 
 const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT;
 
@@ -16,11 +15,9 @@ async function getFilterParamaters(id){
     
     // Get filters enabled by user
     let filters = {} 
-    if(user.programPreference)         filters.program     = "BCT";
-    if(user.universityPreference)      filters.university  = "TU";
-    // if(user.programPreference)         filters.program     = user.programPreference;
-    // if(user.universityPreference)      filters.university  = user.universityPreference;
-    // if(user.genderPreference)         filters.gender      = user.genderPreference;
+    if(user.programPreference)         filters.program     = user.programPreference;
+    if(user.universityPreference)      filters.university  = user.universityPreference;
+    if(user.genderPreference)         filters.gender      = user.genderPreference;
     
     return [
         user.agePreference,

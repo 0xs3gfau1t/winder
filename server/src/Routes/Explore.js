@@ -6,7 +6,7 @@ const router = express.Router();
 
 const auth = require('../Middlewares/authenticateToken');
 
-const { getList, updateAcceptStatus } = require('../Utils/exploreUtils');
+const { getList, updateAcceptStatus } = require('../Controllers/exploreController');
 
 router.get("/", auth ,async (req, res)=>{
 	res.json(
