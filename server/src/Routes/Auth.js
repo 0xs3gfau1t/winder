@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
 		})
 
 	const hashedpassword = await bcrypt.hash(password, 10)
-	const new_user = userModel({ 
+	const new_user = userModel({
 		email,
 		password: hashedpassword,
 		dob: dob,
@@ -49,26 +49,25 @@ router.post("/login", async (req, res) => {
 			error: "Either email or password is missing.",
 		})
 
-	const user = await userModel
-		.find({ email }, { email: 1, password: 1, refreshToken: 1 })
-		.limit(1)
+	const user = await userModel.findOne(
+		{ email },
+		{ email: 1, password: 1, refreshToken: 1 }
+	)
 
-	if (!user.length)
+	if (!user)
 		return res.status(400).json({
 			success: false,
 			error: "No user with this email.",
 		})
 
-	if (await bcrypt.compare(password, user[0].password)) {
-		const userdata = { _id: user[0]._id }
+	if (await bcrypt.compare(password, user.password)) {
+		const userdata = { _id: user._id }
 		const accessToken = generateToken(userdata)
 		const refreshToken = generateToken(userdata, "1d")
 		res.cookie("accessToken", accessToken)
 		res.cookie("refreshToken", refreshToken)
 
-		user[0].refreshToken = refreshToken
-		user[0].save()
-
+		await user.updateOne({ refreshToken: refreshToken })
 		return res.json({ success: true })
 	}
 
@@ -82,8 +81,7 @@ router.delete("/logout", authenticateToken, async (req, res) => {
 			.status(400)
 			.json({ success: false, error: "User not found." })
 
-	user[0].refreshToken = ""
-	user[0].save()
+	user.updateOne({ refreshToken: "" })
 
 	res.cookie("accessToken", "")
 	res.cookie("refreshToken", "")
