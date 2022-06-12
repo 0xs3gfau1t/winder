@@ -34,11 +34,10 @@ let relationSchema = mongoose.Schema({
 		],
 	},
 	/*
-		-1: user[1] sent like first, and waiting for approval of user[0]
-		+1: user[0] sent like first, and waiting for approval of user[1]
-		 0: both approved
+	  	0: waiting for approval; user[0] is always the relation initiator
+		1: approved
 	 */
-	stat: Number,
+	stat: { type: Boolean, default: false },
 	/*
 		-n: user[1] sent n messages that are unread by user[0]
 		+n: user[0] sent n messages that are unread by user[1]

@@ -78,14 +78,16 @@ const populateDB = async count => {
 			passion: [...Array(3)].map((_, i) =>
 				randomProp(availableOptions.passion)
 			),
-			genderPreference: randomProp(availableOptions.genderPreference),
-			programPreference: randomProp(availableOptions.program),
-			universityPreference: randomProp(availableOptions.university),
-			agePreference: [18, 40],
+			// Uncomment this if you want random preference instead of preferred ones
+			// preference: {
+			// 	gender: randomProp(availableOptions.genderPreference),
+			// 	program: randomProp(availableOptions.program),
+			// 	university: randomProp(availableOptions.university),
+			// 	age: [18, 40],
+			// },
 			email,
 			password: await bcrypt.hash(password, 10),
-			dob: randomProp(availableOptions.dob),
-			createdDate: new Date(),
+			dob: new Date(randomProp(availableOptions.dob), 0),
 		})
 
 		await user.save()
@@ -104,7 +106,7 @@ const populateMessage = async count => {
 
 	const relation = await relationModel.create({
 		users: [user1, user2],
-		stat: 0,
+		stat: true,
 		unreadCount: 0,
 		messages: [],
 	})
