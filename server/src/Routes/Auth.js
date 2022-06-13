@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
 	new_user.refreshToken = refreshToken
 	await new_user.save()
 
-	return res.json({ success: true })
+	return res.json({ success: true, id: new_user._id })
 })
 
 router.post("/login", async (req, res) => {
@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
 		res.cookie("refreshToken", refreshToken)
 
 		await user.updateOne({ refreshToken: refreshToken })
-		return res.json({ success: true })
+		return res.json({ success: true, id: user._id })
 	}
 
 	return res.status(400).json({ success: false, error: "Invalid password" })
