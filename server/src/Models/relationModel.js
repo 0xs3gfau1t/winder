@@ -43,7 +43,7 @@ let relationSchema = mongoose.Schema({
 		+n: user[0] sent n messages that are unread by user[1]
 		 0: both user have 0 unread messages
 	 */
-	unreadCount: Number,
+	unreadCount: {type: Number, default: 0},
 	messages: [
 		{
 			type: mongoose.Types.ObjectId,

@@ -1,18 +1,21 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 // Enums for notification types
 const NotificationTypes = {
-	LIKED:0,
-	MATCHED:1,
-	PROMOTIONS:2	
-};
+	LIKED: 0,
+	MATCHED: 1,
+	PROMOTIONS: 2,
+}
 
-notificationSchema = mongoose.Schema({
-	type: Number,	// Use NotificationTypes during operations
-	content: String,
-	time: Date,
-	read: Boolean
-});
-const notificationModel = mongoose.model("Notification", notificationSchema);
+notificationSchema = mongoose.Schema(
+	{
+		type: { type: Number, required: true }, // Use notification types enum
+		content: { type: String, default: "" },
+		read: { type: Boolean, default: false },
+		user: { type: mongoose.Types.ObjectId, ref: "User" }, // if the user is not set this notification is sent to everyone
+	},
+	{ timestamps: true }
+)
+const notificationModel = mongoose.model("Notification", notificationSchema)
 
-module.exports = { notificationModel };
+module.exports = { notificationModel, NotificationTypes }
