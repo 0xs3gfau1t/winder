@@ -11,6 +11,11 @@ const io = require("socket.io")(server, { cors: { origin: "*" } })
 // Connect to the database
 require('./Config/db')()
 
+//Test endpoint for dev purpose
+app.get('/', (req, res) => {
+	res.json({"message":'Welcome!'})
+  })
+
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
 app.use("/messages", require("./Routes/Messages.js"))
