@@ -14,8 +14,6 @@ router.post("/:authtoken", async (req, res) => {
         
         const {data, expired } = verifyToken(t);
 
-        console.log(data, expired);
-
         if(!expired){
 
             // Updates new password
@@ -31,9 +29,9 @@ router.post("/:authtoken", async (req, res) => {
             });
 
             usr.save()
+            res.json({message: "success"});
         }
-
-        res.json({message: "Done"});
+        res.json({message: "failed"});
     })
     .post("/", async (req, res)=>{
 
