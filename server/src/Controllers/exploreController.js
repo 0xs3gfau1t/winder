@@ -1,4 +1,8 @@
 const { userModel } = require("../Models/userModel")
+const {
+	notificationModel,
+	NotificationTypes,
+} = require("../Models/notificationModel")
 const { relationModel } = require("../Models/relationModel")
 
 const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT
@@ -24,7 +28,7 @@ async function getList(req, res) {
 
 	const user = await userModel.findOne(
 		{ _id: req.userdata._id },
-		{ preference: 1, pagination: 1, _id: 0 }
+		{ preference: 1, pagination: 1 }
 	)
 
 	const filters = user.preference.toObject()
@@ -61,7 +65,7 @@ async function getList(req, res) {
 				? "null"
 				: userList[PAGINATION_LIMIT - 1]._id.toString()
 
-		user.updateOne({ pagination: newPagination })
+		await user.updateOne({ pagination: newPagination })
 
 		res.json({ success: true, userList })
 	} catch (err) {
@@ -76,17 +80,31 @@ async function updateAcceptStatus(req, res) {
 
 	let r = { matched: false }
 
+	// Check if user_from has already initiated relation with user_to
+	const relCount = await relationModel.count({ users: [from, to] })
+	console.log(relCount)
+	if (relCount)
+		return res.json({
+			success: false,
+			error: "Relation with this user already exists.",
+		})
+
 	// Check if this user has been liked previously
 	let previouslyLiked = await relationModel.findOne(
 		{ users: [to, from] },
-		{ stat: 1, _id: 0 }
+		{ stat: 1 }
 	)
 
 	// If yes, send a matched: true response
 	if (previouslyLiked !== null) {
 		await previouslyLiked.updateOne({ stat: true })
 
-		// Send push notification to user1 i.e. current user2
+		// Push notification to other user will be emitted from the frontend.
+		await notificationModel({
+			type: NotificationTypes.MATCHED,
+			content: `You are matched with user ${from}.`,
+			user: to,
+		}).save()
 
 		res.json({ success: true, matched: true })
 	} else {
@@ -95,7 +113,7 @@ async function updateAcceptStatus(req, res) {
 			users: [from, to],
 			stat: false,
 		}).save()
-		res.json({ success: true, matched: true })
+		res.json({ success: true, matched: false })
 	}
 }
 
