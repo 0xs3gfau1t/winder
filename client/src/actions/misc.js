@@ -1,8 +1,7 @@
 import { DISPLAY_ALERT, CLEAR_ALERT } from "./types";
 
 export const displayAlert = (message ) => (dispatch) => {
-    console.log('called')
-    console.log(message)
+    // console.log('called')
     dispatch({
         type: DISPLAY_ALERT,
         payload: message,
