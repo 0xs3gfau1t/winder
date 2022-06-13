@@ -7,7 +7,8 @@ const { userModel } = require("../Models/userModel")
 const authenticateToken = require("../Middlewares/authenticateToken")
 
 router.post("/register", async (req, res) => {
-	const { email, password, dob } = req.body
+	console.log("Register req: ", req.body)
+	const { email, password } = req.body
 	if (!email || !password)
 		return res.status(400).json({
 			success: false,

@@ -2,7 +2,9 @@ import {DISPLAY_ALERT, CLEAR_ALERT } from '../actions/types';
 
 const initialState = {
     showAlert:false,
-    alertMsg : ''
+    alertMsg : '',
+    isLoading: false,
+    flag:''
 }
 
 export default function (state = initialState, action) {
