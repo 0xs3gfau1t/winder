@@ -1,16 +1,19 @@
 import React from 'react'
-import Nav from '../Nav/Nav'
+import Wrapper from '../assets/wrappers/ChatPage'
+import Nav from '../components/Nav/Nav'
 
 
 
 function Chat() {
   return (
-    <div>
+    <Wrapper>
+        <div>
         <h1>Chat</h1>
         <div className= "navbarr">
             <Nav current='Chat'/>
         </div>
     </div>
+    </Wrapper>
   )
 }
 

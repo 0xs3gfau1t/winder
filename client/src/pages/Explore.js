@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
-import Nav from '../Nav/Nav'
+import Nav from '../components/Nav/Nav'
 
-import  './Explore.css'
+import  Wrapper from '../assets/wrappers/ExplorePage'
 
 
 function Explore() {
@@ -16,63 +16,65 @@ function Explore() {
 
 
   return (
-    
-    <div>
-        <h1>Explore</h1>
-        <div className= "navbarr">
-            <Nav current='Explore'/>
-        </div>
-
-
-        <div className = "Header">
-        <div className='LogoContainer'>
-          {/* <img  src = {logo} alt = "Logo" height = "100%"/> */}
-        </div>
-      </div>
-
-
-
-      <div className = "Container">
-        <div className = "Gallery">
-          <img className = "user_img" src = {d_data.image_url} height = "50%" width = "20%"/>
-        </div>
-        <div className='Details_and_Controls'>
-          <div className = "Details">
-            <h2>{d_data.name}</h2>
-            <h3>{d_data.batch}</h3>
-            <h3>{d_data.age}</h3>
-            <div className='hobbies'>
-              {d_data.hobbies.map(hobby =>(
-                  <h3 className='hobby'>{hobby}</h3>
-              ))}
-            </div>
-            
-
-
-    
-
-
-
-            <h3>{d_data.university}</h3>
+    <Wrapper>
+        <div>
+          <h1>Explore</h1>
+          <div className= "navbarr">
+              <Nav current='Explore'/>
           </div>
 
 
-          <div className = "Controls">
-            <div className = "Previous">
-              <button >Previous</button>
+          <div className = "Header">
+            <div className='LogoContainer'>
+              {/* <img  src = {logo} alt = "Logo" height = "100%"/> */}
             </div>
-            <div className='Heart'>
-              <button>Like it</button>
-            </div>
-            <div className = "Next">
-              <button>Next</button>
-            </div>
-        </div>
-        
-        </div>
-      </div>
+          </div>
 
-    </div>
+
+
+          <div className = "Container">
+            <div className = "Gallery">
+              <img className = "user_img" src = {d_data.image_url} height = "50%" width = "20%"/>
+            </div>
+            <div className='Details_and_Controls'>
+              <div className = "Details">
+                <h2>{d_data.name}</h2>
+                <h3>{d_data.batch}</h3>
+                <h3>{d_data.age}</h3>
+                <div className='hobbies'>
+                  {d_data.hobbies.map(hobby =>(
+                      <h3 className='hobby'>{hobby}</h3>
+                  ))}
+                </div>
+                
+
+
+        
+
+
+
+                <h3>{d_data.university}</h3>
+              </div>
+
+
+              <div className = "Controls">
+                <div className = "Previous">
+                  <button >Previous</button>
+                </div>
+                <div className='Heart'>
+                  <button>Like it</button>
+                </div>
+                <div className = "Next">
+                  <button>Next</button>
+                </div>
+            </div>
+            
+            </div>
+          </div>
+
+        </div>
+    </Wrapper>
+    
   )
 }
 

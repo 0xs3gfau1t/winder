@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Provider } from "react-redux";
 import store from './store';
 import { Landing, Login, Error } from './pages';
-import Explore from './components/Explore/Explore';
+import Explore from './pages/Explore'
 
 import './app.css'
-import Profile from './components/Profile/Profile';
-import Notification from './components/Notification/Notification';
-import Chat from './components/Chat/Chat';
-import Setting from './components/Setting/Setting';
+import Profile from './pages/Profile';
+import Notification from './pages/Notification';
+import Chat from './pages/Chat';
+import Setting from './pages/Setting';
 
 
 const App = () => {
