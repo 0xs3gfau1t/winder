@@ -24,7 +24,11 @@ router.post("/register", async (req, res) => {
 		})
 
 	const hashedpassword = await bcrypt.hash(password, 10)
-	const new_user = userModel({ email, password: hashedpassword })
+	const new_user = userModel({ 
+		email,
+		password: hashedpassword,
+		dob: dob,
+	})
 
 	const userdata = { _id: new_user._id }
 	const accessToken = generateToken(userdata)

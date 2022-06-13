@@ -6,10 +6,16 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
 
 const app = require("./Config/app")
 const server = require("http").createServer(app)
+
+// IO connection
+const { onConnectionHandler } = require("./Controllers/socket")
 const io = require("socket.io")(server, { cors: { origin: "*" } })
+io.on("connection", onConnectionHandler)
 
 // Connect to the database
-require('./Config/db')()
+require("./Config/db")()
+
+const authenticateToken = require("./Middlewares/authenticateToken")
 
 //Test endpoint for dev purpose
 app.get('/', (req, res) => {
@@ -18,22 +24,12 @@ app.get('/', (req, res) => {
 
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
-app.use("/messages", require("./Routes/Messages.js"))
+app.use("/messages", authenticateToken, require("./Routes/Messages.js"))
 app.use("/notification", require("./Routes/Notifications.js"))
 app.use("/settings", require("./Routes/Settings.js"))
 app.use("/explore", require("./Routes/Explore.js"))
 app.use("/profile", require("./Routes/Profile.js"))
-
-
-
-// IO connection
-io.on("connection", socket => {
-	console.log(`User connected with socket id: ${socket.id}`)
-
-	socket.on("disconnect", payload => {
-		console.log(`User with socket id: ${socket.id} disconnected`)
-	})
-})
+app.use("/changepassword", require("./Routes/ChangePassword.js"))
 
 // Start the server specied in PORT from .env
 server.listen(process.env.PORT || 4000, () => {
