@@ -102,6 +102,7 @@ async function updateAcceptStatus(req, res) {
 		// Push notification to other user will be emitted from the frontend.
 		await notificationModel({
 			type: NotificationTypes.MATCHED,
+			title: "You got a new match.",
 			content: `You are matched with user ${from}.`,
 			user: to,
 		}).save()

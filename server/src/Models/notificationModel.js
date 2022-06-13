@@ -10,8 +10,8 @@ const NotificationTypes = {
 notificationSchema = mongoose.Schema(
 	{
 		type: { type: Number, required: true }, // Use notification types enum
+		title: { type: String, default: "" },
 		content: { type: String, default: "" },
-		read: { type: Boolean, default: false },
 		user: { type: mongoose.Types.ObjectId, ref: "User" }, // if the user is not set this notification is sent to everyone
 	},
 	{ timestamps: true }
