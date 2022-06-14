@@ -87,7 +87,7 @@ const populateDB = async count => {
 			// },
 			email,
 			password: await bcrypt.hash(password, 10),
-			dob: new Date(randomProp(availableOptions.dob), 0),
+			dob: new Date(new Date().setFullYear(randomProp(availableOptions.dob))),
 		})
 
 		await user.save()

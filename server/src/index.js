@@ -22,7 +22,6 @@ app.use("/messages", authenticateToken, require("./Routes/Messages.js"))
 app.use("/notification", require("./Routes/Notifications.js"))
 app.use("/settings", require("./Routes/Settings.js"))
 app.use("/explore", require("./Routes/Explore.js"))
-app.use("/profile", require("./Routes/Profile.js"))
 app.use("/changepassword", require("./Routes/ChangePassword.js"))
 
 // Start the server specied in PORT from .env
