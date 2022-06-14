@@ -17,6 +17,11 @@ require("./Config/db")()
 
 const authenticateToken = require("./Middlewares/authenticateToken")
 
+//Test endpoint for dev purpose
+app.get('/', (req, res) => {
+	res.json({"message":'Welcome!'})
+  })
+
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
 app.use("/messages", authenticateToken, require("./Routes/Messages.js"))

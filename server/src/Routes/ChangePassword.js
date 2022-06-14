@@ -39,7 +39,7 @@ router.post("/:authtoken", async (req, res) => {
 
         console.log("Received email: ", mail);
 
-        if( await userModel.findOne({email: "a4wfLFK6Mu"}) ){
+        if( await userModel.findOne({email: mail}) ){
             const token = generateToken({email: mail}, `${10 * 60}s`);
             console.log("Token generated as: ", token);
 
