@@ -4,6 +4,7 @@ const {
 	NotificationTypes,
 } = require("../Models/notificationModel")
 const { relationModel } = require("../Models/relationModel")
+const { emitNoti } = require("./socket")
 
 const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT
 
@@ -99,13 +100,15 @@ async function updateAcceptStatus(req, res) {
 	if (previouslyLiked !== null) {
 		await previouslyLiked.updateOne({ stat: true })
 
-		// Push notification to other user will be emitted from the frontend.
-		await notificationModel({
+		// Create new notification to db and send it to the receiver through websocket
+		const noti = notificationModel({
 			type: NotificationTypes.MATCHED,
 			title: "You got a new match.",
 			content: `You are matched with user ${from}.`,
 			user: to,
-		}).save()
+		})
+		await noti.save()
+		emitNoti(to, noti._id, title, NotificationTypes.MATCHED)
 
 		res.json({ success: true, matched: true })
 	} else {
