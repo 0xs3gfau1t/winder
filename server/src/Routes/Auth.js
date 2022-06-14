@@ -5,10 +5,10 @@ const router = express.Router()
 const { generateToken } = require("../Utils/jwtUtil")
 const { userModel } = require("../Models/userModel")
 const authenticateToken = require("../Middlewares/authenticateToken")
+const { options } = require("../Utils/variables")
 
 router.post("/register", async (req, res) => {
-	console.log("Register req: ", req.body)
-	const { email, password } = req.body
+	const { email, password, dob, gender, name } = req.body
 	if (!email || !password)
 		return res.status(400).json({
 			success: false,
@@ -24,11 +24,18 @@ router.post("/register", async (req, res) => {
 		})
 
 	const hashedpassword = await bcrypt.hash(password, 10)
-	const new_user = userModel({ 
+
+	// Validate all data
+	// If data is none, no field will be crated in db, thenks mongoose
+	let u = {
 		email,
 		password: hashedpassword,
 		dob: dob,
-	})
+		name: name,
+	}
+	if(gender in options.gender)	u.gender = gender
+
+	const new_user = userModel(u)
 
 	const userdata = { _id: new_user._id }
 	const accessToken = generateToken(userdata)
@@ -37,9 +44,14 @@ router.post("/register", async (req, res) => {
 	res.cookie("refreshToken", refreshToken)
 
 	new_user.refreshToken = refreshToken
-	await new_user.save()
-
-	return res.json({ success: true })
+	try {
+		await new_user.save(
+			{ validateBeforeSave: false }
+			)
+		return res.json({ success: true })
+	} catch (e) {
+		return res.status(400).json({ success: false })
+	}
 })
 
 router.post("/login", async (req, res) => {
