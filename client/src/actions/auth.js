@@ -1,31 +1,45 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAILED } from './types';
-// import dotenv from 'dotenv'
-// import {path} from 'path'
-// dotenv.config({ path: path.resolve(__dirname, "../.env") })
+import { REGISTER_SUCCESS, REGISTER_FAILED, LOGIN_SUCCESS, LOGIN_FAILED } from './types';
+import {displayAlert} from './misc'
  const url = process.env.URL
 
  export const register = (user_data) => (dispatch) => {
-  console.log(url)
-  delete user_data['password2']
-  delete user_data['isMember']
-  console.log(user_data)
-  
+  let data = JSON.parse(JSON.stringify(user_data));
+  delete data['password2']
+  delete data['isMember']
 
   axios
     .post(url+'/auth/register', user_data)
     .then((res) => {
-      window.alert('Account Created.');
-      dispatch({
+      dispatch(displayAlert("Account created.",'success'))
+      setTimeout(()=>dispatch({
         type: REGISTER_SUCCESS,
-        payload: res.data,
-      });
+        payload: res,
+      }),5000)
     })
     .catch((err) => {
-      window.alert(err.response.data);
+      dispatch(displayAlert(err.response.data.error,'danger'))
       dispatch({
         type: REGISTER_FAILED,
       });
     });
-  // console.log('Done')
+};
+
+export const login = ({email,password}) => (dispatch) => {
+  const user_data = {"email":email, "password":password}
+  console.log(user_data)
+  axios
+    .post(url+'/auth/login', user_data)
+    .then((res) => {
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res,
+      });
+    })
+    .catch((err) => {
+      dispatch(displayAlert(err.response.data.error,'danger'))
+      dispatch({
+        type: LOGIN_FAILED,
+      });
+    });
 };

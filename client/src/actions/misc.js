@@ -1,10 +1,14 @@
 import { DISPLAY_ALERT, CLEAR_ALERT } from "./types";
 
-export const displayAlert = (message ) => (dispatch) => {
-    // console.log('called')
+export const displayAlert = (message,alertType ) => (dispatch) => {
+    console.log('called displayAlert')
+    const data  = { 
+      alertMsg : message,
+      alertType:alertType,
+    }
     dispatch({
         type: DISPLAY_ALERT,
-        payload: message,
+        payload: data
     });
     setTimeout(() => {
         console.log('Cleared')
