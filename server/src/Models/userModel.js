@@ -4,6 +4,7 @@ const REQUIREDPASSIONS = 3
 
 let userSchema = mongoose.Schema(
 	{
+		// Received in register
 		email: {
 			type: String,
 			required: true,
@@ -12,24 +13,29 @@ let userSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		name: {
-			type: String,
-			required: true,
-		},
-		username: {
-			type: String,
-			required: true,
-		},
 		dob: {
 			type: Date,
 			required: true,
 		},
-		university: {
+		firstName: {
+			type: String,
+			required: true,
+		},
+		lastName: {
 			type: String,
 			required: true,
 		},
 		gender: {
 			type: Number, // (F, N, M) = (-1, 0, 1)
+			required: true,
+		},
+		// Received in register upto here
+		username: {
+			type: String,
+			required: true,
+		},
+		university: {
+			type: String,
 			required: true,
 		},
 		program: {
