@@ -16,6 +16,7 @@ io.on("connection", onConnectionHandler)
 require("./Config/db")()
 
 const authenticateToken = require("./Middlewares/authenticateToken")
+const checkEmailVerification = require("./Middlewares/verifyEmail")
 
 //Test endpoint for dev purpose
 app.get('/', (req, res) => {
@@ -24,10 +25,10 @@ app.get('/', (req, res) => {
 
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
-app.use("/messages", authenticateToken, require("./Routes/Messages.js"))
-app.use("/notification", require("./Routes/Notifications.js"))
-app.use("/settings", require("./Routes/Settings.js"))
-app.use("/explore", require("./Routes/Explore.js"))
+app.use("/messages", authenticateToken, checkEmailVerification, require("./Routes/Messages.js"))
+app.use("/notification", authenticateToken, checkEmailVerification, require("./Routes/Notifications.js"))
+app.use("/settings", authenticateToken, require("./Routes/Settings.js"))
+app.use("/explore", authenticateToken, checkEmailVerification, require("./Routes/Explore.js"))
 app.use("/changepassword", require("./Routes/ChangePassword.js"))
 
 // Start the server specied in PORT from .env

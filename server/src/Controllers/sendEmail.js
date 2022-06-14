@@ -12,7 +12,7 @@ async function sendEmail(mail, token){
     try{
         let info = await mailer.sendMail({
             from: '83e179ca-6996-b503-7264-d75a7ca1f373@arch-sama',
-            to: "anishchapagai0@gmail.com",
+            to: mail,
             subject: "Winder: Forgot Password",
             text: "This is a automated password request email sent by the server.\
             Please don't reply.",
@@ -20,9 +20,11 @@ async function sendEmail(mail, token){
             <h1>Winder: Password Reset Request</h1>\
             <p>You recently requested to reset your forgotton password. If you don't\
             know about this then please delete this.</p><br>\
-            <b><a href='http://localhost:3000/changepassword/${token}'>\
+            <b><a href='${process.env.APP_URL}/changepassword/${token}'>\
             Click here to change your password</a></b>`, // html body
         });
+
+        console.log(info)
         
         console.log("Message sent: %s", info.messageId);
         
