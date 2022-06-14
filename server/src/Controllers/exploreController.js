@@ -1,141 +1,121 @@
-require('dotenv').config();
-const { userModel } = require('../Models/userModel');
-const { relationModel } = require('../Models/relationModel');
+const { userModel } = require("../Models/userModel")
+const {
+	notificationModel,
+	NotificationTypes,
+} = require("../Models/notificationModel")
+const { relationModel } = require("../Models/relationModel")
 
-const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT;
+const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT
 
-// Temporary map to keep track of pagination status
-// Find a way to implement it in persistence mannder efficiently
-// Also, make it accept pagination direction so that
-// We can make a premium feature out of it
-var paginationStatus = new Map()
+function parseBoundedDates(ageList) {
+	const currentDate = new Date()
 
-async function getFilterParamaters(id){
-    const user = await userModel.findOne({_id: id}).exec();
-    
-    // Get filters enabled by user
-    let filters = {} 
-    if(user.programPreference)         filters.program     = user.programPreference;
-    if(user.universityPreference)      filters.university  = user.universityPreference;
-    if(user.genderPreference)         filters.gender      = user.genderPreference;
-    
-    return [
-        user.agePreference,
-        filters
-    ];
+	let nearestDate = new Date().setFullYear(
+		currentDate.getFullYear() - ageList[0]
+	)
+	nearestDate = new Date(nearestDate)
+
+	let farthestDate = new Date().setFullYear(
+		currentDate.getFullYear() - ageList[1]
+	)
+	farthestDate = new Date(farthestDate)
+
+	return [nearestDate, farthestDate]
 }
 
-function parseBoundedDates(ageList){
-    const currentDate = new Date();
+async function getList(req, res) {
+	const id = req.userdata._id
 
-    let nearestDate = new Date()
-                            .setFullYear(
-                                currentDate.getFullYear() - ageList[0]
-                            );
-    nearestDate = new Date(nearestDate);
+	const user = await userModel.findOne(
+		{ _id: req.userdata._id },
+		{ preference: 1, pagination: 1 }
+	)
 
-    let farthestDate = new Date()
-                            .setFullYear(
-                                currentDate.getFullYear() - ageList[1]
-                            );
-    farthestDate = new Date(farthestDate);
+	const filters = user.preference.toObject()
+	console.log(filters.age)
+	const [nearestDate, farthestDate] = parseBoundedDates(filters.age)
+	delete filters["age"]
 
-    return [nearestDate, farthestDate];
+	const ageFilter = { $gt: farthestDate, $lt: nearestDate }
+	const paginationFilter =
+		user.pagination === "null"
+			? {} // if there is no pagination
+			: { _id: { $ne: id, $gt: user.pagination } } // if there is pagination
+
+	console.log({ filters, paginationFilter, ageFilter })
+
+	try {
+		// To resolve: filter out those users which are already matched or pending approval.
+		// How to: query to see if the currentUser and user from userList are in relation table.
+		// Some keywords to search for: aggregate $lookup
+		const userList = await userModel
+			.find(
+				{
+					...filters,
+					...paginationFilter,
+					dob: ageFilter,
+				},
+				["name", "university", "program", "batch", "bio", "passion"]
+			)
+			.sort({ _id: 1 })
+			.limit(PAGINATION_LIMIT)
+
+		const newPagination =
+			userList.length < PAGINATION_LIMIT
+				? "null"
+				: userList[PAGINATION_LIMIT - 1]._id.toString()
+
+		await user.updateOne({ pagination: newPagination })
+
+		res.json({ success: true, userList })
+	} catch (err) {
+		console.log(err.message)
+		res.json({ success: false, error: "Internal Server Error" })
+	}
 }
 
-async function getList(id, page){
-    // Get applied filters by user with id: id
-    const [ agePreference, filters ] = await getFilterParamaters(id);
-    
-    const [ lowerAgeLimit, upperAgeLimit ] = parseBoundedDates(agePreference);
+async function updateAcceptStatus(req, res) {
+	const from = req.userdata._id
+	const to = req.body.whom
 
-    let userList;
-    const returnableData = {
-        // Data to be shown in result
-        name: 1, university: 1, program:1, batch: 1,
-        bio: 1, passion: 1
-    };
-    const ageFilter = {
-        $gt: lowerAgeLimit,
-        $lt: upperAgeLimit
-    };
-    const paginationFilter = {
-        $ne: id,
-        $gt: paginationStatus.get(id)
-    };
+	let r = { matched: false }
 
-    if(paginationStatus.has(id)){
-        console.log("Has pagination status", paginationStatus);
-        userList = await userModel.find({
-                                        ...filters,
-                                        _id: paginationFilter,
-                                        age: ageFilter
-                                    }, returnableData)
-                                    .sort({_id: 1})
-                                    .limit(PAGINATION_LIMIT)
-                                    .exec();
-        if(userList.length < PAGINATION_LIMIT){
-            console.log("Last page", paginationStatus);
+	// Check if user_from has already initiated relation with user_to
+	const relCount = await relationModel.count({ users: [from, to] })
+	console.log(relCount)
+	if (relCount)
+		return res.json({
+			success: false,
+			error: "Relation with this user already exists.",
+		})
 
-            // Send all remaining data in last page
-            // And delete the pagination record for `id`
-            // Will create new pagination after another request
-            // This might send empty json if userList.length = 0
-            paginationStatus.delete(id);
-        }else{
-            console.log("New records may exist for ", id);
-            paginationStatus.set(
-                id, userList[PAGINATION_LIMIT-1]._id.toString()
-            )
-        }
-    }else{
-        console.log("No pagination. Creating one for ", id);
-        userList = await userModel.find({
-                                        ...filters,
-                                        age: ageFilter
-                                    }, returnableData)
-                                .sort({_id: 1})
-                                .limit(PAGINATION_LIMIT)
-                                .exec()
-        paginationStatus.set(
-            id,userList[PAGINATION_LIMIT-1]._id.toString()
-            )
-    }
+	// Check if this user has been liked previously
+	let previouslyLiked = await relationModel.findOne(
+		{ users: [to, from] },
+		{ stat: 1 }
+	)
 
-    return userList;
+	// If yes, send a matched: true response
+	if (previouslyLiked !== null) {
+		await previouslyLiked.updateOne({ stat: true })
+
+		// Push notification to other user will be emitted from the frontend.
+		await notificationModel({
+			type: NotificationTypes.MATCHED,
+			title: "You got a new match.",
+			content: `You are matched with user ${from}.`,
+			user: to,
+		}).save()
+
+		res.json({ success: true, matched: true })
+	} else {
+		// Else, create a new relationship and send matched: false response
+		await relationModel({
+			users: [from, to],
+			stat: false,
+		}).save()
+		res.json({ success: true, matched: false })
+	}
 }
 
-async function updateAcceptStatus(from, to){
-
-    let r = {matched: false};
-
-    // Check if this user has been liked previously
-    let previouslyLiked = await relationModel.findOne({
-        users: [to, from]
-    });
-
-    // If yes, send a match: true response
-    if(previouslyLiked !== null){
-        console.log("User is previously liked");
-        await previouslyLiked.updateOne({
-            stat: 1,
-            unreadCount: 0
-        });
-
-        //
-        // Send push notification to user1 i.e. current user2
-        //
-
-        r.matched = true;
-    }else{
-        console.log("User was not liked previously");
-        // Else, send a match: false response and update match stat for opposite user
-        await relationModel({
-            users: [from, to],
-            stat: 0,
-        }).save();
-    }
-    return r;
-}
-
-module.exports = { getList, updateAcceptStatus };
+module.exports = { getList, updateAcceptStatus }

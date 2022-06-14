@@ -4,13 +4,7 @@ const path = require("path")
 // Requires dotenv module
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
 
-const app = require("./Config/app")
-const server = require("http").createServer(app)
-
-// IO connection
-const { onConnectionHandler } = require("./Controllers/socket")
-const io = require("socket.io")(server, { cors: { origin: "*" } })
-io.on("connection", onConnectionHandler)
+const { app, server } = require("./Config/app")
 
 // Connect to the database
 require("./Config/db")()

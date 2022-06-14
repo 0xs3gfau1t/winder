@@ -1,5 +1,6 @@
 const { verifyToken } = require("../Utils/jwtUtil")
 
+// Map with keys as user_id and values as socket_id
 var acitveUsers = new Map()
 
 const onConnectionHandler = socket => {
@@ -61,4 +62,4 @@ const onConnectionHandler = socket => {
 	})
 }
 
-module.exports = { onConnectionHandler }
+module.exports = { onConnectionHandler, acitveUsers }

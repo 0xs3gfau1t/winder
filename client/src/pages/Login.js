@@ -17,6 +17,7 @@ const initialState = {
   password: '',
   password2: '',
   dob: new Date(2004, 5, 11),
+  gender: 'male',
   isMember: true,
 };
 
