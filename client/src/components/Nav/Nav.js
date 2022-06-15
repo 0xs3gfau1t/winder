@@ -4,7 +4,7 @@ import logo from '../../assets/images/logo-head.png'
 // import logo from '../assets/images/logo.svg'
 
 import Wrapper from '../../assets/wrappers/NavPage';
-import { FaSearch, FaGrinAlt, FaRegBell, FaRocketchat, FaWrench  } from 'react-icons/fa';
+import { FaSearch, FaGrinAlt, FaRegBell, FaRocketchat, FaWrench, FaDoorOpen  } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 
 
@@ -37,13 +37,9 @@ function Nav(props) {
               <Link to='/setting'><span><FaWrench/></span></Link>
               </IconContext.Provider>
 
-
-              
-              {/* <div>Profile</div>
-              <div>Notification</div>
-              <div>Explore</div>
-              <div>Chat</div> 
-              <div>Setting</div> */}
+              <IconContext.Provider value={{color: "#F24E1E", size: "2em", className: props.current == "Settings" ? 'icons choosen_one' : 'icons'}}>
+              <Link to='/login'><span><FaDoorOpen/></span></Link>
+              </IconContext.Provider>
           </div>
       </div>
         
