@@ -29,9 +29,9 @@ router.post("/:authtoken", async (req, res) => {
             });
 
             usr.save()
-            res.json({message: "success"});
+            res.json({success: true});
         }
-        res.json({message: "failed"});
+        res.json({success: false, error: "Token expired."});
     })
     .post("/", async (req, res)=>{
 

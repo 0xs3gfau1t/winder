@@ -8,11 +8,12 @@ const authenticateToken = require("../Middlewares/authenticateToken")
 const { options } = require("../Utils/variables")
 
 router.post("/register", async (req, res) => {
-	const { email, password, dob, gender, name } = req.body
-	if (!email || !password)
+	console.log(req.body)
+	let { email, password, dob, gender, firstName, lastName } = req.body
+	if (!email || !password || !dob || !gender || !firstName || !lastName)
 		return res.status(400).json({
 			success: false,
-			error: "Either email or password is missing.",
+			error: "One of the parameter is missing.",
 		})
 
 	const userCount = await userModel.count({ email })
@@ -31,10 +32,14 @@ router.post("/register", async (req, res) => {
 		email,
 		password: hashedpassword,
 		dob: dob,
-		name: name,
+		firstName,
+		lastName,
 	}
+	const genderMap = {'male': 1, 'female': -1, 'other': 0}
+	gender = genderMap[gender]
 	if(gender in options.gender)	u.gender = gender
 
+	console.log(u)
 	const new_user = userModel(u)
 
 	const userdata = { _id: new_user._id }
@@ -48,9 +53,9 @@ router.post("/register", async (req, res) => {
 		await new_user.save(
 			{ validateBeforeSave: false }
 			)
-		return res.json({ success: true })
+		return res.json({ success: true, id: new_user._id })
 	} catch (e) {
-		return res.status(400).json({ success: false })
+		return res.status(400).json({ success: false, error: "Failed to create user." })
 	}
 })
 
@@ -62,27 +67,26 @@ router.post("/login", async (req, res) => {
 			error: "Either email or password is missing.",
 		})
 
-	const user = await userModel
-		.find({ email }, { email: 1, password: 1, refreshToken: 1 })
-		.limit(1)
+	const user = await userModel.findOne(
+		{ email },
+		{ email: 1, password: 1, refreshToken: 1 }
+	)
 
-	if (!user.length)
+	if (!user)
 		return res.status(400).json({
 			success: false,
 			error: "No user with this email.",
 		})
 
-	if (await bcrypt.compare(password, user[0].password)) {
-		const userdata = { _id: user[0]._id }
+	if (await bcrypt.compare(password, user.password)) {
+		const userdata = { _id: user._id }
 		const accessToken = generateToken(userdata)
 		const refreshToken = generateToken(userdata, "1d")
 		res.cookie("accessToken", accessToken)
 		res.cookie("refreshToken", refreshToken)
 
-		user[0].refreshToken = refreshToken
-		user[0].save()
-
-		return res.json({ success: true })
+		await user.updateOne({ refreshToken: refreshToken })
+		return res.json({ success: true, id: user._id })
 	}
 
 	return res.status(400).json({ success: false, error: "Invalid password" })
@@ -95,8 +99,7 @@ router.delete("/logout", authenticateToken, async (req, res) => {
 			.status(400)
 			.json({ success: false, error: "User not found." })
 
-	user[0].refreshToken = ""
-	user[0].save()
+	user.updateOne({ refreshToken: "" })
 
 	res.cookie("accessToken", "")
 	res.cookie("refreshToken", "")
