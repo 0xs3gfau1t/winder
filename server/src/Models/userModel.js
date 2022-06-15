@@ -71,8 +71,15 @@ let userSchema = mongoose.Schema(
 			type: String,
 		},
 		pagination: {
-			type: String,
-			default: "null",
+			newExplore: {
+				// Todo: Find a better name
+				type: String,
+				default: "null",
+			},
+			incoming: {
+				type: String,
+				default: "null",
+			},
 		},
 	},
 	{ timestamps: true }

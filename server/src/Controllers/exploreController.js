@@ -6,8 +6,6 @@ const {
 const { relationModel } = require("../Models/relationModel")
 const { emitNoti } = require("./socket")
 
-const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT
-
 function parseBoundedDates(ageList) {
 	const currentDate = new Date()
 
@@ -33,19 +31,43 @@ async function getList(req, res) {
 	)
 
 	const filters = user.preference.toObject()
-	console.log(filters.age)
 	const [nearestDate, farthestDate] = parseBoundedDates(filters.age)
 	delete filters["age"]
 
 	const ageFilter = { $gt: farthestDate, $lt: nearestDate }
 	const paginationFilter =
-		user.pagination === "null"
+		user.pagination.newExplore === "null"
+			? { _id: { $ne: id } } // if there is no pagination
+			: { _id: { $ne: id, $gt: user.pagination.newExplore } } // if there is pagination
+
+	const incomingPagination =
+		user.pagination.incoming === "null"
 			? {} // if there is no pagination
-			: { _id: { $ne: id, $gt: user.pagination } } // if there is pagination
+			: { _id: { $gt: user.pagination.incoming } } // if there is pagination
 
-	console.log({ filters, paginationFilter, ageFilter })
-
+	const fetch = ["name", "university", "program", "batch", "bio", "passion"]
 	try {
+		// Ids of all the users that has sent a match request
+		var incomingUserIds = await relationModel
+			.find(
+				{
+					...incomingPagination,
+					"users.1": id,
+					stat: false,
+				},
+				["users"]
+			)
+			.sort({ _id: 1 })
+			.limit(1)
+
+		// If there is incoming match request, get the data for that user
+		const incomingUser = incomingUserIds.length
+			? await userModel.find({ _id: incomingUserIds[0].users[0] }, fetch)
+			: []
+
+		const PAGINATION_LIMIT =
+			process.env.PAGINATION_LIMIT - incomingUserIds.length
+
 		// To resolve: filter out those users which are already matched or pending approval.
 		// How to: query to see if the currentUser and user from userList are in relation table.
 		// Some keywords to search for: aggregate $lookup
@@ -56,19 +78,25 @@ async function getList(req, res) {
 					...paginationFilter,
 					dob: ageFilter,
 				},
-				["name", "university", "program", "batch", "bio", "passion"]
+				fetch
 			)
 			.sort({ _id: 1 })
 			.limit(PAGINATION_LIMIT)
 
-		const newPagination =
-			userList.length < PAGINATION_LIMIT
-				? "null"
-				: userList[PAGINATION_LIMIT - 1]._id.toString()
+		const newPagination = {
+			newExplore:
+				userList.length < PAGINATION_LIMIT
+					? "null"
+					: userList[PAGINATION_LIMIT]._id.toString(),
+			incoming:
+				incomingUserIds.length < 1
+					? "null"
+					: incomingUserIds[0]._id.toString(),
+		}
 
 		await user.updateOne({ pagination: newPagination })
 
-		res.json({ success: true, userList })
+		res.json({ success: true, userList: [...userList, ...incomingUser] })
 	} catch (err) {
 		console.log(err.message)
 		res.json({ success: false, error: "Internal Server Error" })
