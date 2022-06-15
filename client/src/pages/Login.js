@@ -32,19 +32,19 @@ function Login() {
   const onSubmit = (e) => {
     e.preventDefault();
     const { firstName, email, password, password2, isMember } = values;
-    console.log(values)
+    console.log(values);
     if (!email || !password || (!isMember && !firstName && !password2)) {
       const message = "One or more field is missing!";
-      dispatch(displayAlert(message),'danger');
+      dispatch(displayAlert(message), "danger");
       return;
     }
-    if ((password !== password2) && !isMember) {
+    if (password !== password2 && !isMember) {
       const message =
         "Paswords didn't match. Don't get too desparate to find love";
-      dispatch(displayAlert(message,'danger'));
+      dispatch(displayAlert(message, "danger"));
       return;
     }
-    if(isMember) dispatch(login(values));
+    if (isMember) dispatch(login(values));
     else dispatch(register(values));
   };
   const handleChange = (e) => {
@@ -166,8 +166,8 @@ function Login() {
             name="password2"
             labelText="Confirmn password"
             value={values.password2}
-          handleChange={handleChange}
-          />  
+            handleChange={handleChange}
+          />
         )}
         <button type="submit" className="btn btn-block">
           submit
