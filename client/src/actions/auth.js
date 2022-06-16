@@ -13,7 +13,7 @@ import { REGISTER_SUCCESS, REGISTER_FAILED } from './types';
   
 
   axios
-    .post(url+'/auth/register', user_data)
+    .post(url+'/auth/register', user_data, {withCredentials:true})
     .then((res) => {
       window.alert('Account Created.');
       dispatch({
