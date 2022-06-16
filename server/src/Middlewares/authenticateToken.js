@@ -33,14 +33,16 @@ module.exports = async function authenticateToken(req, res, next) {
 	// Expired access token, try to create new accesstoken using the refresh token
 	let user = null
 	try {
-		user = await userModel.findOne({ _id: data._id })
+		user = await userModel.findOne({ _id: data._id }, ["refreshToken"])
 	} catch (e) {
 		try {
 			const { data: dataTemp, expired: expiredTemp } = verifyToken(
 				accessToken,
 				(ignoreExpired = true)
 			)
-			user = await userModel.findOne({ _id: dataTemp._id })
+			user = await userModel.findOne({ _id: dataTemp._id }, [
+				"refreshToken",
+			])
 		} catch (e) {
 			return res
 				.status(400)
@@ -60,12 +62,13 @@ module.exports = async function authenticateToken(req, res, next) {
 
 	// Valid refresh token
 	if (refreshData) {
-		const newAccessToken = generateToken({
+		const newPayload = {
 			_id: refreshData._id,
-			email_verified: refreshData.email_verified ? true : false,
-		})
+			email_verified: refreshData.email_verified,
+		}
+		const newAccessToken = generateToken(newPayload)
 		res.cookie("accessToken", newAccessToken)
-		req.userdata = { _id: refreshData._id }
+		req.userdata = newPayload
 		return next()
 	}
 
@@ -76,9 +79,8 @@ module.exports = async function authenticateToken(req, res, next) {
 			.json({ success: false, error: "Invalid refresh token" })
 
 	// Expired refresh token
-	console.log(user)
-	userModel.deleteOne({ refreshToken: user.refreshToken })
+	await user.updateOne({ refreshToken: "" })
 	return res
 		.status(400)
-		.json({ success: false, error: "Access token expired." })
+		.json({ success: false, error: "Refresh token expired. Please re-login." })
 }

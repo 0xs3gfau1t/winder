@@ -127,7 +127,7 @@ async function verifyEmail(req, response) {
 			await userModel
 				.findOneAndUpdate(
 					{ _id: data.id },
-					{ username: null, refreshToken: generateToken(newPayload) }
+					{ username: null, refreshToken: generateToken(newPayload, "1d") }
 				)
 				.exec()
 

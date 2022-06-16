@@ -27,7 +27,7 @@ router.post("/register", async (req, res) => {
 	const hashedpassword = await bcrypt.hash(password, 10)
 
 	// Validate all data
-	// If data is none, no field will be crated in db, thenks mongoose
+	// If data is none, no field will be created in db, thenks mongoose
 	let u = {
 		email,
 		password: hashedpassword,
@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
 
 	const user = await userModel.findOne(
 		{ email },
-		{ email: 1, password: 1, refreshToken: 1 }
+		{ email: 1, password: 1, refreshToken: 1, username: 1 }
 	)
 
 	if (!user)
@@ -78,9 +78,10 @@ router.post("/login", async (req, res) => {
 		})
 
 	if (await bcrypt.compare(password, user.password)) {
+		console.log(user.username)
 		const userdata = {
 			_id: user._id,
-			email_verified: user.username ? true : false,
+			email_verified: user.username !== undefined ? true : false,
 		}
 		const accessToken = generateToken(userdata, "1s")
 		const refreshToken = generateToken(userdata, "1d")

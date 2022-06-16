@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 app.use("/auth", require("./Routes/Auth.js"))
 app.use("/messages", authenticateToken, checkEmailVerification, require("./Routes/Messages.js"))
 app.use("/notification", authenticateToken, checkEmailVerification, require("./Routes/Notifications.js"))
-app.use("/settings", authenticateToken, require("./Routes/Settings.js"))
+app.use("/settings", require("./Routes/Settings.js"))
 app.use("/explore", authenticateToken, checkEmailVerification, require("./Routes/Explore.js"))
 app.use("/changepassword", require("./Routes/ChangePassword.js"))
 app.use("/user", require("./Routes/User.js"))
