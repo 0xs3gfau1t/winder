@@ -1,15 +1,16 @@
-require('dotenv').config()
+require("dotenv").config()
 
-const express = require('express');
+const express = require("express")
 
-const router = express.Router();
+const router = express.Router()
 
-const auth = require('../Middlewares/authenticateToken');
+const {
+	getList,
+	updateAcceptStatus,
+} = require("../Controllers/exploreController")
 
-const { getList, updateAcceptStatus } = require('../Controllers/exploreController');
+router.get("/", getList)
 
-router.get("/", auth , getList);
+router.post("/accept", updateAcceptStatus)
 
-router.post("/accept", auth, updateAcceptStatus);
-
-module.exports = router;
+module.exports = router
