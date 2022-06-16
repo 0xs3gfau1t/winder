@@ -2,10 +2,10 @@ require("dotenv").config()
 
 const { userModel } = require("../Models/userModel")
 const { changableData, options } = require("../Utils/variables")
+const { verifyToken, generateToken } = require("../Utils/jwtUtil")
+const { sendEmail } = require("../Controllers/sendEmail")
 
 const bcrypt = require("bcrypt")
-const { response } = require("express")
-
 
 async function updateProfile(req, response) {
 	const data = req.body
@@ -92,35 +92,74 @@ async function updateProfile(req, response) {
 	response.json(res)
 }
 async function changePassword(req, response) {
-	
 	let res = {}
 
 	const newPassword = req.body.newPassword
-    const oldPassword = req.body.oldPassword
-    const user = await userModel.findOne({ _id: req.userdata._id })
-	
+	const oldPassword = req.body.oldPassword
+	const user = await userModel.findOne({ _id: req.userdata._id })
+
 	if (await bcrypt.compare(oldPassword, user.password)) {
-		
 		user.password = await bcrypt.hash(newPassword, 10)
-        try {
+		try {
 			await user.save()
 			res.message = "success"
 		} catch (e) {
 			response.status(500)
 			res.message = "failed"
 		}
-	}else{
-        response.status(401)
-        res.message = "unauthorized"
-    }
-	
+	} else {
+		response.status(401)
+		res.message = "unauthorized"
+	}
+
 	return response.json(res)
 }
 
-function changeEmail(req) {
-	let res = {}
+async function verifyEmail(req, response) {
+	const { data, expired } = await verifyToken(req.params.token)
 
-	return res
+	if (data) {
+		try {
+			const newPayload = {
+				_id: data.id,
+				email_verified: true,
+			}
+			await userModel
+				.findOneAndUpdate(
+					{ _id: data.id },
+					{ username: null, refreshToken: generateToken(newPayload, "1d") }
+				)
+				.exec()
+
+			// Now update accesstoken
+			const newAccessToken = generateToken(newPayload)
+			//
+			// Find a way to replace old accessToken with this new one
+			// Right now, this just sets same named cookie
+			//
+			response.cookie("accessToken", newAccessToken)
+			response.json({ message: "success" })
+		} catch (e) {
+			console.log("Error during verifying email", e)
+			response.status(500).json({ message: "error" })
+		}
+	} else response.status(401).json({ message: "Token Expired" })
 }
 
-module.exports = { updateProfile, changePassword, changeEmail }
+async function sendEmailVerificationLink(req, response) {
+	const to = await userModel.findOne({ _id: req.userdata._id })
+	const token = generateToken({ id: to._id }, "10m")
+	try {
+		await sendEmail(to.email, token)
+		response.json({ message: "success" })
+	} catch (e) {
+		response.status(500).json({ message: "error" })
+	}
+}
+
+module.exports = {
+	updateProfile,
+	changePassword,
+	verifyEmail,
+	sendEmailVerificationLink,
+}

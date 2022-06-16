@@ -124,7 +124,7 @@ Field|Description
 -|-
 success|True or False
 nextCursor|Either undefined or date string, this is to be stored and sent from the frontend for next batch of messages
-data|Array of messages: `[content, sender, createdAt]`
+data|Array of messages: `[content, sender: Boolean, createdAt]`
 error|Error message if success is False
 
 ### /:id

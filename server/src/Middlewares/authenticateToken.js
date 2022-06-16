@@ -9,7 +9,7 @@ const { verifyToken, generateToken } = require("../Utils/jwtUtil")
 */
 
 module.exports = async function authenticateToken(req, res, next) {
-	const { accessToken, refreshToken } = req.cookies
+	const { accessToken } = req.cookies
 
 	if (!accessToken)
 		return res
@@ -31,31 +31,44 @@ module.exports = async function authenticateToken(req, res, next) {
 			.json({ success: false, error: "Invalid access token." })
 
 	// Expired access token, try to create new accesstoken using the refresh token
-	// Missing refresh token
-	if (!refreshToken)
-		return res
-			.status(400)
-			.json({ success: false, error: "Refresh token missing." })
-
-	const userCount = await userModel.count({
-		refreshToken,
-	})
-
-	// Expired session
-	if (!userCount) {
-		return res
-			.status(400)
-			.json({ success: false, error: "Session expired" })
+	let user = null
+	try {
+		user = await userModel.findOne({ _id: data._id }, ["refreshToken"])
+	} catch (e) {
+		try {
+			const { data: dataTemp, expired: expiredTemp } = verifyToken(
+				accessToken,
+				(ignoreExpired = true)
+			)
+			user = await userModel.findOne({ _id: dataTemp._id }, [
+				"refreshToken",
+			])
+		} catch (e) {
+			return res
+				.status(400)
+				.json({ success: false, error: "Tampered access token" })
+		}
 	}
 
-	const { data: refreshData, expired: refreshExpired } =
-		verifyToken(refreshToken)
+	// Missing refresh token
+	if (!user || user.refreshToken === "" || !user.refreshToken)
+		return res
+			.status(400)
+			.json({ success: false, error: "Session expired." })
+
+	const { data: refreshData, expired: refreshExpired } = verifyToken(
+		user.refreshToken
+	)
 
 	// Valid refresh token
 	if (refreshData) {
-		const newAccessToken = generateToken({ _id: refreshData._id })
+		const newPayload = {
+			_id: refreshData._id,
+			email_verified: refreshData.email_verified,
+		}
+		const newAccessToken = generateToken(newPayload)
 		res.cookie("accessToken", newAccessToken)
-		req.userdata = { _id: refreshData._id }
+		req.userdata = newPayload
 		return next()
 	}
 
@@ -66,8 +79,8 @@ module.exports = async function authenticateToken(req, res, next) {
 			.json({ success: false, error: "Invalid refresh token" })
 
 	// Expired refresh token
-	userModel.deleteOne({ refreshToken })
+	await user.updateOne({ refreshToken: "" })
 	return res
 		.status(400)
-		.json({ success: false, error: "Access token expired." })
+		.json({ success: false, error: "Refresh token expired. Please re-login." })
 }

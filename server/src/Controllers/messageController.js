@@ -5,7 +5,7 @@ const getConvoList = async (req, res) => {
 	try {
 		const convoList = await relationModel.find(
 			{ users: req.userdata._id, stat: true },
-			{ users: 1, stat: 1, unreadCount: 1, _id: 0 }
+			{ users: 1, unreadCount: 1 }
 		)
 		res.json({ success: true, data: convoList })
 	} catch (err) {
@@ -19,6 +19,9 @@ const getMessages = async (req, res) => {
 
 	if (cursor) {
 		cursor = new Date(cursor)
+		// https://stackoverflow.com/a/1353711/13001607
+		// Bhagwan tumara bhala karega if you could simplify this expression
+		// Probably (!(cursor instance of Date) || isNan(cursor))
 		if (!(cursor instanceof Date && !isNaN(cursor)))
 			return res
 				.status(400)
@@ -54,7 +57,14 @@ const getMessages = async (req, res) => {
 		const nextCursor = more ? relation.messages[10].createdAt : undefined
 		more && relation.messages.pop()
 
-		res.json({ success: true, nextCursor, data: relation.messages })
+		res.json({
+			success: true,
+			nextCursor,
+			data: relation.messages.map(msg => ({
+				...msg._doc, // Document is stored in this property
+				sender: userIdx == msg._doc.sender ,
+			})),
+		})
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
