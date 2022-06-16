@@ -7,7 +7,7 @@ const router = express.Router();
 const auth = require('../Middlewares/authenticateToken');
 const { userModel } = require('../Models/userModel');
 
-router.get("/", auth, (req, res)=>{
+router.get("/", auth, async (req, res)=>{
     try {
         const user = await userModel.find({_id: req.userdata._id})
         res.json({success: true, user})
