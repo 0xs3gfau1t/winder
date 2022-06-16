@@ -118,12 +118,26 @@ async function changePassword(req, response) {
 async function verifyEmail(req, response) {
 	const { data, expired } = await verifyToken(req.params.token)
 
-
-	if (!expired) {
+	if (data) {
 		try {
+			const newPayload = {
+				_id: data.id,
+				email_verified: true,
+			}
 			await userModel
-				.findOneAndUpdate({ _id: data.id }, { username: null })
+				.findOneAndUpdate(
+					{ _id: data.id },
+					{ username: null, refreshToken: generateToken(newPayload) }
+				)
 				.exec()
+
+			// Now update accesstoken
+			const newAccessToken = generateToken(newPayload)
+			//
+			// Find a way to replace old accessToken with this new one
+			// Right now, this just sets same named cookie
+			//
+			response.cookie("accessToken", newAccessToken)
 			response.json({ message: "success" })
 		} catch (e) {
 			console.log("Error during verifying email", e)
@@ -132,15 +146,20 @@ async function verifyEmail(req, response) {
 	} else response.status(401).json({ message: "Token Expired" })
 }
 
-async function sendEmailVerificationLink(req, response){
-	const to = await userModel.findOne({_id: req.userdata._id})
-	const token = generateToken({id: to._id}, "10m")
-	try{
+async function sendEmailVerificationLink(req, response) {
+	const to = await userModel.findOne({ _id: req.userdata._id })
+	const token = generateToken({ id: to._id }, "10m")
+	try {
 		await sendEmail(to.email, token)
-		response.json({message: "success"})
-	}catch(e){
-		response.status(500).json({message: "error"})
+		response.json({ message: "success" })
+	} catch (e) {
+		response.status(500).json({ message: "error" })
 	}
 }
 
-module.exports = { updateProfile, changePassword, verifyEmail, sendEmailVerificationLink }
+module.exports = {
+	updateProfile,
+	changePassword,
+	verifyEmail,
+	sendEmailVerificationLink,
+}

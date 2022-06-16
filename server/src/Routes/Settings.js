@@ -8,12 +8,12 @@ const {
 	updateProfile,
 	verifyEmail,
 	changePassword,
-	sendEmailVerificationLink
+	sendEmailVerificationLink,
 } = require("../Controllers/updateProfile")
 
 router
 	.post("/verifyemail/:token", verifyEmail)
-	.get("/verifyemail", sendEmailVerificationLink)
+	.post("/verifyemail", sendEmailVerificationLink)
 	.patch("/changepassword", changePassword)
 	.patch("/", updateProfile)
 

@@ -1,7 +1,3 @@
-const { userModel } = require("../Models/userModel")
-
-const { verifyToken, generateToken } = require("../Utils/jwtUtil")
-
 /*
     This is a middleware to verify if email
     of an account is verified or not
@@ -12,17 +8,9 @@ const { verifyToken, generateToken } = require("../Utils/jwtUtil")
     After user is verified
 */
 
-async function verifyEmail(req, res, next){
-    const user = await userModel.findOne({_id: req.userdata._id})
-    if(user.username || user.username === null){
-
-        //
-        // Do something to remove this middleware from `app`'s stack
-        //
-
-        next()
-    }
-    else    res.status(403).json({message: "Email not verified"})
+async function verifyEmail(req, res, next) {
+	if (req.userdata.email_verified) next()
+	else res.status(403).json({ message: "Email not verified" })
 }
 
 module.exports = verifyEmail
