@@ -6,10 +6,10 @@ import { displayAlert } from "../actions/misc";
 const PrivateRoute = ({ children }) => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  if (auth.isAuthenticated) {
-    return children;
-  }
-  dispatch(displayAlert("Login Required", "danger"));
+  // if (auth.isAuthenticated) {
+  return children;
+  // }
+  dispatch(displayAlert("Login Required!", "danger"));
   return <Navigate to="/login" />;
 };
 

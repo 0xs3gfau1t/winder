@@ -32,7 +32,7 @@ function Login() {
   const onSubmit = (e) => {
     e.preventDefault();
     const { firstName, email, password, password2, isMember } = values;
-    console.log(values);
+
     if (!email || !password || (!isMember && !firstName && !password2)) {
       const message = "One or more field is missing!";
       dispatch(displayAlert(message), "danger");

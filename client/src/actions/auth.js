@@ -38,7 +38,7 @@ export const login =
   ({ email, password }) =>
   (dispatch) => {
     const user_data = { email: email, password: password };
-    console.log(user_data);
+    // console.log(user_data);
     axios
       .post(url + "/auth/login", user_data)
       .then((res) => {
