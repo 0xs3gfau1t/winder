@@ -2,10 +2,11 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILED,
   LOGIN_SUCCESS,
+  LOGOUT,
+  LOAD_USER,
 } from "../actions/types";
 
 const initialState = {
-  token: localStorage.getItem("token"),
   isAuthenticated: false,
   isLoading: true,
   user: null,
@@ -34,7 +35,18 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         flag: true,
-        user: action.payload.id,
+        cookie: document.cookie.slice(0, 11) == "accessToken",
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        isAuthenticated: false,
+        flag: false,
+      };
+    case LOAD_USER:
+      return {
+        ...state,
+        ...action.payload,
       };
     default:
       return state;

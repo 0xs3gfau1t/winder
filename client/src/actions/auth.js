@@ -4,6 +4,7 @@ import {
   REGISTER_FAILED,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
+  LOGOUT,
 } from "./types";
 import { displayAlert } from "./misc";
 const url = process.env.URL;
@@ -40,7 +41,7 @@ export const login =
     const user_data = { email: email, password: password };
     // console.log(user_data);
     axios
-      .post(url + "/auth/login", user_data, {withCredentials: true})
+      .post(url + "/auth/login", user_data, { withCredentials: true })
       .then((res) => {
         dispatch({
           type: LOGIN_SUCCESS,
@@ -54,3 +55,11 @@ export const login =
         });
       });
   };
+
+export const logout = () => (dispatch) => {
+  axios.delete(url + "/auth/logout", { withCredentials: true }).then((res) => {
+    dispatch({
+      type: LOGOUT,
+    });
+  });
+};

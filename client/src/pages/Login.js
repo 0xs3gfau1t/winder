@@ -53,9 +53,9 @@ function Login() {
   const setDOB = (date) => {
     setValues({ ...values, dob: date });
   };
-  const flag = useSelector((state) => state.auth.flag);
+  const flag = useSelector((state) => state.auth);
 
-  if (flag) {
+  if (flag.isAuthenticated || flag.cookie) {
     return <Navigate to="/explore" />;
   }
   return (
