@@ -10,7 +10,6 @@ import {
   Profile,
   Notification,
   Chat,
-  Setting,
 } from "./pages";
 import PrivateRoute from "./components/privateRoute";
 import "./app.css";
@@ -58,14 +57,6 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Chat />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/setting"
-            element={
-              <PrivateRoute>
-                <Setting />
               </PrivateRoute>
             }
           />

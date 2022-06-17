@@ -5,6 +5,5 @@ import Explore from "./Explore";
 import Chat from "./Chat";
 import Notification from "./Notification";
 import Profile from "./Profile";
-import Setting from "./Setting";
 
-export { Landing, Error, Login, Explore, Chat, Notification, Profile, Setting };
+export { Landing, Error, Login, Explore, Chat, Notification, Profile };

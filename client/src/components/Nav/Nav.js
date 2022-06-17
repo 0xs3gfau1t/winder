@@ -80,22 +80,6 @@ function Nav(props) {
               </span>
             </Link>
           </IconContext.Provider>
-
-          <IconContext.Provider
-            value={{
-              color: "#F24E1E",
-              size: "2em",
-              className:
-                props.current == "Settings" ? "icons choosen_one" : "icons",
-            }}
-          >
-            <Link to="/setting">
-              <span>
-                <FaWrench />
-              </span>
-            </Link>
-          </IconContext.Provider>
-
           <IconContext.Provider
             value={{ color: "#F24E1E", size: "2em", className: "icons" }}
           >
