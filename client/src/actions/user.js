@@ -1,20 +1,11 @@
 import axios from "axios";
-import {
-  REGISTER_SUCCESS,
-  REGISTER_FAILED,
-  LOGIN_SUCCESS,
-  LOGIN_FAILED,
-} from "./types";
+import { LOAD_USER } from "./types";
 import { displayAlert } from "./misc";
 const url = process.env.URL;
 
-export const register = (user_data) => (dispatch) => {
-  let data = JSON.parse(JSON.stringify(user_data));
-  delete data["password2"];
-  delete data["isMember"];
-
+export const user = () => (dispatch) => {
   axios
-    .post(url + "/auth/register", user_data, { withCredentials: true })
+    .get(url + "/user", user_data)
     .then((res) => {
       dispatch(displayAlert("Account created.", "success"));
       setTimeout(

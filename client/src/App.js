@@ -1,19 +1,21 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from './store';
-import { Landing, Login, Error } from './pages';
-import Explore from './pages/Explore'
-
-import './app.css'
-import Profile from './pages/Profile';
-import Notification from './pages/Notification';
-import Chat from './pages/Chat';
-import Setting from './pages/Setting';
-
+import store from "./store";
+import {
+  Landing,
+  Login,
+  Error,
+  Explore,
+  Profile,
+  Notification,
+  Chat,
+} from "./pages";
+import PrivateRoute from "./components/privateRoute";
+import "./app.css";
 
 const App = () => {
-	return (
+  return (
     <Provider store={store}>
       <Router>
         {/* <nav>
@@ -23,18 +25,45 @@ const App = () => {
 
         </nav> */}
         <Routes>
-          <Route path='/' element={<Landing />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='*' element={<Error />} />
-          <Route path = '/profile' element = {<Profile/>}/>
-          <Route path = '/notification' element = {<Notification/>}/>
-          <Route path='/explore' element = {<Explore/>} />
-          <Route path = '/chat' element = {<Chat/>}/>
-          <Route path = '/setting' element = {<Setting/>}/>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Error />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/notification"
+            element={
+              <PrivateRoute>
+                <Notification />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/explore"
+            element={
+              <PrivateRoute>
+                <Explore />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <PrivateRoute>
+                <Chat />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
     </Provider>
-	)
-}
+  );
+};
 
 export default App;
