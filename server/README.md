@@ -173,13 +173,36 @@ Field|Description
 success|True of False
 notification|Full notification detail: `{_id, type, title, content}`
 
+## /user
+
+### /
+
+Method: GET
+Description: Get the info of the logged in user.
+Authentication: Required
+
+Response
+Field|Description
+-|-
+user|all the user's property: `{email, password, dob, firstName, lastName, gender, username, university, program, batch, bio, passion, preference}`
+
+### /options
+
+Method: GET
+Description: Get the available options for different field property
+Authentication: Not Required
+
+Response
+Field|Description
+-|-
+options|all the available options: `{gender, programs, universities, age, passions}`
+
 ## /changepassword
 
 ### /:id
 
 Method: POST  
 Description: Send email with reset link if that email exists. Response is static no matter the result  
-Method: POST  
 Authentication: Not Required
 
 Request
