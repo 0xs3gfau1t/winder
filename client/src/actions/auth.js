@@ -40,7 +40,7 @@ export const login =
     const user_data = { email: email, password: password };
     // console.log(user_data);
     axios
-      .post(url + "/auth/login", user_data)
+      .post(url + "/auth/login", user_data, {withCredentials: true})
       .then((res) => {
         dispatch({
           type: LOGIN_SUCCESS,
