@@ -1,19 +1,23 @@
 import { DISPLAY_ALERT, CLEAR_ALERT } from "./types";
 
-export const displayAlert = (message, alertType) => (dispatch) => {
-  // console.log("called displayAlert");
-  const data = {
-    alertMsg: message,
-    alertType: alertType,
-  };
-  dispatch({
-    type: DISPLAY_ALERT,
-    payload: data,
-  });
-  setTimeout(() => {
-    // console.log("Cleared");
+export const displayAlert =
+  (message, alertType, persist = false) =>
+  (dispatch) => {
+    // console.log("called displayAlert");
+    const data = {
+      alertMsg: message,
+      alertType: alertType,
+    };
     dispatch({
-      type: CLEAR_ALERT,
+      type: DISPLAY_ALERT,
+      payload: data,
     });
-  }, 3000);
-};
+    if (!persist) {
+      setTimeout(() => {
+        // console.log("Cleared");
+        dispatch({
+          type: CLEAR_ALERT,
+        });
+      }, 3000);
+    }
+  };

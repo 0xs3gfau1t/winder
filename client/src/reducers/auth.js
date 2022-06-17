@@ -35,7 +35,6 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         flag: true,
-        cookie: document.cookie.slice(0, 11) == "accessToken",
       };
     case LOGOUT:
       return {
@@ -46,7 +45,7 @@ export default function (state = initialState, action) {
     case LOAD_USER:
       return {
         ...state,
-        ...action.payload,
+        user: action.payload,
       };
     default:
       return state;

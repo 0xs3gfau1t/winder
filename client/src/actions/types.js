@@ -7,3 +7,4 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 export const LOGOUT = "LOGOUT";
 export const LOAD_USER = "LOAD_USER";
 export const EDIT_USER = "EDIT_USER";
+export const LOAD_EXPLORE = "LOAD_EXPLORE";
