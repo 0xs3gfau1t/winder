@@ -25,20 +25,6 @@ router.post("/register", async (req, res) => {
 
   const hashedpassword = await bcrypt.hash(password, 10);
 
-<<<<<<< HEAD
-  // Validate all data
-  // If data is none, no field will be crated in db, thenks mongoose
-  let u = {
-    email,
-    password: hashedpassword,
-    dob: dob,
-    firstName,
-    lastName,
-  };
-  const genderMap = { male: 1, female: -1, other: 0 };
-  gender = genderMap[gender];
-  if (gender in options.gender) u.gender = gender;
-=======
 	// Validate all data
 	// If data is none, no field will be created in db, thenks mongoose
 	let u = {
@@ -51,29 +37,10 @@ router.post("/register", async (req, res) => {
 	const genderMap = { "male": 1, "female": -1, "other": 0 }
 	gender = genderMap[gender]
 	if (gender in options.gender) u.gender = gender
->>>>>>> main
 
   console.log(u);
   const new_user = userModel(u);
 
-<<<<<<< HEAD
-  const userdata = { _id: new_user._id };
-  const accessToken = generateToken(userdata);
-  const refreshToken = generateToken(userdata, "1d");
-  res.cookie("accessToken", accessToken);
-  res.cookie("refreshToken", refreshToken);
-
-  new_user.refreshToken = refreshToken;
-  try {
-    await new_user.save({ validateBeforeSave: false });
-    return res.json({ success: true, id: new_user._id });
-  } catch (e) {
-    return res
-      .status(400)
-      .json({ success: false, error: "Failed to create user." });
-  }
-});
-=======
 	const userdata = { _id: new_user._id, email_verified: false }
 	const accessToken = generateToken(userdata)
 	const refreshToken = generateToken(userdata, "1d")
@@ -89,7 +56,6 @@ router.post("/register", async (req, res) => {
 			.json({ success: false, error: "Failed to create user." })
 	}
 })
->>>>>>> main
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -99,17 +65,10 @@ router.post("/login", async (req, res) => {
       error: "Either email or password is missing.",
     });
 
-<<<<<<< HEAD
-  const user = await userModel.findOne(
-    { email },
-    { email: 1, password: 1, refreshToken: 1 }
-  );
-=======
 	const user = await userModel.findOne(
 		{ email },
 		{ email: 1, password: 1, refreshToken: 1, username: 1 }
 	)
->>>>>>> main
 
   if (!user)
     return res.status(400).json({
@@ -117,18 +76,6 @@ router.post("/login", async (req, res) => {
       error: "No user with this email.",
     });
 
-<<<<<<< HEAD
-  if (await bcrypt.compare(password, user.password)) {
-    const userdata = { _id: user._id };
-    const accessToken = generateToken(userdata);
-    const refreshToken = generateToken(userdata, "1d");
-    res.cookie("accessToken", accessToken);
-    res.cookie("refreshToken", refreshToken);
-
-    await user.updateOne({ refreshToken: refreshToken });
-    return res.json({ success: true, id: user._id });
-  }
-=======
 	if (await bcrypt.compare(password, user.password)) {
 		console.log(user.username)
 		const userdata = {
@@ -145,22 +92,11 @@ router.post("/login", async (req, res) => {
 		)
 		return res.json({ success: true, id: user._id })
 	}
->>>>>>> main
 
   return res.status(400).json({ success: false, error: "Invalid password" });
 });
 
 router.delete("/logout", authenticateToken, async (req, res) => {
-<<<<<<< HEAD
-  const user = await userModel.find({ _id: req.userdata._id }).limit(1);
-  if (!user)
-    return res.status(400).json({ success: false, error: "User not found." });
-
-  user.updateOne({ refreshToken: "" });
-
-  res.cookie("accessToken", "");
-  res.cookie("refreshToken", "");
-=======
 	const user = await userModel.findOne({ _id: req.userdata._id })
 	if (!user)
 		return res
@@ -171,7 +107,6 @@ router.delete("/logout", authenticateToken, async (req, res) => {
 	user.save({ validateBeforeSave: false })
 
 	res.cookie("accessToken", "")
->>>>>>> main
 
   return res.json({ success: true });
 });
