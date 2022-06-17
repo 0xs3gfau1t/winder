@@ -127,7 +127,10 @@ async function verifyEmail(req, response) {
 			await userModel
 				.findOneAndUpdate(
 					{ _id: data.id },
-					{ username: null, refreshToken: generateToken(newPayload, "1d") }
+					{
+						username: null,
+						refreshToken: generateToken(newPayload, "1d"),
+					}
 				)
 				.exec()
 
@@ -157,9 +160,27 @@ async function sendEmailVerificationLink(req, response) {
 	}
 }
 
+async function getUserInfo(req, res) {
+	try {
+		const user = await userModel.findOne(
+			{ _id: req.userdata._id },
+			{
+				password: 0,
+				refreshToken: 0,
+				pagination: 0,
+				__v: 0,
+			}
+		)
+		res.json({ success: true, user })
+	} catch (err) {
+		console.log(err)
+		res.json({ success: false, error: "Failed to retrieve user info." })
+	}
+}
 module.exports = {
 	updateProfile,
 	changePassword,
 	verifyEmail,
 	sendEmailVerificationLink,
+	getUserInfo,
 }
