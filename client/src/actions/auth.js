@@ -14,7 +14,7 @@ export const register = (user_data) => (dispatch) => {
   delete data["isMember"];
 
   axios
-    .post(url + "/auth/register", user_data)
+    .post(url + "/auth/register", user_data, { withCredentials: true })
     .then((res) => {
       dispatch(displayAlert("Account created.", "success"));
       setTimeout(

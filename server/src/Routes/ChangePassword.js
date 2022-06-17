@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require("express");
 const bcrypt = require("bcrypt")
 
-const { sendEmail } = require("../Controllers/changePassword");
+const { sendEmail } = require("../Controllers/sendEmail");
 const { generateToken, verifyToken } = require("../Utils/jwtUtil");
 const { userModel } = require('../Models/userModel');
 
@@ -29,9 +29,9 @@ router.post("/:authtoken", async (req, res) => {
             });
 
             usr.save()
-            res.json({message: "success"});
+            res.json({success: true});
         }
-        res.json({message: "failed"});
+        res.json({success: false, error: "Token expired."});
     })
     .post("/", async (req, res)=>{
 

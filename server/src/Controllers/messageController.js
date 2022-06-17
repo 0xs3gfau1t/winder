@@ -1,10 +1,11 @@
 const { messagesModel, relationModel } = require("../Models/relationModel")
+const { emitChat } = require("./socket")
 
 const getConvoList = async (req, res) => {
 	try {
 		const convoList = await relationModel.find(
 			{ users: req.userdata._id, stat: true },
-			{ users: 1, stat: 1, unreadCount: 1, _id: 0 }
+			{ users: 1, unreadCount: 1 }
 		)
 		res.json({ success: true, data: convoList })
 	} catch (err) {
@@ -18,6 +19,9 @@ const getMessages = async (req, res) => {
 
 	if (cursor) {
 		cursor = new Date(cursor)
+		// https://stackoverflow.com/a/1353711/13001607
+		// Bhagwan tumara bhala karega if you could simplify this expression
+		// Probably (!(cursor instance of Date) || isNan(cursor))
 		if (!(cursor instanceof Date && !isNaN(cursor)))
 			return res
 				.status(400)
@@ -40,23 +44,27 @@ const getMessages = async (req, res) => {
 			})
 
 		// Updating the unreadCount
-		console.log(relation.users[1].toString())
-		const userIdx = req.userdata._id === relation.users[1].toString() ? 1 : 0
-		console.log({userIdx, uCnt: relation.unreadCount})
+		const userIdx =
+			req.userdata._id === relation.users[1].toString() ? 1 : 0
 		if (
 			(userIdx === 0 && relation.unreadCount < 0) || // if there is unread msg sent by user[1] and user[0] read them
 			(userIdx === 1 && relation.unreadCount > 0) // if there is unread msg sent by user[0] and user[1] read them
-		){
-			console.log('Updating unreadCount')
+		)
 			await relation.updateOne({ unreadCount: 0 })
-		}
 
 		// Setting next pagination token
 		const more = relation.messages.length === 11
 		const nextCursor = more ? relation.messages[10].createdAt : undefined
 		more && relation.messages.pop()
 
-		res.json({ success: true, nextCursor, data: relation.messages })
+		res.json({
+			success: true,
+			nextCursor,
+			data: relation.messages.map(msg => ({
+				...msg._doc, // Document is stored in this property
+				sender: userIdx == msg._doc.sender ,
+			})),
+		})
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
@@ -81,8 +89,12 @@ const sendMessage = async (req, res) => {
 		await msg.save()
 		relation.messages.push(msg._id)
 
+		// Send the message to the receiver through socket
+		const status = emitChat(id, msg._id, content, msg.createdAt)
+
 		// Update the unreadCount
-		const userIdx = req.userdata._id === relation.users[1].toString() ? 1 : 0
+		const userIdx =
+			req.userdata._id === relation.users[1].toString() ? 1 : 0
 		if (userIdx === 0 && relation.unreadCount >= 0)
 			// if user[1] still has some unread message from user[0]
 			relation.unreadCount += 1
@@ -91,7 +103,7 @@ const sendMessage = async (req, res) => {
 			relation.unreadCount -= 1
 
 		await relation.save()
-		res.json({ success: true, id: msg._id })
+		res.json({ success: true, id: msg._id, status })
 	} catch (err) {
 		console.log(err.message)
 		res.status(500).json({ success: false, error: "Internal Server Error" })

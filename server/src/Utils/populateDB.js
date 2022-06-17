@@ -68,7 +68,8 @@ const populateDB = async count => {
 		)
 
 		var user = userModel({
-			name: randomString(4, 15),
+			firstName: randomString(4, 15),
+			lastName: randomString(4, 15),
 			username: randomString(5, 10),
 			university: randomProp(availableOptions.university),
 			gender: randomProp(availableOptions.gender),
