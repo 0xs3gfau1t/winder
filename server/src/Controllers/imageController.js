@@ -1,39 +1,58 @@
+const { default: mongoose } = require("mongoose")
 const { grid } = require("../Config/storage")
 const { userModel } = require("../Models/userModel")
 
 const putImg = async (req, res) => {
 	if (req.file === undefined) return res.send("you must select a file.")
-	// const imgUrl = `http://localhost:8080/file/${req.file.filename}`
 
-	await userModel.findOneAndUpdate(
-		{ _id: req.userdata._id },
-		{ images: req.file.filename }
-	)
+	const user = await userModel.findOne({ _id: req.userdata._id }, ["images"])
+	user.images.push(req.file.id)
+	await user.save({ validateBeforeSave: false }) // Remove this validateBeforeSave
 
-	return res.send(req.file.filename)
+	return res.json({ success: true, id: req.file.id })
 }
 
 const getImg = async (req, res) => {
 	try {
-		const file = await grid.gfs.files.findOne({
-			filename: req.params.filename,
+		const readStream = grid.gridfsBucket.openDownloadStream(
+			mongoose.Types.ObjectId(req.params.id)
+		)
+
+		readStream.on("error", err => {
+			console.log(err)
+			return res.json({ success: false, error: "Image not found" })
 		})
-		const readStream = grid.gridfsBucket.openDownloadStream(file._id)
+
 		readStream.pipe(res)
 	} catch (error) {
 		console.log(error)
-		res.send("not found")
+		res.json({ success: false, error: "Invalid id." })
 	}
 }
 
 const delImg = async (req, res) => {
-	const user = await userModel.findOne({ _id: req.userdata._id }, ["images"])
+	const { id } = req.params
+	const userCnt = await userModel.count({
+		_id: req.userdata._id,
+		images: id,
+	})
+
+	if (userCnt == 0)
+		return res.status(400).json({
+			success: false,
+			error: "Bruh this ain't your image.",
+		})
+
 	try {
-		await gfs.files.deleteOne({ filename: user.images })
-		res.send("success")
+		grid.gridfsBucket.delete(mongoose.Types.ObjectId(id))
+		await userModel.updateOne(
+			{ _id: req.userdata._id },
+			{ $pull: { images: id } }
+		)
+		res.json({ success: true })
 	} catch (error) {
 		console.log(error)
-		res.send("An error occured.")
+		res.json({ success: false, error: "Failed to delete the file." })
 	}
 }
 

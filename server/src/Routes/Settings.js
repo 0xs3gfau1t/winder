@@ -14,6 +14,7 @@ const {
 } = require("../Controllers/updateProfile")
 const { putImg, getImg, delImg } = require("../Controllers/imageController")
 const { upload } = require("../Middlewares/uploadToDB")
+const { imgSpotVacant } = require("../Middlewares/imgSpotVacant")
 
 router
 	.get("/options", (req, res) =>
@@ -24,8 +25,16 @@ router
 	.post("/verifyemail", authenticateToken, sendEmailVerificationLink)
 	.patch("/changepassword", authenticateToken, changePassword)
 	.patch("/", authenticateToken, updateProfile)
-	.post("/img", authenticateToken, upload.single("file"), putImg)
-	.get("/img/:filename", getImg)
-	.delete("/img/:fileindex", authenticateToken, delImg)
+
+// User images
+router.post(
+	"/img",
+	authenticateToken,
+	imgSpotVacant,
+	upload.single("file"),
+	putImg
+)
+router.get("/img/:id", getImg)
+router.delete("/img/:id", authenticateToken, delImg)
 
 module.exports = router
