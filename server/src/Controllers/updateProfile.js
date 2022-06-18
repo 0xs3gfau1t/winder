@@ -11,7 +11,7 @@ async function updateProfile(req, response) {
 	const data = req.body
 	const id = req.userdata._id
 
-	let changedFields = {}
+	let changedFields = { preference: {} }
 	let res = {}
 
 	for (const i in data) {
@@ -28,7 +28,7 @@ async function updateProfile(req, response) {
 			case "genderPreference":
 				const gPref = parseInt(data[i])
 				if (options.gender.includes(gPref)) {
-					changedFields.genderPreference = gPref
+					changedFields.preference.gender = gPref
 					res[i] = true
 				} else res[i] = false
 				break
@@ -37,13 +37,13 @@ async function updateProfile(req, response) {
 					// Remove the or 1 portion when we have a system
 					// Where all valid programs are registered
 					// And user has to choose from provided program
-					changedFields.programPreference = data[i]
+					changedFields.preference.program = data[i]
 					res[i] = true
 				} else res[i] = false
 				break
 			case "universityPreference":
 				if (options.universities.includes(data[i])) {
-					changedFields.universityPreference = data[i]
+					changedFields.preference.university = data[i]
 					res[i] = true
 				} else res[i] = false
 				break
@@ -53,7 +53,7 @@ async function updateProfile(req, response) {
 					data[i][0] >= options.age[0] &&
 					data[i][1] <= options.age[1]
 				) {
-					changedFields.programPreference = data[i]
+					changedFields.preference.age = data[i]
 					res[i] = true
 				} else res[i] = false
 				break
@@ -76,6 +76,27 @@ async function updateProfile(req, response) {
 					changedFields.passions = passions
 					res[i] = true
 				} else res[i] = false
+				break
+			case "university":
+				if (options.universities.includes(data[i])) {
+					changedFields.university = data[i]
+					res[i] = true
+				} else res[i] = false
+				break
+			case "program":
+				if (options.programs.includes(data[i])) {
+					changedFields.program = data[i]
+					res[i] = true
+				} else res[i] = false
+				break
+			case "batch":
+				if (!isNaN(data[i])) {
+					changedFields.batch = data[i]
+					res[i] = true
+				} else res[i] = false
+				break
+			case "email":
+				console.log("Haven't yet decided to make it happen")
 				break
 			default:
 				res[i] = "Invalid property. FBI open up."
@@ -127,7 +148,10 @@ async function verifyEmail(req, response) {
 			await userModel
 				.findOneAndUpdate(
 					{ _id: data.id },
-					{ username: null, refreshToken: generateToken(newPayload, "1d") }
+					{
+						username: null,
+						refreshToken: generateToken(newPayload, "1d"),
+					}
 				)
 				.exec()
 
@@ -157,9 +181,27 @@ async function sendEmailVerificationLink(req, response) {
 	}
 }
 
+async function getUserInfo(req, res) {
+	try {
+		const user = await userModel.findOne(
+			{ _id: req.userdata._id },
+			{
+				password: 0,
+				refreshToken: 0,
+				pagination: 0,
+				__v: 0,
+			}
+		)
+		res.json({ success: true, user })
+	} catch (err) {
+		console.log(err)
+		res.json({ success: false, error: "Failed to retrieve user info." })
+	}
+}
 module.exports = {
 	updateProfile,
 	changePassword,
 	verifyEmail,
 	sendEmailVerificationLink,
+	getUserInfo,
 }

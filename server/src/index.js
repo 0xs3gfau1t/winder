@@ -19,12 +19,26 @@ app.get("/", (req, res) => {
 
 // Routing each endpoint to respective routers
 app.use("/auth", require("./Routes/Auth.js"))
-app.use("/messages", authenticateToken, checkEmailVerification, require("./Routes/Messages.js"))
-app.use("/notification", authenticateToken, checkEmailVerification, require("./Routes/Notifications.js"))
+app.use(
+	"/messages",
+	authenticateToken,
+	checkEmailVerification,
+	require("./Routes/Messages.js")
+)
+app.use(
+	"/notification",
+	authenticateToken,
+	checkEmailVerification,
+	require("./Routes/Notifications.js")
+)
 app.use("/settings", require("./Routes/Settings.js"))
-app.use("/explore", authenticateToken, checkEmailVerification, require("./Routes/Explore.js"))
+app.use(
+	"/explore",
+	authenticateToken,
+	checkEmailVerification,
+	require("./Routes/Explore.js")
+)
 app.use("/changepassword", require("./Routes/ChangePassword.js"))
-app.use("/user", require("./Routes/User.js"))
 
 // Start the server specied in PORT from .env
 server.listen(process.env.PORT || 4000, () => {
