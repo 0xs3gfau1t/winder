@@ -12,7 +12,7 @@ function Profile() {
     preview: "https://thispersondoesnotexist.com/image",
   });
   const misc = useSelector((state) => state.misc);
-
+  const user = useSelector((state) => state.auth.user);
   const onChange = (e) => {
     let file = e.target.files[0];
     setData((prev) => ({
@@ -45,10 +45,14 @@ function Profile() {
                 name="file"
                 onChange={onChange}
               />
+              <input
+                className="decoration-black text-red-700 my-2 font-bold hover:text-xl "
+                value={user.bio}
+              />
               <ul className="permanent-info m-2">
-                <li>First Name : Hency</li>
-                <li>Last Name : Hency</li>
-                <li>Email : hency@hency.com</li>
+                <li> {user.firstName + " " + user.lastName}</li>
+                <li>{user.dob}</li>
+                <li>Email : {user.email}</li>
               </ul>
             </div>
           </aside>

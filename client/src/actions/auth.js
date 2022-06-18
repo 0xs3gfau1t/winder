@@ -5,6 +5,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILED,
   LOGOUT,
+  CLEAR_ALERT,
 } from "./types";
 import { displayAlert } from "./misc";
 const url = process.env.URL;
@@ -57,9 +58,14 @@ export const login =
   };
 
 export const logout = () => (dispatch) => {
-  axios.delete(url + "/auth/logout", { withCredentials: true }).then((res) => {
-    dispatch({
-      type: LOGOUT,
+  axios
+    .delete(url + "/auth/logout", user_data, { withCredentials: true })
+    .then((res) => {
+      dispatch({
+        type: CLEAR_ALERT,
+      });
+      dispatch({
+        type: LOGOUT,
+      });
     });
-  });
 };

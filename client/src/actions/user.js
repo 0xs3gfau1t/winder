@@ -9,7 +9,7 @@ export const loadUser = () => (dispatch) => {
     .then((res) => {
       dispatch({
         type: LOAD_USER,
-        payload: res.data,
+        payload: res.data.result,
       });
     })
     .catch((err) => {
