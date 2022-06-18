@@ -192,7 +192,11 @@ async function getUserInfo(req, res) {
 				__v: 0,
 			}
 		)
-		res.json({ success: true, user })
+		res.json({
+			success: true,
+			user,
+			email_verified: req.userdata.email_verified,
+		})
 	} catch (err) {
 		console.log(err)
 		res.json({ success: false, error: "Failed to retrieve user info." })
