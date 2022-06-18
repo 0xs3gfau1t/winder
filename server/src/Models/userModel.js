@@ -67,6 +67,9 @@ let userSchema = mongoose.Schema(
 				validate: [age => age[0] >= 18, `You creepy bruh.`],
 			},
 		},
+		images: {
+			type: String,
+		},
 		refreshToken: {
 			type: String,
 		},
