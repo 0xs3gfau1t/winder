@@ -45,18 +45,19 @@ export const emailVerifyRequest = () => dispatch => {
 
 export const verifyEmail = token => dispatch => {
 	axios
-		.post(url + `/settings/verifyemail/${token}`, {})
+		.post(url + `/settings/verifyemail/${token.token}`, {})
 		.then(res => {
 			console.log(res)
 			dispatch(
 				displayAlert(
 					"Your email is verified now. Your journey to meet your soulmate begins now...",
-					"success"
+					"success",
+					true
 				)
 			)
 		})
 		.catch(err => {
-			console.log(err.response.data)
+			console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger", true))
 		})
 }
