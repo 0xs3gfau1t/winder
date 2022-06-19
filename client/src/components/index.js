@@ -1,5 +1,6 @@
-import Logo from "./Logo";
-import FormRow from "./FormRow";
-import Alert from "./Alert";
+import Logo from "./Logo"
+import FormText, { FormSelect } from "./FormElement"
+import Alert from "./Alert"
+import Bar from "./Bar"
 
-export {Logo, FormRow, Alert};
+export { Logo, FormText, FormSelect, Alert, Bar }

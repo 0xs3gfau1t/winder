@@ -189,10 +189,17 @@ async function getUserInfo(req, res) {
 				password: 0,
 				refreshToken: 0,
 				pagination: 0,
+				createdAt: 0,
+				updatedAt: 0,
 				__v: 0,
 			}
 		)
-		res.json({ success: true, user })
+		let result = JSON.parse(JSON.stringify(user))
+		result.email_verified = req.userdata.email_verified
+		res.json({
+			success: true,
+			result,
+		})
 	} catch (err) {
 		console.log(err)
 		res.json({ success: false, error: "Failed to retrieve user info." })
