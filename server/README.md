@@ -354,3 +354,49 @@ Field|Description
 -|-
 success|`True` or `False`
 message|`Unauthorized` if old password is wrong
+
+### `/img`
+
+**Description**: Upload user's image if there is vacant space.
+
+**Method**: `POST`
+
+**Authentication**: Required
+
+**Request**:
+Field|Description
+-|-
+file|Image file to be uploaded; must be less than 3MB; accepted fileType: 'jpg', 'jpeg', 'gif', 'png'; accepted mimeType: 'image/jpg', 'image/jpeg', 'image/gif', 'image/png'
+
+**Response**:
+Field|Description
+-|-
+success|`True` or `False`
+id|id of the image, is used to fetch the image
+error|error message if something went wrong
+
+### `/img/:id`
+
+**Description**: Get the image identified by `id`
+
+**Method**: `GET`
+
+**Authentication**: Not Required
+
+**Request**:
+param|description
+-|-
+id|id of the image, provided in [userDetails](#1)
+
+### `/img/:id`
+
+**Description**: Delete the image identified by `id` only if it belongs to the logged in user.
+
+**Method**: `DELETE`
+
+**Authentication**: Required
+
+**Request**:
+param|description
+-|-
+id|id of the image, provided in [userDetails](#1)
