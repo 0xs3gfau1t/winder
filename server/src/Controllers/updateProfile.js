@@ -104,10 +104,10 @@ async function updateProfile(req, response) {
 	}
 	try {
 		userModel.findOneAndUpdate({ _id: id }, changedFields).exec()
-		res.message = "success"
+		res.success = true
 	} catch (e) {
 		response.status(500)
-		res.message = "failed"
+		res.success = false
 		console.log(e)
 	}
 	response.json(res)
@@ -123,13 +123,14 @@ async function changePassword(req, response) {
 		user.password = await bcrypt.hash(newPassword, 10)
 		try {
 			await user.save()
-			res.message = "success"
+			res.success = true
 		} catch (e) {
 			response.status(500)
-			res.message = "failed"
+			res.success = false
 		}
 	} else {
 		response.status(401)
+		res.success = false
 		res.message = "unauthorized"
 	}
 
@@ -162,12 +163,13 @@ async function verifyEmail(req, response) {
 			// Right now, this just sets same named cookie
 			//
 			response.cookie("accessToken", newAccessToken)
-			response.json({ message: "success" })
+			response.json({ success: true })
 		} catch (e) {
 			console.log("Error during verifying email", e)
-			response.status(500).json({ message: "error" })
+			response.status(500).json({ success: false })
 		}
-	} else response.status(401).json({ message: "Token Expired" })
+	} else
+		response.status(401).json({ success: false, message: "Token Expired" })
 }
 
 async function sendEmailVerificationLink(req, response) {
@@ -175,9 +177,9 @@ async function sendEmailVerificationLink(req, response) {
 	const token = generateToken({ id: to._id }, "10m")
 	try {
 		await sendEmail(to.email, token)
-		response.json({ message: "success" })
+		response.json({ success: true })
 	} catch (e) {
-		response.status(500).json({ message: "error" })
+		response.status(500).json({ success: false })
 	}
 }
 
