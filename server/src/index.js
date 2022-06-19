@@ -18,7 +18,7 @@ const checkEmailVerification = require("./Middlewares/verifyEmail")
 
 //Test endpoint for dev purpose
 app.get("/", (req, res) => {
-	res.json({ "message": "Welcome!" })
+	res.json({ message: "Welcome!" })
 })
 
 // Routing each endpoint to respective routers

@@ -9,8 +9,8 @@
 */
 
 async function verifyEmail(req, res, next) {
-	if (req.userdata.email_verified) return next()
-	else res.status(403).json({ message: "Email not verified" })
+  if (req.userdata.email_verified) return next();
+  else res.status(403).json({ message: "Email not verified" });
 }
 
-module.exports = verifyEmail
+module.exports = verifyEmail;
