@@ -4,10 +4,10 @@ import { MdEdit } from "react-icons/md"
 import { GoVerified } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { loadOptions } from "../actions/misc"
-import { verifyEmail } from "../actions/user"
+import { emailVerifyRequest } from "../actions/user"
 import Wrapper from "../assets/wrappers/SettingPage"
 import Nav from "../components/Nav/Nav"
-import { Alert, FormSelect, Bar } from "../components"
+import { Alert, FormSelect, Bar, SaveChanges } from "../components"
 
 function Profile() {
 	const misc = useSelector(state => state.misc)
@@ -17,9 +17,11 @@ function Profile() {
 		dispatch(loadOptions())
 	}, [])
 	const [settings, setSettings] = useState({
+		changed: false,
 		preview: "https://thispersondoesnotexist.com/image",
 	})
 	const onChange = e => {
+		if (!settings.changed) setSettings({ ...settings, changed: true })
 		if (e.target.name === "file") {
 			let file = e.target.files[0]
 			setSettings(prev => ({
@@ -32,10 +34,13 @@ function Profile() {
 			let field_value = e.target.value
 			setSettings(prev => ({ ...prev, [field_name]: field_value }))
 		}
+		console.log(settings)
 	}
 	const verifyMail = () => {
-		console.log("Verified")
-		dispatch(verifyEmail())
+		dispatch(emailVerifyRequest())
+	}
+	const updatePassion = passion => {
+		console.log(passion)
 	}
 	return (
 		<Wrapper>
@@ -46,7 +51,7 @@ function Profile() {
 			<div className="container mx-auto">
 				{misc.showAlert && <Alert style={{ marginTop: "-4%" }} />}
 				<form onChange={onChange}>
-					<div className="flex flex-row flex-wrap py-4">
+					<div className="flex flex-row flex-wrap pb-4">
 						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-r-2 h-full">
 							<div className="sticky top-0 p-4 w-full profile-form">
 								<img
@@ -68,7 +73,14 @@ function Profile() {
 									onChange={onChange}
 								/>
 								<ul className="permanent-info m-2">
-									<div className="grid grid-cols-2">
+									<div
+										className={
+											"grid" +
+											(user.email_verified
+												? "grid-col-2"
+												: "")
+										}
+									>
 										<li>
 											{user.firstName +
 												" " +
@@ -79,7 +91,7 @@ function Profile() {
 										)}
 									</div>
 									<li>{user.dob}</li>
-									<li>Email : {user.email}</li>
+									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
 											"Verify mail"
@@ -106,7 +118,8 @@ function Profile() {
 							<input
 								name="bio"
 								className="m-10 text-orange-700 my-2 font-bold"
-								value={user.bio}
+								placeholder={user.bio}
+								value={settings.bio}
 							/>
 							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
 								<div className="grid grid-row-2">
@@ -143,6 +156,9 @@ function Profile() {
 											<span
 												className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
 												key={index}
+												onClick={passion =>
+													updatePassion(passion)
+												}
 											>
 												{passion}
 											</span>
@@ -150,6 +166,7 @@ function Profile() {
 									)}
 							</div>
 							<h4 className="m-5">You are looking for</h4>
+							{settings.changed && <SaveChanges />}
 						</main>
 					</div>
 				</form>
