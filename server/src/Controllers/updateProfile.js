@@ -194,9 +194,12 @@ async function getUserInfo(req, res) {
 				password: 0,
 				refreshToken: 0,
 				pagination: 0,
+				createdAt: 0,
+				updatedAt: 0,
 				__v: 0,
 			}
 		)
+
 		res.json({
 			success: true,
 			user,

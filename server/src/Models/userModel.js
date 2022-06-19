@@ -67,6 +67,13 @@ let userSchema = mongoose.Schema(
 				validate: [age => age[0] >= 18, `You creepy bruh.`],
 			},
 		},
+		images: {
+			type: [String],
+			validate: [
+				imgs => imgs.length <= 9,
+				"Cannot add more than 9 images.",
+			],
+		},
 		refreshToken: {
 			type: String,
 		},
@@ -82,7 +89,15 @@ let userSchema = mongoose.Schema(
 			},
 		},
 	},
-	{ timestamps: true }
+	{ timestamps: true },
+	{
+		toJSON: {
+			getters: true,
+			transform: function (doc, ret) {
+				delete ret._id
+			},
+		},
+	}
 )
 
 userSchema.pre("save", function (next) {
@@ -103,6 +118,23 @@ userSchema.pre("save", function (next) {
 
 	next()
 })
+
+//get data in JSON format form model
+userSchema.options.toJSON = {
+	transform: function (doc, ret, options) {
+		delete ret._id
+		delete ret.password
+		delete ret.__v
+		ret.dob = ret.dob.toLocaleDateString("en-US", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		})
+		ret.gender =
+			ret.gender == 1 ? "Male" : ret.gender == 0 ? "Female" : "Other"
+		return ret
+	},
+}
 
 userModel = mongoose.model("User", userSchema)
 

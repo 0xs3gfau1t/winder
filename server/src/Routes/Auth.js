@@ -32,7 +32,7 @@ router.post("/register", async (req, res) => {
 		firstName,
 		lastName,
 	}
-	const genderMap = { "male": 1, "female": -1, "other": 0 }
+	const genderMap = { male: 1, female: -1, other: 0 }
 	gender = genderMap[gender]
 	if (gender in options.gender) u.gender = gender
 
@@ -102,7 +102,7 @@ router.delete("/logout", authenticateToken, async (req, res) => {
 	user.refreshToken = ""
 	user.save({ validateBeforeSave: false })
 
-	res.cookie("accessToken", "")
+	res.clearCookie("accessToken", "")
 
 	return res.json({ success: true })
 })

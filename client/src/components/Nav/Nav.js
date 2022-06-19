@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../actions/auth";
 import logo from "../../assets/images/logo-head.png";
 // import logo from '../assets/images/logo.svg'
 
@@ -9,12 +11,15 @@ import {
   FaGrinAlt,
   FaRegBell,
   FaRocketchat,
-  FaWrench,
   FaDoorOpen,
 } from "react-icons/fa";
 import { IconContext } from "react-icons";
 
 function Nav(props) {
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
   return (
     <Wrapper className="Navbar">
       <div className="Navbar">
@@ -83,7 +88,7 @@ function Nav(props) {
           <IconContext.Provider
             value={{ color: "#F24E1E", size: "2em", className: "icons" }}
           >
-            <Link to="/login">
+            <Link to="/login" onClick={handleLogout}>
               <span>
                 <FaDoorOpen />
               </span>
