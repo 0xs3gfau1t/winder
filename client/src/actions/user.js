@@ -7,10 +7,9 @@ export const loadUser = () => dispatch => {
 	axios
 		.get(url + "/settings", { withCredentials: true })
 		.then(res => {
-			console.log(res)
 			dispatch({
 				type: LOAD_USER,
-				payload: res.data.result,
+				payload: res.data.user,
 			})
 		})
 		.catch(err => {
@@ -21,10 +20,11 @@ export const loadUser = () => dispatch => {
 		})
 }
 
-export const verifyEmail = () => dispatch => {
+export const emailVerifyRequest = () => dispatch => {
 	axios
-		.post(url + "/settings/verifyemail", { withCredentials: true })
+		.post(url + "/settings/verifyemail", {}, { withCredentials: true })
 		.then(res => {
+			console.log(res)
 			dispatch(
 				displayAlert(
 					"Please check you mail box to complete verification",
@@ -40,5 +40,24 @@ export const verifyEmail = () => dispatch => {
 					true
 				)
 			)
+		})
+}
+
+export const verifyEmail = token => dispatch => {
+	axios
+		.post(url + `/settings/verifyemail/${token.token}`, {})
+		.then(res => {
+			console.log(res)
+			dispatch(
+				displayAlert(
+					"Your email is verified now. Your journey to meet your soulmate begins now...",
+					"success",
+					true
+				)
+			)
+		})
+		.catch(err => {
+			console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger", true))
 		})
 }

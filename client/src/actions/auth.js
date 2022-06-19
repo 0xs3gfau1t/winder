@@ -18,7 +18,9 @@ export const register = user_data => dispatch => {
 	axios
 		.post(url + "/auth/register", user_data, { withCredentials: true })
 		.then(res => {
-			dispatch(displayAlert("Account created.", "success"))
+			dispatch(
+				displayAlert("Account created! Proceeding to login.", "success")
+			)
 			setTimeout(
 				() =>
 					dispatch({
@@ -27,6 +29,7 @@ export const register = user_data => dispatch => {
 					}),
 				5000
 			)
+			window.location.reload()
 		})
 		.catch(err => {
 			dispatch(displayAlert(err.response.data.error, "danger"))
