@@ -67,6 +67,13 @@ let userSchema = mongoose.Schema(
 				validate: [age => age[0] >= 18, `You creepy bruh.`],
 			},
 		},
+		images: {
+			type: [String],
+			validate: [
+				imgs => imgs.length <= 9,
+				"Cannot add more than 9 images.",
+			],
+		},
 		refreshToken: {
 			type: String,
 		},
