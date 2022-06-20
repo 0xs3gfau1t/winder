@@ -334,3 +334,21 @@ ul {
     margin-right: 0.5rem;
   }
 }
+.profile-form input[type="file"] {
+  position: absolute;
+  z-index: 1;
+  top: 80%;
+  display: none;
+  font-size: 15px;
+  color: rgb(153, 153, 153);
+}
+.change-dp{
+  position: absolute;
+  top: 5%;
+  right: 6%;
+  height: 2rem;
+  width: 2rem;
+  margin: auto;
+  border-radius: 20%;
+  background: black;
+}
