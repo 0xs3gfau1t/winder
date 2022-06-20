@@ -11,8 +11,11 @@ async function updateProfile(req, response) {
 	const data = req.body
 	const id = req.userdata._id
 
-	let changedFields = {}
-	let preference = {}
+	let changedFields = {
+		preference: await userModel
+			.findOne({ _id: id }, "preference")
+			.then(user => user.preference),
+	}
 	let res = {}
 
 	for (const i in data) {
@@ -29,7 +32,7 @@ async function updateProfile(req, response) {
 			case "genderPreference":
 				const gPref = parseInt(data[i])
 				if (options.gender.includes(gPref)) {
-					preference.gender = gPref
+					changedFields.preference.gender = gPref
 					res[i] = true
 				} else res[i] = false
 				break
@@ -38,13 +41,13 @@ async function updateProfile(req, response) {
 					// Remove the or 1 portion when we have a system
 					// Where all valid programs are registered
 					// And user has to choose from provided program
-					preference.program = data[i]
+					changedFields.preference.program = data[i]
 					res[i] = true
 				} else res[i] = false
 				break
 			case "universityPreference":
 				if (options.universities.includes(data[i])) {
-					preference.university = data[i]
+					changedFields.preference.university = data[i]
 					res[i] = true
 				} else res[i] = false
 				break
@@ -53,7 +56,7 @@ async function updateProfile(req, response) {
 				const lAge = parseInt(data[i][0])
 				const hAge = parseInt(data[i][1])
 				if (lAge >= options.age[0] && hAge <= options.age[1]) {
-					preference.age = [lAge, hAge]
+					changedFields.preference.age = [lAge, hAge]
 					res[i] = true
 				} else res[i] = false
 				break
@@ -119,8 +122,6 @@ async function updateProfile(req, response) {
 				res[i] = "Invalid property. FBI open up."
 		}
 	}
-
-	if (Object.keys(preference).length) changedFields.preference = preference
 
 	try {
 		userModel.findOneAndUpdate({ _id: id }, changedFields).exec()
