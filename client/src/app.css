@@ -345,9 +345,10 @@ ul {
 .change-dp{
   position: absolute;
   top: 5%;
-  right: 10%;
+  right: 6%;
   height: 2rem;
   width: 2rem;
   margin: auto;
-  color: white;
+  border-radius: 20%;
+  background: black;
 }

@@ -49,17 +49,17 @@ async function updateProfile(req, response) {
 				break
 			case "agePreference":
 				// Validate age range
-				if (
-					data[i][0] >= options.age[0] &&
-					data[i][1] <= options.age[1]
-				) {
-					changedFields.preference.age = data[i]
+				const lAge = parseInt(data[i][0])
+				const hAge = parseInt(data[i][1])
+				if (lAge >= options.age[0] && hAge <= options.age[1]) {
+					changedFields.preference.age = [lAge, hAge]
 					res[i] = true
 				} else res[i] = false
 				break
 			case "gender":
-				if (options.gender.includes(data[i])) {
-					changedFields.gender = data[i]
+				const g = parseInt(data[i])
+				if (options.gender.includes(g)) {
+					changedFields.gender = g
 					res[i] = true
 				} else res[i] = false
 				break
@@ -69,8 +69,8 @@ async function updateProfile(req, response) {
 				break
 			case "passion":
 				let passions = []
-				for (const j in data[i]) {
-					if (j in options.passions) passions.push(j)
+				for (const j of data[i]) {
+					if (options.passions.includes(j)) passions.push(j)
 				}
 				if (passions.length > 2) {
 					changedFields.passion = passions
@@ -104,10 +104,10 @@ async function updateProfile(req, response) {
 	}
 	try {
 		userModel.findOneAndUpdate({ _id: id }, changedFields).exec()
-		res.message = "success"
+		res.success = true
 	} catch (e) {
 		response.status(500)
-		res.message = "failed"
+		res.success = false
 		console.log(e)
 	}
 	response.json(res)
@@ -125,13 +125,14 @@ async function changePassword(req, response) {
 		user.password = await bcrypt.hash(newPassword, 10)
 		try {
 			await user.save()
-			res.message = "success"
+			res.success = true
 		} catch (e) {
 			response.status(500)
-			res.message = "failed"
+			res.success = false
 		}
 	} else {
 		response.status(401)
+		res.success = false
 		res.message = "unauthorized"
 	}
 
@@ -139,7 +140,9 @@ async function changePassword(req, response) {
 }
 
 async function verifyEmail(req, response) {
-	const { data, expired } = await verifyToken(req.params.token)
+	const decodedToken = atob(req.params.token)
+	console.log("Decoded Token: ", decodedToken)
+	const { data, expired } = await verifyToken(decodedToken)
 
 	if (data) {
 		try {
@@ -164,12 +167,13 @@ async function verifyEmail(req, response) {
 			// Right now, this just sets same named cookie
 			//
 			response.cookie("accessToken", newAccessToken)
-			response.json({ message: "success" })
+			response.json({ success: true })
 		} catch (e) {
 			console.log("Error during verifying email", e)
-			response.status(500).json({ message: "error" })
+			response.status(500).json({ success: false })
 		}
-	} else response.status(401).json({ message: "Token Expired" })
+	} else
+		response.status(401).json({ success: false, message: "Token Expired" })
 }
 
 async function sendEmailVerificationLink(req, response) {
@@ -177,9 +181,9 @@ async function sendEmailVerificationLink(req, response) {
 	const token = generateToken({ id: to._id }, "10m")
 	try {
 		await sendEmail(to.email, token)
-		response.json({ message: "success" })
+		response.json({ success: true })
 	} catch (e) {
-		response.status(500).json({ message: "error" })
+		response.status(500).json({ success: false })
 	}
 }
 
