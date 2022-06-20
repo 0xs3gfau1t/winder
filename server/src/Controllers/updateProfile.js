@@ -3,7 +3,7 @@ require("dotenv").config()
 const { userModel } = require("../Models/userModel")
 const { changableData, options } = require("../Utils/variables")
 const { verifyToken, generateToken } = require("../Utils/jwtUtil")
-const { sendEmail } = require("../Controllers/sendEmail")
+const { sendVerifyMailEmail } = require("../Controllers/sendEmail")
 
 const bcrypt = require("bcrypt")
 
@@ -174,7 +174,7 @@ async function sendEmailVerificationLink(req, response) {
 	const to = await userModel.findOne({ _id: req.userdata._id })
 	const token = generateToken({ id: to._id }, "10m")
 	try {
-		await sendEmail(to.email, token)
+		await sendVerifyMailEmail(to.email, token)
 		response.json({ message: "success" })
 	} catch (e) {
 		response.status(500).json({ message: "error" })
