@@ -8,17 +8,14 @@ const authenticateToken = require("../Middlewares/authenticateToken")
 const { options } = require("../Utils/variables")
 
 router.post("/register", async (req, res) => {
-	console.log(req.body)
 	let { email, password, dob, gender, firstName, lastName } = req.body
 	if (!email || !password || !dob || !gender || !firstName || !lastName)
 		return res.status(400).json({
 			success: false,
-			error: "One of the parameter is missing.",
+			error: "One or more field is missing.",
 		})
 
-	const userCount = await userModel.count({ email })
-
-	if (userCount)
+	if (await userModel.exists({ email }))
 		return res.status(400).json({
 			success: false,
 			error: "User already exists with this email.",
@@ -35,11 +32,10 @@ router.post("/register", async (req, res) => {
 		firstName,
 		lastName,
 	}
-	const genderMap = { "male": 1, "female": -1, "other": 0 }
+	const genderMap = { male: 1, female: -1, other: 0 }
 	gender = genderMap[gender]
 	if (gender in options.gender) u.gender = gender
 
-	console.log(u)
 	const new_user = userModel(u)
 
 	const userdata = { _id: new_user._id, email_verified: false }
@@ -78,7 +74,6 @@ router.post("/login", async (req, res) => {
 		})
 
 	if (await bcrypt.compare(password, user.password)) {
-		console.log(user.username)
 		const userdata = {
 			_id: user._id,
 			email_verified: user.username !== undefined ? true : false,
@@ -107,9 +102,17 @@ router.delete("/logout", authenticateToken, async (req, res) => {
 	user.refreshToken = ""
 	user.save({ validateBeforeSave: false })
 
-	res.cookie("accessToken", "")
+	res.clearCookie("accessToken", "")
 
 	return res.json({ success: true })
 })
 
+router.delete("/delete", authenticateToken, async (req, res) => {
+	const identifier = { _id: req.userdata._id }
+	if (!(await userModel.exists(identifier)))
+		return res.status(400).json({ success: false, error: "User not found" })
+
+	userModel.deleteOne(identifier).exec()
+	res.json({ success: true })
+})
 module.exports = router
