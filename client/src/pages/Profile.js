@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md"
 import { GoVerified } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { loadOptions } from "../actions/misc"
-import { emailVerifyRequest } from "../actions/user"
+import { emailVerifyRequest, updateProfile } from "../actions/user"
 import Wrapper from "../assets/wrappers/SettingPage"
 import Nav from "../components/Nav/Nav"
 import { Alert, FormSelect, Bar, SaveChanges } from "../components"
@@ -18,6 +18,8 @@ function Profile() {
 	}, [])
 	const [settings, setSettings] = useState({
 		changed: false,
+		bio: "",
+		passions: user.passion ? user.passion : [],
 		preview: "https://thispersondoesnotexist.com/image",
 	})
 	const onChange = e => {
@@ -29,18 +31,25 @@ function Profile() {
 				preview: URL.createObjectURL(file),
 				file: file,
 			}))
+		}
+		if (e.target.name == "passions") {
+			setSettings(prev => ({
+				...prev,
+				passions: [...prev.passions, e.target.value],
+			}))
 		} else {
 			let field_name = e.target.name
 			let field_value = e.target.value
 			setSettings(prev => ({ ...prev, [field_name]: field_value }))
 		}
-		console.log(settings)
 	}
 	const verifyMail = () => {
 		dispatch(emailVerifyRequest())
 	}
-	const updatePassion = passion => {
-		console.log(passion)
+	const onSubmit = e => {
+		e.preventDefault()
+		setSettings({ ...settings, changed: false })
+		dispatch(updateProfile(settings))
 	}
 	return (
 		<Wrapper>
@@ -50,10 +59,10 @@ function Profile() {
 			</div>
 			<div className="container mx-auto">
 				{misc.showAlert && <Alert style={{ marginTop: "-4%" }} />}
-				<form onChange={onChange}>
+				<form onChange={onChange} onSubmit={onSubmit}>
 					<div className="flex flex-row flex-wrap pb-4">
 						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-r-2 h-full">
-							<div className="sticky top-0 p-4 w-full profile-form">
+							<div className="sticky top-0 p-2 w-full profile-form">
 								<img
 									className="h-76 w-76"
 									src={settings.preview}
@@ -70,7 +79,6 @@ function Profile() {
 									type="file"
 									accept="image/*"
 									name="file"
-									onChange={onChange}
 								/>
 								<ul className="permanent-info m-2">
 									<div
@@ -85,16 +93,18 @@ function Profile() {
 											{user.firstName +
 												" " +
 												user.lastName}
+											{user.email_verified && (
+												<GoVerified className="-mt-6 ml-32" />
+											)}
 										</li>
-										{user.email_verified && (
-											<GoVerified className="m-1" />
-										)}
 									</div>
 									<li>{user.dob}</li>
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
-											"Verify mail"
+											<span className="text-green-500">
+												Email Verified
+											</span>
 										) : (
 											<span
 												className="text-yellow-900 cursor-pointer bg-slate-200"
@@ -120,6 +130,7 @@ function Profile() {
 								className="m-10 text-orange-700 my-2 font-bold"
 								placeholder={user.bio}
 								value={settings.bio}
+								onChange={onChange}
 							/>
 							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
 								<div className="grid grid-row-2">
@@ -132,7 +143,6 @@ function Profile() {
 									<FormSelect
 										defaultV={user.university}
 										name="university"
-										onChange={onChange}
 										options={misc.options.universities}
 									/>
 								</div>
@@ -143,32 +153,30 @@ function Profile() {
 									<FormSelect
 										name="program"
 										defaultV={user.program}
-										onChange={onChange}
 										options={misc.options.programs}
 									/>
 								</div>
 							</div>
 							<h5 className="mt-6 mx-3">Passions</h5>
 							<div className="flex flex-wrap mx-7">
-								{"passions" in misc.options &&
-									misc.options.passions.map(
-										(passion, index) => (
-											<span
-												className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
-												key={index}
-												onClick={passion =>
-													updatePassion(passion)
-												}
-											>
-												{passion}
-											</span>
-										)
-									)}
+								{settings.passions.map((passion, index) => (
+									<span
+										className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+										key={index}
+									>
+										{passion}
+									</span>
+								))}
+								<FormSelect
+									name="passions"
+									hint="Add passion"
+									options={misc.options.passions}
+								/>
 							</div>
 							<h4 className="m-5">You are looking for</h4>
-							{settings.changed && <SaveChanges />}
 						</main>
 					</div>
+					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
 		</Wrapper>

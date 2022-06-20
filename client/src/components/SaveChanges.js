@@ -5,11 +5,13 @@ const SaveChanges = ({ onSubmit }) => {
 	// console.log(alertMsg)
 	return (
 		<div className="sticky bottom-1 flex  justify-center space-x-2">
-			<div className="rounded h-9 items-center text-center text-slate-50 bg-sky-900 w-1/2 py-1">
+			<div className="rounded h-12 items-center text-center text-slate-50 bg-sky-900 w-1/2 py-1">
 				Changes Made!{" "}
-				<button className="mx-2 bg-black rounded p-1">
-					Save Changes
-				</button>
+				<input
+					type="submit"
+					className="mx-2 bg-black rounded p-1"
+					value="Save Changes"
+				/>
 			</div>
 		</div>
 	)

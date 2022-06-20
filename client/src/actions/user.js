@@ -47,7 +47,6 @@ export const verifyEmail = token => dispatch => {
 	axios
 		.post(url + `/settings/verifyemail/${token.token}`, {})
 		.then(res => {
-			console.log(res)
 			dispatch(
 				displayAlert(
 					"Your email is verified now. Your journey to meet your soulmate begins now...",
@@ -55,6 +54,24 @@ export const verifyEmail = token => dispatch => {
 					true
 				)
 			)
+		})
+		.catch(err => {
+			console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger", true))
+		})
+}
+
+export const updateProfile = data => dispatch => {
+	let update = JSON.parse(JSON.stringify(data))
+	delete update["changed"]
+	delete update["preview"]
+	console.log(update)
+	axios
+		.patch(url + `/settings`, update, { withCredentials: true })
+		.then(res => {
+			console.log(res)
+			// dispatch(loadUser())
+			dispatch(displayAlert("Profile Updated...", "success", true))
 		})
 		.catch(err => {
 			console.log(err)
