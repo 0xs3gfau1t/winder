@@ -131,7 +131,7 @@ userSchema.options.toJSON = {
 			year: "numeric",
 		})
 		ret.gender =
-			ret.gender == 1 ? "Male" : ret.gender == 0 ? "Female" : "Other"
+			ret.gender == 1 ? "Male" : ret.gender == -1 ? "Female" : "Other"
 		return ret
 	},
 }

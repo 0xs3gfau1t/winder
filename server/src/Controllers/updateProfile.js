@@ -189,7 +189,7 @@ async function sendEmailVerificationLink(req, response) {
 
 async function getUserInfo(req, res) {
 	try {
-		const user = await userModel.findOne({ _id: req.userdata._id }, [
+		let user = await userModel.findOne({ _id: req.userdata._id }, [
 			"email",
 			"dob",
 			"firstName",
@@ -204,11 +204,11 @@ async function getUserInfo(req, res) {
 			"preference",
 			"images",
 		])
-		res.json({
-			success: true,
-			user,
+		user = {
+			...JSON.parse(JSON.stringify(user)),
 			email_verified: req.userdata.email_verified,
-		})
+		}
+		res.json({ success: true, user })
 	} catch (err) {
 		console.log(err)
 		res.json({ success: false, error: "Failed to retrieve user info." })
