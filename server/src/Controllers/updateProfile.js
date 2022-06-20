@@ -73,7 +73,7 @@ async function updateProfile(req, response) {
 					if (options.passions.includes(j)) passions.push(j)
 				}
 				if (passions.length > 2) {
-					changedFields.passions = passions
+					changedFields.passion = passions
 					res[i] = true
 				} else res[i] = false
 				break
@@ -117,7 +117,9 @@ async function changePassword(req, response) {
 
 	const newPassword = req.body.newPassword
 	const oldPassword = req.body.oldPassword
-	const user = await userModel.findOne({ _id: req.userdata._id })
+	const user = await userModel.findOne({ _id: req.userdata._id }, [
+		"password",
+	])
 
 	if (await bcrypt.compare(oldPassword, user.password)) {
 		user.password = await bcrypt.hash(newPassword, 10)
@@ -175,9 +177,8 @@ async function verifyEmail(req, response) {
 }
 
 async function sendEmailVerificationLink(req, response) {
-	const to = await userModel.findOne({ _id: req.userdata._id })
+	const to = await userModel.findOne({ _id: req.userdata._id }, ["email"])
 	const token = btoa(generateToken({ id: to._id }, "10m"))
-	console.log("Token", token)
 	try {
 		await sendEmail(to.email, token)
 		response.json({ success: true })
@@ -188,17 +189,21 @@ async function sendEmailVerificationLink(req, response) {
 
 async function getUserInfo(req, res) {
 	try {
-		let user = await userModel.findOne(
-			{ _id: req.userdata._id },
-			{
-				password: 0,
-				refreshToken: 0,
-				pagination: 0,
-				createdAt: 0,
-				updatedAt: 0,
-				__v: 0,
-			}
-		)
+		let user = await userModel.findOne({ _id: req.userdata._id }, [
+			"email",
+			"dob",
+			"firstName",
+			"lastName",
+			"gender",
+			"username",
+			"university",
+			"program",
+			"batch",
+			"bio",
+			"passion",
+			"preference",
+			"images",
+		])
 		user = {
 			...JSON.parse(JSON.stringify(user)),
 			email_verified: req.userdata.email_verified,
