@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 
 const REQUIREDPASSIONS = 3
+const MAXPASSIONS = 5
 
 let userSchema = mongoose.Schema(
 	{
@@ -53,8 +54,10 @@ let userSchema = mongoose.Schema(
 		passion: {
 			type: [String],
 			validate: [
-				size => size.length >= REQUIREDPASSIONS,
-				`Passions must be greater than ${REQUIREDPASSIONS}`,
+				size =>
+					size.length >= REQUIREDPASSIONS &&
+					size.length <= MAXPASSIONS,
+				`Passions must be greater than ${REQUIREDPASSIONS} and smaller than ${MAXPASSIONS}`,
 			],
 		},
 		preference: {

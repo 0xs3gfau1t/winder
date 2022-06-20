@@ -70,7 +70,8 @@ async function updateProfile(req, response) {
 			case "passion":
 				let passions = []
 				for (const j of data[i]) {
-					if (options.passions.includes(j)) passions.push(j)
+					if (options.passions.includes(j) && !passions.includes(j))
+						passions.push(j)
 				}
 				if (passions.length > 2) {
 					changedFields.passion = passions
@@ -92,6 +93,21 @@ async function updateProfile(req, response) {
 			case "batch":
 				if (!isNaN(data[i])) {
 					changedFields.batch = data[i]
+					res[i] = true
+				} else res[i] = false
+				break
+			case "firstName":
+				changedFields.firstName = data[i]
+				res[i] = true
+				break
+			case "lastName":
+				changedFields.lastName = data[i]
+				res[i] = true
+				break
+			case "dob":
+				const d = new Date(Date.parse(data[i]))
+				if (!isNaN(d)) {
+					changedFields.dob = d
 					res[i] = true
 				} else res[i] = false
 				break
