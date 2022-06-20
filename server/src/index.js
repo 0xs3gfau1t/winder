@@ -43,6 +43,7 @@ app.use(
 	require("./Routes/Explore.js")
 )
 app.use("/changepassword", require("./Routes/ChangePassword.js"))
+app.use("/image", require("./Routes/Image.js"))
 
 // Start the server specied in PORT from .env
 server.listen(process.env.PORT || 4000, () => {
