@@ -178,7 +178,7 @@ async function verifyEmail(req, response) {
 
 async function sendEmailVerificationLink(req, response) {
 	const to = await userModel.findOne({ _id: req.userdata._id }, ["email"])
-	const token = generateToken({ id: to._id }, "10m")
+	const token = btoa(generateToken({ id: to._id }, "10m"))
 	try {
 		await sendEmail(to.email, token)
 		response.json({ success: true })
