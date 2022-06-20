@@ -63,13 +63,22 @@ export const verifyEmail = token => dispatch => {
 
 export const updateProfile = data => dispatch => {
 	let update = JSON.parse(JSON.stringify(data))
+	delete update["images"]
 	delete update["changed"]
 	delete update["preview"]
-	console.log(update)
+	if (update.hasOwnProperty("ageL") && update.hasOwnProperty("ageH")) {
+		update["age"] = [update.ageL, update.ageH]
+		delete update["ageL"]
+		delete update["ageH"]
+	} else {
+		delete update["ageL"]
+		delete update["ageH"]
+	}
+	if (data.bio.length == 0) delete update["bio"]
 	axios
 		.patch(url + `/settings`, update, { withCredentials: true })
 		.then(res => {
-			console.log(res)
+			// console.log(res)
 			// dispatch(loadUser())
 			dispatch(displayAlert("Profile Updated...", "success", true))
 		})
@@ -77,4 +86,20 @@ export const updateProfile = data => dispatch => {
 			console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger", true))
 		})
+	if (data.hasOwnProperty("images")) {
+		console.log(data.images)
+		axios
+			.post(url + `/image`, [data.images], { withCredentials: true })
+			.then(res => {
+				console.log(res)
+				// dispatch(loadUser())
+				dispatch(displayAlert("Profile Updated...", "success", true))
+			})
+			.catch(err => {
+				console.log(err)
+				dispatch(
+					displayAlert(err.response.data.message, "danger", true)
+				)
+			})
+	}
 }

@@ -19,23 +19,25 @@ function Profile() {
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
-		passions: user.passion ? user.passion : [],
 		preview: "https://thispersondoesnotexist.com/image",
 	})
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (e.target.name === "file") {
+		if (e.target.name === "images") {
 			let file = e.target.files[0]
 			setSettings(prev => ({
 				...prev,
 				preview: URL.createObjectURL(file),
-				file: file,
+				images: file,
 			}))
 		}
-		if (e.target.name == "passions") {
+		if (e.target.name == "passion") {
+			let upPassion = settings.passion
+				? [...settings.passion]
+				: [...user.passion]
 			setSettings(prev => ({
 				...prev,
-				passions: [...prev.passions, e.target.value],
+				passion: [...upPassion, e.target.value],
 			}))
 		} else {
 			let field_name = e.target.name
@@ -50,6 +52,13 @@ function Profile() {
 		e.preventDefault()
 		setSettings({ ...settings, changed: false })
 		dispatch(updateProfile(settings))
+	}
+	const delPassion = e => {
+		if (!settings.changed) setSettings({ ...settings, changed: true })
+		setSettings(prev => ({
+			...prev,
+			passion: user.passion.filter(pas => pas != e.target.textContent),
+		}))
 	}
 	return (
 		<Wrapper>
@@ -78,7 +87,7 @@ function Profile() {
 									id="upload"
 									type="file"
 									accept="image/*"
-									name="file"
+									name="images"
 								/>
 								<ul className="permanent-info m-2">
 									<div
@@ -159,21 +168,90 @@ function Profile() {
 							</div>
 							<h5 className="mt-6 mx-3">Passions</h5>
 							<div className="flex flex-wrap mx-7">
-								{settings.passions.map((passion, index) => (
-									<span
-										className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
-										key={index}
-									>
-										{passion}
-									</span>
-								))}
+								{user.passion &&
+									!settings.passion &&
+									user.passion.map((passion, index) => (
+										<span
+											className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+											key={index}
+											onClick={delPassion}
+										>
+											{passion}
+										</span>
+									))}
+								{settings.passion &&
+									settings.passion.map((passion, index) => (
+										<span
+											className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+											key={index}
+											onClick={delPassion}
+										>
+											{passion}
+										</span>
+									))}
 								<FormSelect
-									name="passions"
+									name="passion"
 									hint="Add passion"
 									options={misc.options.passions}
 								/>
 							</div>
 							<h4 className="m-5">You are looking for</h4>
+							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
+								<div className="grid grid-row-2">
+									<label
+										htmlFor="gender"
+										className="form-label"
+									>
+										University
+									</label>
+									<FormSelect
+										defaultV={""}
+										name="universityPreference"
+										options={misc.options.universities}
+									/>
+								</div>
+								<div className="grid grid-row-2">
+									<label htmlFor="age" className="form-label">
+										Programmme
+									</label>
+									<FormSelect
+										name="programPreference"
+										defaultV={""}
+										options={misc.options.programs}
+									/>
+								</div>
+								<div className="grid grid-row-2">
+									<label
+										htmlFor="gender"
+										className="form-label"
+									>
+										Gender
+									</label>
+									<FormSelect
+										defaultV={user.university}
+										name="universityPreference"
+										options={["male", "female", "other"]}
+									/>
+								</div>
+								<div className="grid grid-row-2">
+									<label htmlFor="age" className="form-label">
+										Age Range
+									</label>
+									<input
+										type="number"
+										size="2"
+										name="ageL"
+										placeholder="Min"
+									/>
+									<input
+										type="number"
+										size="2"
+										maxLength="2"
+										name="ageH"
+										placeholder="Max"
+									/>
+								</div>
+							</div>
 						</main>
 					</div>
 					{settings.changed && <SaveChanges />}
