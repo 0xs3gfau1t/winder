@@ -18,7 +18,7 @@ const checkEmailVerification = require("./Middlewares/verifyEmail")
 
 //Test endpoint for dev purpose
 app.get("/", (req, res) => {
-	res.json({ "message": "Welcome!" })
+	res.json({ message: "Welcome!" })
 })
 
 // Routing each endpoint to respective routers
@@ -43,6 +43,7 @@ app.use(
 	require("./Routes/Explore.js")
 )
 app.use("/changepassword", require("./Routes/ChangePassword.js"))
+app.use("/image", require("./Routes/Image.js"))
 
 // Start the server specied in PORT from .env
 server.listen(process.env.PORT || 4000, () => {
