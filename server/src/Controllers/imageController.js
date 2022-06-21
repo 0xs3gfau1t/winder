@@ -32,12 +32,12 @@ const getImg = async (req, res) => {
 
 const delImg = async (req, res) => {
 	const { id } = req.params
-	const userCnt = await userModel.count({
-		_id: req.userdata._id,
-		images: id,
-	})
-
-	if (userCnt == 0)
+	if (
+		!(await userModel.exists({
+			_id: req.userdata._id,
+			images: id,
+		}))
+	)
 		return res.status(400).json({
 			success: false,
 			error: "Bruh this ain't your image.",

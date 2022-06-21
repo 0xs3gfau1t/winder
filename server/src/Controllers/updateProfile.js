@@ -3,7 +3,7 @@ require("dotenv").config()
 const { userModel } = require("../Models/userModel")
 const { changeableData, options } = require("../Utils/variables")
 const { verifyToken, generateToken } = require("../Utils/jwtUtil")
-const { sendEmail } = require("../Controllers/sendEmail")
+const { sendVerifyMailEmail } = require("../Controllers/sendEmail")
 
 const bcrypt = require("bcrypt")
 
@@ -11,8 +11,14 @@ async function updateProfile(req, response) {
 	const data = req.body
 	const id = req.userdata._id
 
-	let changedFields = { preference: {} }
+	let changedFields = {
+		preference: await userModel
+			.findOne({ _id: id }, "preference")
+			.then(user => user.preference),
+	}
 	let res = {}
+
+	const userData = await userModel.findOne({ _id: id })
 
 	for (const i in data) {
 		// Check if this particular field is modifiable or not
@@ -70,7 +76,8 @@ async function updateProfile(req, response) {
 			case "passion":
 				let passions = []
 				for (const j of data[i]) {
-					if (options.passions.includes(j)) passions.push(j)
+					if (options.passions.includes(j) && !passions.includes(j))
+						passions.push(j)
 				}
 				if (passions.length > 2) {
 					changedFields.passion = passions
@@ -95,6 +102,20 @@ async function updateProfile(req, response) {
 					res[i] = true
 				} else res[i] = false
 				break
+			case "firstName":
+				changedFields.firstName = data[i]
+				res[i] = true
+				break
+			case "lastName":
+				changedFields.lastName = data[i]
+				res[i] = true
+				break
+			case "dob":
+				if (data[i] instanceof Date) {
+					changedFields.dob = data[i]
+					res[i] = true
+				} else res[i] = false
+				break
 			case "email":
 				console.log("Haven't yet decided to make it happen")
 				break
@@ -102,6 +123,7 @@ async function updateProfile(req, response) {
 				res[i] = "Invalid property. FBI open up."
 		}
 	}
+
 	try {
 		userModel.findOneAndUpdate({ _id: id }, changedFields).exec()
 		res.success = true
@@ -180,8 +202,8 @@ async function sendEmailVerificationLink(req, response) {
 	const to = await userModel.findOne({ _id: req.userdata._id }, ["email"])
 	const token = btoa(generateToken({ id: to._id }, "10m"))
 	try {
-		await sendEmail(to.email, token)
-		response.json({ success: true })
+		await sendVerifyMailEmail(to.email, token)
+		response.json({ message: "success" })
 	} catch (e) {
 		response.status(500).json({ success: false })
 	}

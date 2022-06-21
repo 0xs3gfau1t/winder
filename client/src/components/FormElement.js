@@ -18,11 +18,11 @@ const FormText = ({ type, name, value, handleChange, labelText }) => {
 	)
 }
 
-const FormSelect = ({ name, options = [], onChange, defaultV }) => {
+const FormSelect = ({ name, options = [], defaultV, hint }) => {
 	return (
 		<select name={name} onChange={onchange} className="h-9">
 			<option value="" hidden={!defaultV}>
-				{defaultV ? defaultV : "Select One"}
+				{defaultV ? defaultV : hint || "Select one"}
 			</option>
 			{options.map((opt, index) => (
 				<option key={index} value={opt}>
