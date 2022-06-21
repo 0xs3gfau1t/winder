@@ -12,6 +12,8 @@ const changableData = {
 	bio: true,
 	refreshToken: false,
 	university: true,
+	firstName: false,
+	lastName: false,
 	password: false,
 	username: false,
 	program: true,
