@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md"
 import { GoVerified } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { loadOptions } from "../actions/misc"
-import { emailVerifyRequest, updateProfile } from "../actions/user"
+import { emailVerifyRequest, updateProfile, upImg } from "../actions/user"
 import Wrapper from "../assets/wrappers/SettingPage"
 import Nav from "../components/Nav/Nav"
 import { Alert, FormSelect, Bar, SaveChanges } from "../components"
@@ -12,6 +12,7 @@ import { Alert, FormSelect, Bar, SaveChanges } from "../components"
 function Profile() {
 	const misc = useSelector(state => state.misc)
 	const user = useSelector(state => state.auth.user)
+
 	const dispatch = useDispatch()
 	useEffect(() => {
 		dispatch(loadOptions())
@@ -21,15 +22,18 @@ function Profile() {
 		bio: "",
 		preview: "https://thispersondoesnotexist.com/image",
 	})
+	const [imFile, setFile] = useState()
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
 		if (e.target.name === "images") {
 			let file = e.target.files[0]
-			setSettings(prev => ({
-				...prev,
-				preview: URL.createObjectURL(file),
-				images: file,
-			}))
+			console.log(file)
+			setFile(e.target.files[0])
+			// setSettings(prev => ({
+			// 	...prev,
+			// 	preview: URL.createObjectURL(file),
+			// 	file: file,
+			// }))
 		}
 		if (e.target.name == "passion") {
 			let upPassion = settings.passion
@@ -50,6 +54,7 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
+		if (imFile) dispatch(upImg(imFile))
 		setSettings({ ...settings, changed: false })
 		dispatch(updateProfile(settings))
 	}
@@ -59,6 +64,9 @@ function Profile() {
 			...prev,
 			passion: user.passion.filter(pas => pas != e.target.textContent),
 		}))
+	}
+	const imgH = e => {
+		dispatch(upImg(e.target.files[0]))
 	}
 	return (
 		<Wrapper>
@@ -205,18 +213,26 @@ function Profile() {
 										University
 									</label>
 									<FormSelect
-										defaultV={""}
+										defaultV={
+											user.preference
+												? user.preference.university
+												: ""
+										}
 										name="universityPreference"
 										options={misc.options.universities}
 									/>
 								</div>
 								<div className="grid grid-row-2">
 									<label htmlFor="age" className="form-label">
-										Programmme
+										Program
 									</label>
 									<FormSelect
 										name="programPreference"
-										defaultV={""}
+										defaultV={
+											user.preference
+												? user.preference.program
+												: ""
+										}
 										options={misc.options.programs}
 									/>
 								</div>
@@ -228,8 +244,12 @@ function Profile() {
 										Gender
 									</label>
 									<FormSelect
-										defaultV={user.university}
-										name="universityPreference"
+										defaultV={
+											user.preference
+												? user.preference.gender
+												: ""
+										}
+										name="gender"
 										options={["male", "female", "other"]}
 									/>
 								</div>

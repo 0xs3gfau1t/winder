@@ -89,7 +89,7 @@ export const updateProfile = data => dispatch => {
 	if (data.hasOwnProperty("images")) {
 		console.log(data.images)
 		axios
-			.post(url + `/image`, [data.images], { withCredentials: true })
+			.post(url + `/image`, data.images, { withCredentials: true })
 			.then(res => {
 				console.log(res)
 				// dispatch(loadUser())
@@ -102,4 +102,25 @@ export const updateProfile = data => dispatch => {
 				)
 			})
 	}
+}
+
+export const upImg = img => dispatch => {
+	console.log(img)
+	const formData = new FormData()
+	formData.append("file", img, img.name)
+	axios
+		.post(url + "/image", formData, { withCredentials: true })
+		.then(res => {
+			dispatch(
+				displayAlert(
+					"Your email is verified now. Your journey to meet your soulmate begins now...",
+					"success",
+					true
+				)
+			)
+		})
+		.catch(err => {
+			console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger", true))
+		})
 }
