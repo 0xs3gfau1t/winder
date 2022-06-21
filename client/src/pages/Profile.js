@@ -5,7 +5,6 @@ import { GoVerified } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { loadOptions } from "../actions/misc"
 import { emailVerifyRequest, updateProfile, upImg } from "../actions/user"
-import Wrapper from "../assets/wrappers/SettingPage"
 import Nav from "../components/Nav/Nav"
 import { Alert, FormSelect, Bar, SaveChanges } from "../components"
 
@@ -56,6 +55,10 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
+		if ("ageL" in settings && !("ageH" in settings))
+			setSettings({ ...settings, ageH: user.preferance.age[1] })
+		if ("ageH" in settings && !("ageL" in settings))
+			setSettings({ ...settings, ageL: user.preferance.age[0] })
 		setSettings({ ...settings, changed: false })
 		dispatch(updateProfile(settings))
 	}
@@ -67,7 +70,7 @@ function Profile() {
 		}))
 	}
 	return (
-		<Wrapper>
+		<>
 			<Bar title={"Settings"} />
 			<div className="navbarr">
 				<Nav current="Settings" />
@@ -297,7 +300,7 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
-		</Wrapper>
+		</>
 	)
 }
 

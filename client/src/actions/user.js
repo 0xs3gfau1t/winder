@@ -68,7 +68,7 @@ export const updateProfile = data => dispatch => {
 	delete update["changed"]
 	delete update["preview"]
 	if (update.hasOwnProperty("ageL") && update.hasOwnProperty("ageH")) {
-		update["age"] = [update.ageL, update.ageH]
+		update["agePreference"] = [update.ageL, update.ageH]
 		delete update["ageL"]
 		delete update["ageH"]
 	} else {
