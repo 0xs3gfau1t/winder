@@ -39,7 +39,7 @@ const validators = {
 	university: value => [options.universities.includes(value), value],
 	program: value => [options.programs.includes(value), value],
 	batch: value => [!isNaN(value), value],
-	bio: value => [value.length <= options.bio],
+	bio: value => [value.length <= options.bio, value],
 	passion: value => {
 		let passions = []
 		for (let val of value)
