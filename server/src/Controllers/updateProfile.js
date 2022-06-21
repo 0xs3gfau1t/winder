@@ -18,9 +18,11 @@ async function updateProfile(req, response) {
 	}
 	let res = {}
 
+	const userData = await userModel.findOne({ _id: id })
+
 	for (const i in data) {
 		// Check if this particular field is modifiable or not
-		if (!changableData[i]) {
+		if (!changableData[i] && userData[i]) {
 			res[i] = false
 			console.log(`${i} can't be changed`)
 			continue
@@ -109,9 +111,8 @@ async function updateProfile(req, response) {
 				res[i] = true
 				break
 			case "dob":
-				const d = new Date(Date.parse(data[i]))
-				if (!isNaN(d)) {
-					changedFields.dob = d
+				if (data[i] instanceof Date) {
+					changedFields.dob = data[i]
 					res[i] = true
 				} else res[i] = false
 				break
