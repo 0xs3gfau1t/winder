@@ -63,6 +63,7 @@ export const verifyEmail = token => dispatch => {
 
 export const updateProfile = data => dispatch => {
 	let update = JSON.parse(JSON.stringify(data))
+	delete update["file"]
 	delete update["images"]
 	delete update["changed"]
 	delete update["preview"]
@@ -86,10 +87,18 @@ export const updateProfile = data => dispatch => {
 			console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger", true))
 		})
-	if (data.hasOwnProperty("images")) {
-		console.log(data.images)
+	if (data.hasOwnProperty("file")) {
+		const formData = new FormData()
+		formData.append("file", data.file)
+		const config = {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+			withCredentials: true,
+		}
+		console.log(data.file)
 		axios
-			.post(url + `/image`, data.images, { withCredentials: true })
+			.post(url + `/image`, formData, config)
 			.then(res => {
 				console.log(res)
 				// dispatch(loadUser())

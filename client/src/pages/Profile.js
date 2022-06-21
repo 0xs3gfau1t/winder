@@ -14,26 +14,28 @@ function Profile() {
 	const user = useSelector(state => state.auth.user)
 
 	const dispatch = useDispatch()
-	useEffect(() => {
-		dispatch(loadOptions())
-	}, [])
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
-		preview: "https://thispersondoesnotexist.com/image",
+		preview: "", // + user.images[0],
 	})
-	const [imFile, setFile] = useState()
+	useEffect(() => {
+		if (user.images)
+			setSettings(prev => ({
+				...prev,
+				preview: process.env.URL + "/image/" + user.images[0],
+			}))
+		dispatch(loadOptions())
+	}, [user])
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
 		if (e.target.name === "images") {
 			let file = e.target.files[0]
-			console.log(file)
-			setFile(e.target.files[0])
-			// setSettings(prev => ({
-			// 	...prev,
-			// 	preview: URL.createObjectURL(file),
-			// 	file: file,
-			// }))
+			setSettings(prev => ({
+				...prev,
+				preview: URL.createObjectURL(file),
+				file: file,
+			}))
 		}
 		if (e.target.name == "passion") {
 			let upPassion = settings.passion
@@ -54,7 +56,6 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
-		if (imFile) dispatch(upImg(imFile))
 		setSettings({ ...settings, changed: false })
 		dispatch(updateProfile(settings))
 	}
@@ -65,9 +66,6 @@ function Profile() {
 			passion: user.passion.filter(pas => pas != e.target.textContent),
 		}))
 	}
-	const imgH = e => {
-		dispatch(upImg(e.target.files[0]))
-	}
 	return (
 		<Wrapper>
 			<Bar title={"Settings"} />
@@ -76,10 +74,15 @@ function Profile() {
 			</div>
 			<div className="container mx-auto">
 				{misc.showAlert && <Alert style={{ marginTop: "-4%" }} />}
-				<form onChange={onChange} onSubmit={onSubmit}>
+				<form
+					encType="multipart/form-data"
+					onChange={onChange}
+					onSubmit={onSubmit}
+				>
 					<div className="flex flex-row flex-wrap pb-4">
 						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-r-2 h-full">
 							<div className="sticky top-0 p-2 w-full profile-form">
+								<h5>Profile Picture</h5>
 								<img
 									className="h-76 w-76"
 									src={settings.preview}
@@ -257,19 +260,36 @@ function Profile() {
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
-									<input
-										type="number"
-										size="2"
-										name="ageL"
-										placeholder="Min"
-									/>
-									<input
-										type="number"
-										size="2"
-										maxLength="2"
-										name="ageH"
-										placeholder="Max"
-									/>
+									<div className="grid grid-cols-4">
+										<span className="px-2">From</span>
+										<input
+											className="w-24"
+											type="number"
+											max="51"
+											min="18"
+											size="2"
+											name="ageL"
+											placeholder={
+												user.preference
+													? user.preference.age[0]
+													: "Min"
+											}
+										/>
+										<span className="px-2">to</span>
+										<input
+											className="w-24"
+											type="number"
+											max="52"
+											min="19"
+											maxLength="2"
+											name="ageH"
+											placeholder={
+												user.preference
+													? user.preference.age[1]
+													: "Max"
+											}
+										/>
+									</div>
 								</div>
 							</div>
 						</main>
