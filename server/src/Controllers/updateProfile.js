@@ -1,7 +1,7 @@
 require("dotenv").config()
 
 const { userModel } = require("../Models/userModel")
-const { changableData, options } = require("../Utils/variables")
+const { changeableData, options } = require("../Utils/variables")
 const { verifyToken, generateToken } = require("../Utils/jwtUtil")
 const { sendEmail } = require("../Controllers/sendEmail")
 
@@ -16,7 +16,7 @@ async function updateProfile(req, response) {
 
 	for (const i in data) {
 		// Check if this particular field is modifiable or not
-		if (!changableData[i]) {
+		if (!changeableData[i]) {
 			res[i] = false
 			console.log(`${i} can't be changed`)
 			continue
