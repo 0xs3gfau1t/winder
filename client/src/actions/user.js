@@ -126,7 +126,7 @@ export const removeDp = id => dispatch => {
 				type: DELETE_DP,
 				payload: id,
 			}),
-			window.location.reload()
+			setTimeout(() => window.location.reload(), 2000)
 		)
 		.catch(err => {
 			console.log(err)

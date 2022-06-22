@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Nav from "../components/Nav/Nav"
-import { Bar } from "../components"
+import { Bar, ChatBody, ChatHead } from "../components"
 
 function Profile() {
 	const misc = useSelector(state => state.misc)
 	const dispatch = useDispatch()
-
+	const a = Array.from(Array(50).keys())
 	useEffect(() => {})
 
 	return (
 		<>
 			<Bar title={"Chats"} />
-			<Nav current="Settings" />
-			<div className="container mx-2 border-2 w-4/5">
-				<div className="flex flex-row flex-wrap">
-					<aside className="w-full sm:w-1/3 md:w-1/4 border-2 rounded-md h-screen">
-						<div className="sticky top-0 p-2 w-full profile-form">
-							Asided
+			<Nav current="chat" />
+			<div className="container ml-4">
+				<div className="min-w-full border-4 rounded-xl lg:grid lg:grid-cols-3">
+					<div className="border-r border-gray-300 lg:col-span-1">
+						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600">
+							Chats
+						</h2>
+						<div className="overflow-auto h-[85vh]">
+							{a.map((element, key) => {
+								return (
+									<div className="chatContainer">
+										<ChatHead key={key} />
+									</div>
+								)
+							})}
 						</div>
-					</aside>
-					<main
-						role="main"
-						className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2"
-					>
-						Main
-					</main>
+					</div>
+					<div className="lg:col-span-2 lg:block">
+						<ChatBody />
+					</div>
 				</div>
 			</div>
 		</>
