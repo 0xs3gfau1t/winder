@@ -1,7 +1,5 @@
-require("dotenv").config()
-
 const { userModel } = require("../Models/userModel")
-const { changeableData, options } = require("../Utils/variables")
+const { changeableData } = require("../Utils/variables")
 const { verifyToken, generateToken } = require("../Utils/jwtUtil")
 const { sendVerifyMailEmail } = require("../Controllers/sendEmail")
 
@@ -47,19 +45,19 @@ async function updateProfile(req, response) {
 				delete data.agePreference
 				break
 			default:
-				console.log('Nothing to do here', i)
+				console.log("Nothing to do here", i)
 				break
-				// res[i] = "Invalid property. FBI open up."
+			// res[i] = "Invalid property. FBI open up."
 		}
 	}
 	data.preference = preference
 
 	try {
 		await userModel.findOneAndUpdate({ _id: id }, data).exec()
-		response.json({success: true, updated: validity})
+		response.json({ success: true, updated: validity })
 	} catch (e) {
 		console.log(e)
-		response.status(500).json({success: false})
+		response.status(500).json({ success: false })
 	}
 }
 async function changePassword(req, response) {

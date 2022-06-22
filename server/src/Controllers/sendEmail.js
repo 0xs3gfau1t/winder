@@ -1,6 +1,3 @@
-require("dotenv").config()
-
-const nodemailer = require("nodemailer")
 const mailer = require("../Config/mailer")
 
 async function sendForgotPasswordEmail(mail, token) {
