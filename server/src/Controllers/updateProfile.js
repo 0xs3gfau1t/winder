@@ -20,7 +20,7 @@ async function updateProfile(req, response) {
 
 	for (const i in data) {
 		// Check if this particular field is modifiable or not
-		if (!changeableData[i] && userData[i]) {
+		if (!changeableData[i] && userData[i] !== undefined) {
 			delete data[i]
 			validity[i] = false
 			console.log(`${i} can't be changed`)
