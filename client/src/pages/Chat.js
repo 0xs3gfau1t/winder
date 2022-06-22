@@ -1,30 +1,35 @@
-import React from "react"
-import ChatHead from "../components/ChatHead/ChatHead"
+import React, { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import Nav from "../components/Nav/Nav"
-import { Alert, Bar } from "../components"
+import { Bar } from "../components"
 
-function Chat() {
-	const a = Array.from(Array(50).keys())
+function Profile() {
+	const misc = useSelector(state => state.misc)
+	const dispatch = useDispatch()
+
+	useEffect(() => {})
 
 	return (
 		<>
 			<Bar title={"Chats"} />
-			<div className="navbarr">
-				<Nav current="Chat" />
-			</div>
-			<div className="container ml-28 w-4/5">
-				<div className="flex flex-row flex-wrap pb-4">
-					{a.map(element => {
-						return (
-							<div className="h-64 w-64 p-4 mb-9 mx-2">
-								<ChatHead />
-							</div>
-						)
-					})}
+			<Nav current="Settings" />
+			<div className="container mx-2 border-2 w-4/5">
+				<div className="flex flex-row flex-wrap">
+					<aside className="w-full sm:w-1/3 md:w-1/4 border-2 rounded-md h-screen">
+						<div className="sticky top-0 p-2 w-full profile-form">
+							Asided
+						</div>
+					</aside>
+					<main
+						role="main"
+						className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2"
+					>
+						Main
+					</main>
 				</div>
 			</div>
 		</>
 	)
 }
 
-export default Chat
+export default Profile

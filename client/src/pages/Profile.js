@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { MdEdit } from "react-icons/md"
-import { GoVerified } from "react-icons/go"
+import { GoVerified, GoX } from "react-icons/go"
 import { IconContext } from "react-icons"
-import { loadOptions } from "../actions/misc"
-import { emailVerifyRequest, updateProfile, upImg } from "../actions/user"
+import { displayAlert, loadOptions } from "../actions/misc"
+import { emailVerifyRequest, updateProfile, removeDp } from "../actions/user"
 import Nav from "../components/Nav/Nav"
 import { Alert, FormSelect, Bar, SaveChanges } from "../components"
 
@@ -62,12 +62,30 @@ function Profile() {
 		setSettings({ ...settings, changed: false })
 		dispatch(updateProfile(settings))
 	}
-	const delPassion = e => {
+	const delPassion = passion => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		setSettings(prev => ({
-			...prev,
-			passion: user.passion.filter(pas => pas != e.target.textContent),
-		}))
+		if (settings.passion)
+			setSettings(prev => ({
+				...prev,
+				passion: settings.passion.filter(pas => pas != passion),
+			}))
+		else
+			setSettings(prev => ({
+				...prev,
+				passion: user.passion.filter(pas => pas != passion),
+			}))
+	}
+	const removeDP = () => {
+		if (user.images.length < 2) {
+			dispatch(
+				displayAlert(
+					"Can't remove! This is the only image you have.",
+					"danger"
+				)
+			)
+			return
+		}
+		dispatch(removeDp(user.images[0]))
 	}
 	return (
 		<>
@@ -76,23 +94,30 @@ function Profile() {
 				<Nav current="Settings" />
 			</div>
 			<div className="container mx-auto">
-				{misc.showAlert && <Alert style={{ marginTop: "-4%" }} />}
+				{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
 				<form
 					encType="multipart/form-data"
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-row flex-wrap pb-4">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-r-2 h-full">
+						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-md hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 w-full profile-form">
 								<h5>Profile Picture</h5>
 								<img
-									className="h-76 w-76"
+									className="h-60 w-64 border-2"
 									src={settings.preview}
 								/>
+								<span className="remove-dp" onClick={removeDP}>
+									<IconContext.Provider
+										value={{ color: "red", size: "1em" }}
+									>
+										<GoX />
+									</IconContext.Provider>
+								</span>
 								<label className="change-dp" htmlFor="upload">
 									<IconContext.Provider
-										value={{ color: "cyan", size: "2em" }}
+										value={{ color: "cyan", size: "1em" }}
 									>
 										<MdEdit />
 									</IconContext.Provider>
@@ -185,23 +210,38 @@ function Profile() {
 								{user.passion &&
 									!settings.passion &&
 									user.passion.map((passion, index) => (
-										<span
-											className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
-											key={index}
-											onClick={delPassion}
-										>
-											{passion}
-										</span>
+										<div key={index}>
+											<span className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200">
+												{passion}
+												<span
+													onClick={e =>
+														delPassion(passion)
+													}
+													className="absolute float-right leading-3 text-rose-600 bg-slate-400 rounded-xl leading-3"
+												>
+													x
+												</span>
+											</span>
+										</div>
 									))}
 								{settings.passion &&
 									settings.passion.map((passion, index) => (
-										<span
-											className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
-											key={index}
-											onClick={delPassion}
-										>
-											{passion}
-										</span>
+										<div key={index}>
+											<span
+												className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+												key={index}
+											>
+												{passion}
+												<span
+													onClick={e =>
+														delPassion(passion)
+													}
+													className="absolute float-right leading-3 -m-1 text-rose-600 rounded-xl"
+												>
+													x
+												</span>
+											</span>
+										</div>
 									))}
 								<FormSelect
 									name="passion"
@@ -273,7 +313,7 @@ function Profile() {
 											size="2"
 											name="ageL"
 											placeholder={
-												user.preference
+												user.preference.age
 													? user.preference.age[0]
 													: "Min"
 											}
@@ -287,7 +327,7 @@ function Profile() {
 											maxLength="2"
 											name="ageH"
 											placeholder={
-												user.preference
+												user.preference.age
 													? user.preference.age[1]
 													: "Max"
 											}
