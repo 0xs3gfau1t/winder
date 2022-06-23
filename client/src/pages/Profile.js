@@ -90,9 +90,6 @@ function Profile() {
 	return (
 		<>
 			<Bar title={"Settings"} />
-			<div className="navbarr">
-				<Nav current="Settings" />
-			</div>
 			<div className="container mx-auto">
 				{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
 				<form
@@ -107,6 +104,7 @@ function Profile() {
 								<img
 									className="h-60 w-64 border-2"
 									src={settings.preview}
+									alt={user.firstName}
 								/>
 								<span className="remove-dp" onClick={removeDP}>
 									<IconContext.Provider

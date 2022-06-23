@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import Nav from "../components/Nav/Nav"
 import { Bar, ChatBody, ChatHead } from "../components"
 
-function Profile() {
+function Chat() {
 	const misc = useSelector(state => state.misc)
 	const dispatch = useDispatch()
 	const a = Array.from(Array(50).keys())
@@ -12,7 +12,6 @@ function Profile() {
 	return (
 		<>
 			<Bar title={"Chats"} />
-			<Nav current="chat" />
 			<div className="container ml-4">
 				<div className="min-w-full border-4 rounded-xl lg:grid lg:grid-cols-3">
 					<div className="border-r border-gray-300 lg:col-span-1">
@@ -20,10 +19,10 @@ function Profile() {
 							Chats
 						</h2>
 						<div className="overflow-auto h-[85vh]">
-							{a.map((element, key) => {
+							{a.map((element, index) => {
 								return (
-									<div className="chatContainer">
-										<ChatHead key={key} />
+									<div key={index} className="chatContainer">
+										<ChatHead />
 									</div>
 								)
 							})}
@@ -38,4 +37,4 @@ function Profile() {
 	)
 }
 
-export default Profile
+export default Chat

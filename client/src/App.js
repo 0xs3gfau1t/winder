@@ -2,6 +2,7 @@ import React from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Provider } from "react-redux"
 import { CookiesProvider } from "react-cookie"
+import io from "socket.io-client"
 import store from "./store"
 import {
 	Landing,
@@ -14,19 +15,16 @@ import {
 	Chat,
 } from "./pages"
 import PrivateRoute from "./components/privateRoute"
+import Nav from "./components/Nav/Nav"
 import "./app.css"
 
+const socket = io.connect(process.env.URL)
 const App = () => {
 	return (
 		<CookiesProvider>
 			<Provider store={store}>
 				<Router>
-					{/* <nav>
-          <Link to='/' >Dashbaord</Link>
-          <Link to='/landing' >Landing</Link>
-          <Link to='/login' >Login</Link>
-          
-        </nav> */}
+					<Nav current="Notification" />
 					<Routes>
 						<Route path="/" element={<Landing />} />
 						<Route path="/login" element={<Login />} />
@@ -36,6 +34,7 @@ const App = () => {
 						/>
 						<Route path="*" element={<Error />} />
 						<Route
+							exact={true}
 							path="/profile"
 							element={
 								<PrivateRoute>
@@ -44,6 +43,7 @@ const App = () => {
 							}
 						/>
 						<Route
+							exact={true}
 							path="/notification"
 							element={
 								<PrivateRoute>
@@ -52,6 +52,7 @@ const App = () => {
 							}
 						/>
 						<Route
+							exact={true}
 							path="/explore"
 							element={
 								<PrivateRoute>
@@ -60,6 +61,7 @@ const App = () => {
 							}
 						/>
 						<Route
+							exact={true}
 							path="/chat"
 							element={
 								<PrivateRoute>

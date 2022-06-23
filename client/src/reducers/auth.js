@@ -44,6 +44,7 @@ export default function (state = initialState, action) {
 		case LOAD_USER:
 			return {
 				...state,
+				isAuthenticated: true,
 				user: action.payload,
 			}
 		case DELETE_DP:
