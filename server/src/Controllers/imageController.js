@@ -5,8 +5,13 @@ const { userModel } = require("../Models/userModel")
 const putImg = async (req, res) => {
 	if (req.file === undefined) return res.send("you must select a file.")
 
-	const user = await userModel.findOne({ _id: req.userdata._id }, ["images"])
-	user.images.push(req.file.id)
+	const user = req.user
+	if (req.body.isDP === "true" && user.images.length > 0) {
+		grid.gridfsBucket.delete(mongoose.Types.ObjectId(user.images[0]))
+		user.images[0] = req.file.id
+	} else {
+		user.images.push(req.file.id)
+	}
 	await user.save({ validateBeforeSave: false }) // Remove this validateBeforeSave
 
 	return res.json({ success: true, id: req.file.id })

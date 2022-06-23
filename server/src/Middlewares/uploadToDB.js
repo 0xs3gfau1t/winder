@@ -12,17 +12,28 @@ function checkFileType(file, callback) {
 	)
 	const mime = whitelistMime.includes(file.mimetype)
 
-	console.log(file.originalname, file.mimetype)
-	console.log(path.extname(file.originalname))
-
 	if (ext && mime) return callback(null, true)
-	else callback("Error: Images Only!")
+	else callback("Not image")
 }
 
 const upload = multer({
 	storage: storage,
-	fileFilter: function (req, file, callback) {
-		checkFileType(file, callback)
+	fileFilter: async function (req, file, callback) {
+		try {
+			const user = await userModel.findOne({ _id: req.userdata._id }, [
+				"images",
+			])
+			const nextIdx = user.images.length
+
+			if (nextIdx >= 9 && req.body.isDP !== "true")
+				callback("ImageList Full")
+
+			req.user = user
+			req.imgIdx = nextIdx
+			checkFileType(file, callback)
+		} catch (err) {
+			callback("UserFetch Fail")
+		}
 	},
 	limits: {
 		fileSize: 3 * 1024 * 1024, // 3MB
