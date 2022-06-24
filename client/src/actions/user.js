@@ -13,7 +13,7 @@ export const loadUser = () => dispatch => {
 			})
 		})
 		.catch(err => {
-			dispatch(displayAlert(err.response.data.error, "danger"))
+			// dispatch(displayAlert(err.response.data.error, "danger"))
 			dispatch({
 				type: LOGOUT,
 			})
@@ -85,11 +85,11 @@ export const updateProfile = data => dispatch => {
 		.then(res => {
 			// console.log(res)
 			// dispatch(loadUser())
-			dispatch(displayAlert("Profile Updated...", "success", true))
+			dispatch(displayAlert("Profile Updated...", "success"))
 		})
 		.catch(err => {
 			console.log(err)
-			dispatch(displayAlert(err.response.data.message, "danger", true))
+			dispatch(displayAlert(err.response.data.message, "danger"))
 		})
 	if (data.hasOwnProperty("file")) {
 		const formData = new FormData()

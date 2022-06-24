@@ -92,15 +92,7 @@ let userSchema = mongoose.Schema(
 			},
 		},
 	},
-	{ timestamps: true },
-	{
-		toJSON: {
-			getters: true,
-			transform: function (doc, ret) {
-				delete ret._id
-			},
-		},
-	}
+	{ timestamps: true }
 )
 
 userSchema.pre("save", function (next) {
@@ -125,7 +117,6 @@ userSchema.pre("save", function (next) {
 //get data in JSON format form model
 userSchema.options.toJSON = {
 	transform: function (doc, ret, options) {
-		delete ret._id
 		delete ret.password
 		delete ret.__v
 		ret.dob = ret.dob.toLocaleDateString("en-US", {

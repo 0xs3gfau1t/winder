@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { Provider } from "react-redux"
+import { Provider, useSelector } from "react-redux"
 import { CookiesProvider } from "react-cookie"
 import io from "socket.io-client"
 import store from "./store"
@@ -18,8 +18,14 @@ import PrivateRoute from "./components/privateRoute"
 import Nav from "./components/Nav/Nav"
 import "./app.css"
 
-const socket = io.connect(process.env.URL)
 const App = () => {
+	const socket = io.connect(process.env.URL)
+
+	useEffect(() => {
+		socket.on("chat", data => {
+			console.log("Chat")
+		})
+	}, [socket])
 	return (
 		<CookiesProvider>
 			<Provider store={store}>

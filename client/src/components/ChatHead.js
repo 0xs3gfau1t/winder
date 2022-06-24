@@ -24,7 +24,9 @@ function ChatHead() {
 						{data.lastTime}
 					</span>
 				</div>
-				<span className="block ml-2 text-sm text-gray-600">bye</span>
+				<span className="block ml-2 text-sm text-gray-600">
+					{data.lastMsg}
+				</span>
 			</div>
 		</div>
 	)
