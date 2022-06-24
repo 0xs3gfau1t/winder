@@ -9,6 +9,22 @@ npm install
 npm run devStart
 ```
 
+## Socket
+- Join the socket like so
+```
+const {io} = require("socket.io-client")
+const socket = io("http://localhost:4000", {withCredentials: true})
+```
+
+- Handle 2 socket events: `chat` and `notification`
+```
+socket.on('chat', (payload)=>{
+    // append the message details to the chat box
+})
+```
+- `chat`'s payload will be `{_id, content, createdAt}`
+- `notification`'s payload will be `{_id, title, type}`
+
 ## **`/auth`**
 
 ### `/register`
