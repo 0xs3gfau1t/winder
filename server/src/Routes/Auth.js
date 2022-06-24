@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
 			_id: user._id,
 			email_verified: user.username !== undefined ? true : false,
 		}
-		const accessToken = generateToken(userdata, "1s")
+		const accessToken = generateToken(userdata, "1h")
 		const refreshToken = generateToken(userdata, "1d")
 		res.cookie("accessToken", accessToken, { httpOnly: true })
 

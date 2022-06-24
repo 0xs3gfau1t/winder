@@ -5,7 +5,6 @@ const router = express.Router()
 // Middlewares
 const authenticateToken = require("../Middlewares/authenticateToken")
 const { upload } = require("../Middlewares/uploadToDB")
-const { imgSpotVacant } = require("../Middlewares/imgSpotVacant")
 
 // Controllers
 const { putImg, getImg, delImg } = require("../Controllers/imageController")
