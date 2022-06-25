@@ -67,6 +67,12 @@ const CarouselStyled = styled.div`
 		display: block;
 	}
 
+	.header {
+		width: 100%;
+		position: absolute;
+		top: 0px;
+	}
+
 	.indicator {
 		position: absolute;
 		top: 0px;
@@ -84,6 +90,12 @@ const CarouselStyled = styled.div`
 	.indicator-btn--active {
 		position: relative;
 		background-color: white;
+	}
+
+	.context-menu{
+		position: absolute;
+		top: 2rem;
+		width: 100%;
 	}
 `
 

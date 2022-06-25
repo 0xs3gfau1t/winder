@@ -24,16 +24,13 @@ function Explore() {
 
 	const dispatch = useDispatch()
 
-	console.log("Rendering explore")
-
 	useEffect(() => {
 		dispatch(loadExplore())
 	}, [])
 
-	const accept = e => {
-		console.log("Pressed like")
-		dispatch(sendLike(users[current].id))
-	}
+	const accept = e =>
+		(users[current] && dispatch(sendLike(users[current].id))) ||
+		console.log("No user to accept.")
 
 	return (
 		<>
@@ -45,15 +42,17 @@ function Explore() {
 				<div className="carousel-wrapper">
 					<Carousel
 						imgs={
-							users[0]?.images.map(
+							users[current]?.images.map(
 								item => process.env.URL + "/image/" + item
-							) || []
+							) || [
+								"https://via.placeholder.com/300/000000/FFFFFF/?text=No+Images+To+Load",
+							]
 						}
 					/>
 				</div>
 				<div className="outer">
 					<div className="details">
-						<UserDetails user={users[0] || {}} />
+						<UserDetails user={users[current] || {}} />
 					</div>
 					<IconContext.Provider
 						value={{ color: "green", size: "2em" }}

@@ -1,4 +1,4 @@
-import { EXPLORE_LOAD, EXPLORE_ACCEPT } from "../actions/types"
+import { EXPLORE_LOAD, EXPLORE_NEXT } from "../actions/types"
 
 const initialState = { isLoading: true, current: 0, users: [] }
 
@@ -9,8 +9,11 @@ export default function (state = initialState, action) {
 				...state,
 				users: action.payload,
 			}
-		case EXPLORE_ACCEPT:
-			return { ...state }
+		case EXPLORE_NEXT:
+			return {
+				...state,
+				current: state.current + 1,
+			}
 		default:
 			return state
 	}

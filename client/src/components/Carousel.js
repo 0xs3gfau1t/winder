@@ -1,11 +1,25 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { IconContext } from "react-icons"
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
 
 import CarouselStyled from "../assets/wrappers/Carousel"
+import DropDown from "./DropDown"
 
-const Carousel = ({ imgs, width, height }) => {
+const Carousel = ({ imgs, width, height, options = [] }) => {
 	const [current, setCurrent] = useState(0)
+
+	const download = async () => {
+		const image = await fetch(imgs[current])
+		const imageURL = URL.createObjectURL(await image.blob())
+
+		const el = document.createElement("a")
+		el.href = imageURL
+		el.download = imgs[current].split("/")[4] + ".jpg"
+		document.body.appendChild(el)
+		el.click()
+		document.body.removeChild(el)
+	}
+
 	const moveLeft = () =>
 		setCurrent(current => {
 			return current === 0 ? imgs.length - 1 : current - 1
@@ -14,6 +28,10 @@ const Carousel = ({ imgs, width, height }) => {
 		setCurrent(current => {
 			return current === imgs.length - 1 ? 0 : current + 1
 		})
+
+	useEffect(() => {
+		setCurrent(0)
+	}, [imgs])
 
 	return (
 		<CarouselStyled width={width} height={height} len={imgs.length}>
@@ -46,15 +64,20 @@ const Carousel = ({ imgs, width, height }) => {
 					</div>
 				</button>
 			</IconContext.Provider>
-			<div className="indicator">
-				{imgs.map((_, idx) => (
-					<button
-						key={idx}
-						className={`indicator-btn ${
-							idx === current ? "indicator-btn--active" : ""
-						}`}
-					></button>
-				))}
+			<div className="header">
+				<div className="indicator">
+					{imgs.map((_, idx) => (
+						<button
+							key={idx}
+							className={`indicator-btn ${
+								idx === current ? "indicator-btn--active" : ""
+							}`}
+						></button>
+					))}
+				</div>
+				<div className="context-menu">
+					<DropDown options={[...options, ["Download", download]]} />
+				</div>
 			</div>
 		</CarouselStyled>
 	)
