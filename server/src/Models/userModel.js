@@ -122,19 +122,25 @@ userSchema.pre("save", function (next) {
 	next()
 })
 
-//get data in JSON format form model
+// get data in JSON format form model
 userSchema.options.toJSON = {
 	transform: function (doc, ret, options) {
+		ret.id = ret._id.toString()
 		delete ret._id
 		delete ret.password
 		delete ret.__v
-		ret.dob = ret.dob.toLocaleDateString("en-US", {
-			day: "numeric",
-			month: "long",
-			year: "numeric",
-		})
-		ret.gender =
-			ret.gender == 1 ? "Male" : ret.gender == -1 ? "Female" : "Other"
+		if (ret.dob)
+			ret.dob = ret.dob.toLocaleDateString("en-US", {
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+			})
+		const genderRevMap = { 1: "male", "-1": "female", 0: "other" }
+
+		if (ret.preference?.gender)
+			ret.preference.gender = genderRevMap[ret.preference?.gender]
+
+		if (ret.gender) ret.gender = genderRevMap[ret.gender]
 		return ret
 	},
 }

@@ -38,7 +38,7 @@ const onConnectionHandler = socket => {
 }
 
 const emitChat = (receiverId, _id, content, createdAt) => {
-	const receiverSocketId = acitveUsers[receiverId.toString()]
+	const receiverSocketId = acitveUsers.get(receiverId.toString())
 	if (receiverSocketId) {
 		io.to(receiverSocketId).emit("chat", {
 			_id,

@@ -30,6 +30,8 @@ app.use(
 const server = require("http").createServer(app)
 
 // SOCKET IO
-const io = require("socket.io")(server, { cors: { origin: "*" } })
+const io = require("socket.io")(server, {
+	cors: { origin: process.env.FRONTEND_URL, credentials: true },
+})
 
 module.exports = { app, io, server }
