@@ -31,7 +31,7 @@ const getConvoList = async (req, res) => {
 						: convo.unreadCount
 				return {
 					id: convo._id.toString(),
-					user: convo.users[userIdx],
+					user: convo.users[userIdx].toString(),
 					unreadCount,
 				}
 			}),
