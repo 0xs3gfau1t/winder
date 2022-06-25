@@ -5,14 +5,15 @@ const router = express.Router()
 const { generateToken } = require("../Utils/jwtUtil")
 const { userModel } = require("../Models/userModel")
 const authenticateToken = require("../Middlewares/authenticateToken")
-const { options } = require("../Utils/variables")
+const sanitizer = require("../Middlewares/sanitizer")
 
-router.post("/register", async (req, res) => {
-	let { email, password, dob, gender, firstName, lastName } = req.body
+router.post("/register", sanitizer, async (req, res) => {
+	let { email, password, dob, gender, firstName, lastName } =
+		req.sanitized.user
 	if (!email || !password || !dob || !gender || !firstName || !lastName)
 		return res.status(400).json({
 			success: false,
-			error: "One or more field is missing.",
+			error: "One or more field is missing or invalid.",
 		})
 
 	if (await userModel.exists({ email }))
@@ -21,29 +22,10 @@ router.post("/register", async (req, res) => {
 			error: "User already exists with this email.",
 		})
 
-	const hashedpassword = await bcrypt.hash(password, 10)
+	req.sanitized.user.password = await bcrypt.hash(password, 10)
 
-	// Validate all data
-	// If data is none, no field will be created in db, thenks mongoose
-	let u = {
-		email,
-		password: hashedpassword,
-		dob: dob,
-		firstName,
-		lastName,
-	}
-	const genderMap = { male: 1, female: -1, other: 0 }
-	gender = genderMap[gender]
-	if (gender in options.gender) u.gender = gender
+	let new_user = new userModel(req.sanitized.user)
 
-	const new_user = userModel(u)
-
-	const userdata = { _id: new_user._id, email_verified: false }
-	const accessToken = generateToken(userdata)
-	const refreshToken = generateToken(userdata, "1d")
-	res.cookie("accessToken", accessToken, { httpOnly: true })
-
-	new_user.refreshToken = refreshToken
 	try {
 		await new_user.save({ validateBeforeSave: false })
 		return res.json({ success: true, id: new_user._id })
@@ -78,7 +60,7 @@ router.post("/login", async (req, res) => {
 			_id: user._id,
 			email_verified: user.username !== undefined ? true : false,
 		}
-		const accessToken = generateToken(userdata, "1s")
+		const accessToken = generateToken(userdata, "1h")
 		const refreshToken = generateToken(userdata, "1d")
 		res.cookie("accessToken", accessToken, { httpOnly: true })
 

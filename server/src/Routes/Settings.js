@@ -1,9 +1,8 @@
-require("dotenv").config()
-
 const express = require("express")
 const router = express.Router()
 
 const authenticateToken = require("../Middlewares/authenticateToken")
+const sanitizer = require("../Middlewares/sanitizer")
 
 const {
 	updateProfile,
@@ -21,6 +20,6 @@ router
 	.post("/verifyemail/:token", verifyEmail)
 	.post("/verifyemail", authenticateToken, sendEmailVerificationLink)
 	.patch("/changepassword", authenticateToken, changePassword)
-	.patch("/", authenticateToken, updateProfile)
+	.patch("/", authenticateToken, sanitizer, updateProfile)
 
 module.exports = router

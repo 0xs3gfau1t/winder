@@ -6,21 +6,18 @@ var acitveUsers = new Map()
 
 const onConnectionHandler = socket => {
 	console.log(`New client connected with socket id: ${socket.id}`)
-
-	socket.on("addUser", (payload, callback) => {
-		const token = payload.token
-		const { data, expired } = verifyToken(token)
-		if (!expired && data) {
-			acitveUsers.set(data._id, socket.id)
-			console.log(`User ${data._id} added to activeUsers list.`)
-			callback({ success: true })
-		} else {
-			console.error(
-				`Failed to add User ${data._id} to activeUser list due to failed authorization.`
-			)
-			callback({ success: false })
-		}
-	})
+	const cookie = `; ${socket.handshake.headers.cookie}`
+	const token = cookie.split("; accessToken=").pop().split(";").shift()
+	const { data, expired } = verifyToken(token)
+	if (!expired && data) {
+		acitveUsers.set(data._id, socket.id)
+		console.log(`User ${data._id} added to activeUsers list.`)
+	} else {
+		console.error(
+			`Failed to add User to activeUser list due to failed authorization.`
+		)
+		socket.disconnect(true)
+	}
 
 	socket.on("disconnect", payload => {
 		try {

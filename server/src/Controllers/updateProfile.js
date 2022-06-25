@@ -1,27 +1,26 @@
-require("dotenv").config()
-
 const { userModel } = require("../Models/userModel")
-const { changableData, options } = require("../Utils/variables")
+const { changeableData } = require("../Utils/variables")
 const { verifyToken, generateToken } = require("../Utils/jwtUtil")
 const { sendVerifyMailEmail } = require("../Controllers/sendEmail")
 
 const bcrypt = require("bcrypt")
 
 async function updateProfile(req, response) {
-	const data = req.body
+	let { user: data, validity } = req.sanitized
 	const id = req.userdata._id
 
-	let changedFields = {
-		preference: await userModel
-			.findOne({ _id: id }, "preference")
-			.then(user => user.preference),
-	}
-	let res = {}
+	let preference = await userModel
+		.findOne({ _id: id }, "preference")
+		.then(user => user.preference)
+
+
+	const userData = await userModel.findOne({ _id: id })
 
 	for (const i in data) {
 		// Check if this particular field is modifiable or not
-		if (!changableData[i]) {
-			res[i] = false
+		if (!changeableData[i] && userData[i] !== undefined) {
+			delete data[i]
+			validity[i] = false
 			console.log(`${i} can't be changed`)
 			continue
 		}
@@ -30,108 +29,36 @@ async function updateProfile(req, response) {
 		// Pass it to corresponding handler
 		switch (i) {
 			case "genderPreference":
-				const gPref = parseInt(data[i])
-				if (options.gender.includes(gPref)) {
-					changedFields.preference.gender = gPref
-					res[i] = true
-				} else res[i] = false
+				preference.gender = data.genderPreference
+				delete data.genderPreference
 				break
 			case "programPreference":
-				if (options.programs.includes(data[i]) || 1) {
-					// Remove the or 1 portion when we have a system
-					// Where all valid programs are registered
-					// And user has to choose from provided program
-					changedFields.preference.program = data[i]
-					res[i] = true
-				} else res[i] = false
+				preference.program = data.programPreference
+				delete data.programPreference
 				break
 			case "universityPreference":
-				if (options.universities.includes(data[i])) {
-					changedFields.preference.university = data[i]
-					res[i] = true
-				} else res[i] = false
+				preference.university = data.universityPreference
+				delete data.universityPreference
 				break
 			case "agePreference":
-				// Validate age range
-				const lAge = parseInt(data[i][0])
-				const hAge = parseInt(data[i][1])
-				if (lAge >= options.age[0] && hAge <= options.age[1]) {
-					changedFields.preference.age = [lAge, hAge]
-					res[i] = true
-				} else res[i] = false
-				break
-			case "gender":
-				const g = parseInt(data[i])
-				if (options.gender.includes(g)) {
-					changedFields.gender = g
-					res[i] = true
-				} else res[i] = false
-				break
-			case "bio":
-				changedFields.bio = data[i]
-				res[i] = true
-				break
-			case "passion":
-				let passions = []
-				for (const j of data[i]) {
-					if (options.passions.includes(j) && !passions.includes(j))
-						passions.push(j)
-				}
-				if (passions.length > 2) {
-					changedFields.passion = passions
-					res[i] = true
-				} else res[i] = false
-				break
-			case "university":
-				if (options.universities.includes(data[i])) {
-					changedFields.university = data[i]
-					res[i] = true
-				} else res[i] = false
-				break
-			case "program":
-				if (options.programs.includes(data[i])) {
-					changedFields.program = data[i]
-					res[i] = true
-				} else res[i] = false
-				break
-			case "batch":
-				if (!isNaN(data[i])) {
-					changedFields.batch = data[i]
-					res[i] = true
-				} else res[i] = false
-				break
-			case "firstName":
-				changedFields.firstName = data[i]
-				res[i] = true
-				break
-			case "lastName":
-				changedFields.lastName = data[i]
-				res[i] = true
-				break
-			case "dob":
-				const d = new Date(Date.parse(data[i]))
-				if (!isNaN(d)) {
-					changedFields.dob = d
-					res[i] = true
-				} else res[i] = false
-				break
-			case "email":
-				console.log("Haven't yet decided to make it happen")
+				preference.age = data.agePreference
+				delete data.agePreference
 				break
 			default:
-				res[i] = "Invalid property. FBI open up."
+				console.log("Nothing to do here", i)
+				break
+			// res[i] = "Invalid property. FBI open up."
 		}
 	}
+	data.preference = preference
 
 	try {
-		userModel.findOneAndUpdate({ _id: id }, changedFields).exec()
-		res.success = true
+		await userModel.findOneAndUpdate({ _id: id }, data).exec()
+		response.json({ success: true, updated: validity })
 	} catch (e) {
-		response.status(500)
-		res.success = false
 		console.log(e)
+		response.status(500).json({ success: false })
 	}
-	response.json(res)
 }
 async function changePassword(req, response) {
 	let res = {}

@@ -2,7 +2,7 @@
 //  This file will contain static variables used in the app
 //
 
-const changableData = {
+const changeableData = {
 	universityPreference: true,
 	programPreference: true,
 	genderPreference: true,
@@ -24,7 +24,7 @@ const changableData = {
 }
 
 const options = {
-	gender: [-1, 0, 1],
+	gender: ["male", "female", "other"],
 	programs: ["BArch", "BCE", "BCT", "BEL", "BEX", "BME", "BAM", "BGE"],
 	universities: [
 		"TU",
@@ -65,6 +65,12 @@ const options = {
 		"Picnicking",
 		"Yoga",
 	],
+	bio: 500,
 }
 
-module.exports = { changableData, options }
+const genderMapper = gender => {
+	const genderMap = { male: 1, female: -1, other: 0 }
+	return genderMap[gender]
+}
+
+module.exports = { changeableData, options, genderMapper }
