@@ -8,16 +8,10 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
 	switch (action.type) {
-		case CHAT_UPDATE: {
+		case "CONNECT": {
+			console.log("Socket connected ")
 			return {
 				...state,
-				chat: state.chat + 1,
-			}
-		}
-		case NOTI_UPDATE: {
-			return {
-				...state,
-				noti: state.noti + 1,
 			}
 		}
 		default: {

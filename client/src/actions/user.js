@@ -1,6 +1,8 @@
 import axios from "axios"
 import { DELETE_DP, LOAD_USER, LOGOUT, VERIFY_MAIL } from "./types"
 import { displayAlert } from "./misc"
+import { connect } from "./socket"
+
 const url = process.env.URL
 
 export const loadUser = () => dispatch => {
@@ -11,6 +13,7 @@ export const loadUser = () => dispatch => {
 				type: LOAD_USER,
 				payload: res.data.user,
 			})
+			dispatch(connect())
 		})
 		.catch(err => {
 			// dispatch(displayAlert(err.response.data.error, "danger"))

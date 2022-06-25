@@ -1,7 +1,11 @@
-import io, { Socket } from "socket.io-client"
+export function connect() {
+	return { type: "CONNECT" }
+}
 
-const URL = process.env.URL
+export function apiGotData(data) {
+	return { type: "ADD_USER", data }
+}
 
-export const loadUser = () => dispatch => {}
-
-// export const receive = (type,payload)=>Socket.
+export function apiSetData(data) {
+	return { type: "CHAT", data }
+}

@@ -8,6 +8,7 @@ import {
 	CLEAR_ALERT,
 } from "./types"
 import { displayAlert } from "./misc"
+
 const url = process.env.URL
 
 export const register = user_data => dispatch => {
