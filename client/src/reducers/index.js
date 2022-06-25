@@ -1,8 +1,12 @@
-import { combineReducers } from "redux";
-import auth from "./auth";
-import misc from "./misc";
+import { combineReducers } from "redux"
+import auth from "./auth"
+import exploreReducer from "./exploreReducer"
+import misc from "./misc"
+
+console.log(exploreReducer)
 
 export default combineReducers({
-  auth,
-  misc,
-});
+	auth,
+	misc,
+	explore: exploreReducer,
+})
