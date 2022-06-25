@@ -1,20 +1,23 @@
 import io, { Socket } from "socket.io-client"
 import * as Actions from "./actions/socket"
 
-let socket = null
+const socket = io(process.env.URL, {
+	autoConnect: false,
+	withCredentials: true,
+})
 
 export function wsMiddleware() {
 	return next => action => {
-		if (!socket && action.type === "CONNECT") {
-			socket = Socket ? Socket : io.connect(process.env.URL)
+		if (action.type === "CONNECT") {
+			socket.connect()
+			console.log(socket.id)
 		}
 		return next(action)
 	}
 }
 
 export default function (store) {
-	socket = socket ? socket : io.connect(process.env.URL)
-	console.log("Listening")
+	// if (socket.disconnected)
 	socket.on("chat", data => {
 		console.log("Chat Received")
 		// store.dispatch(Actions.apiGotData(data))
