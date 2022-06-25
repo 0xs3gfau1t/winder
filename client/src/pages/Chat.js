@@ -1,30 +1,40 @@
-import React from "react";
-import Wrapper from "../assets/wrappers/ChatPage";
-import ChatHead from "../components/ChatHead/ChatHead";
-import Nav from "../components/Nav/Nav";
+import React, { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import Nav from "../components/Nav/Nav"
+import { Bar, ChatBody, ChatHead } from "../components"
 
 function Chat() {
-  const a = Array.from(Array(50).keys());
+	const misc = useSelector(state => state.misc)
+	const dispatch = useDispatch()
+	const a = Array.from(Array(50).keys())
+	useEffect(() => {})
 
-  return (
-    <Wrapper>
-      <div>
-        <h1>Chat</h1>
-        <div className="navbarr">
-          <Nav current="Chat" />
-        </div>
-        <div className="chatsContainer">
-          {a.map((element) => {
-            return (
-              <div className="chatContainer">
-                <ChatHead />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </Wrapper>
-  );
+	return (
+		<>
+			<Bar title={"Chats"} />
+			<div className="container ml-4">
+				<div className="min-w-full border-4 rounded-xl lg:grid lg:grid-cols-3">
+					<div className="border-r border-gray-300 lg:col-span-1">
+						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600">
+							Chats
+						</h2>
+						<div className="overflow-auto h-[85vh]">
+							{a.map((element, index) => {
+								return (
+									<div key={index} className="chatContainer">
+										<ChatHead />
+									</div>
+								)
+							})}
+						</div>
+					</div>
+					<div className="lg:col-span-2 lg:block">
+						<ChatBody />
+					</div>
+				</div>
+			</div>
+		</>
+	)
 }
 
-export default Chat;
+export default Chat

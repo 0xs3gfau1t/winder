@@ -30,6 +30,12 @@ app.use(
 const server = require("http").createServer(app)
 
 // SOCKET IO
-const io = require("socket.io")(server, { cors: { origin: "*" } })
+const io = require("socket.io")(server, {
+	cors: {
+		origin: "http://localhost:8000",
+		// AccessControlAllowCredentials: true,
+		credentials: true,
+	},
+})
 
 module.exports = { app, io, server }

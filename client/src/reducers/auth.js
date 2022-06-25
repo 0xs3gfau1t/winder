@@ -4,14 +4,13 @@ import {
 	LOGIN_SUCCESS,
 	LOGOUT,
 	LOAD_USER,
+	DELETE_DP,
 } from "../actions/types"
 
 const initialState = {
 	isAuthenticated: false,
-	isLoading: true,
-	user: { preferance: {} },
+	user: { preference: {} },
 	flag: false,
-	id: null,
 }
 
 export default function (state = initialState, action) {
@@ -45,7 +44,14 @@ export default function (state = initialState, action) {
 		case LOAD_USER:
 			return {
 				...state,
+				isAuthenticated: true,
 				user: action.payload,
+			}
+		case DELETE_DP:
+			let imageUp = state.user.images
+			return {
+				...state,
+				image: imageUp.shift(),
 			}
 		default:
 			return state

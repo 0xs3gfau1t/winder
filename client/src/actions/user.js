@@ -1,6 +1,8 @@
 import axios from "axios"
-import { LOAD_USER, LOGOUT, VERIFY_MAIL } from "./types"
+import { DELETE_DP, LOAD_USER, LOGOUT, VERIFY_MAIL } from "./types"
 import { displayAlert } from "./misc"
+import { connect } from "./socket"
+
 const url = process.env.URL
 
 export const loadUser = () => dispatch => {
@@ -11,9 +13,10 @@ export const loadUser = () => dispatch => {
 				type: LOAD_USER,
 				payload: res.data.user,
 			})
+			dispatch(connect())
 		})
 		.catch(err => {
-			dispatch(displayAlert(err.response.data.error, "danger"))
+			// dispatch(displayAlert(err.response.data.error, "danger"))
 			dispatch({
 				type: LOGOUT,
 			})
@@ -68,12 +71,16 @@ export const updateProfile = data => dispatch => {
 	delete update["changed"]
 	delete update["preview"]
 	if (update.hasOwnProperty("ageL") && update.hasOwnProperty("ageH")) {
-		update["age"] = [update.ageL, update.ageH]
+		update["agePreference"] = [update.ageL, update.ageH]
 		delete update["ageL"]
 		delete update["ageH"]
 	} else {
 		delete update["ageL"]
 		delete update["ageH"]
+	}
+	if ("passion" in update && update.passion.length < 3) {
+		dispatch(displayAlert("Atleast three passions are required!", "danger"))
+		return
 	}
 	if (data.bio.length == 0) delete update["bio"]
 	axios
@@ -81,11 +88,11 @@ export const updateProfile = data => dispatch => {
 		.then(res => {
 			// console.log(res)
 			// dispatch(loadUser())
-			dispatch(displayAlert("Profile Updated...", "success", true))
+			dispatch(displayAlert("Profile Updated...", "success"))
 		})
 		.catch(err => {
 			console.log(err)
-			dispatch(displayAlert(err.response.data.message, "danger", true))
+			dispatch(displayAlert(err.response.data.message, "danger"))
 		})
 	if (data.hasOwnProperty("file")) {
 		const formData = new FormData()
@@ -113,21 +120,17 @@ export const updateProfile = data => dispatch => {
 	}
 }
 
-export const upImg = img => dispatch => {
-	console.log(img)
-	const formData = new FormData()
-	formData.append("file", img, img.name)
+export const removeDp = id => dispatch => {
+	console.log("called")
 	axios
-		.post(url + "/image", formData, { withCredentials: true })
-		.then(res => {
-			dispatch(
-				displayAlert(
-					"Your email is verified now. Your journey to meet your soulmate begins now...",
-					"success",
-					true
-				)
-			)
-		})
+		.delete(url + `/image/${id}`, { withCredentials: true })
+		.then(
+			dispatch({
+				type: DELETE_DP,
+				payload: id,
+			}),
+			setTimeout(() => window.location.reload(), 2000)
+		)
 		.catch(err => {
 			console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger", true))
