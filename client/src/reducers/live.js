@@ -9,7 +9,7 @@ const initialState = {
 	noti: 0,
 	chat: 0,
 	chatList: [],
-	activeChat: [],
+	activeChat: { data: [] },
 	notiList: {},
 }
 
@@ -36,8 +36,15 @@ export default function reducer(state = initialState, action) {
 		case FETCH_ACTIVE_CHAT: {
 			return {
 				...state,
-				activeChat: action.payload.data.reverse(),
-				more: action.payload.nextCursor,
+				activeChat: {
+					id: action.id,
+					data: [
+						...state.activeChat.data,
+						...action.payload.reverse(),
+					],
+				},
+				more: action.more,
+				chat: action.live ? state.caht - 1 : state.chat,
 			}
 		}
 		default: {

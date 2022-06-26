@@ -9,7 +9,7 @@ const ChatBody = ({ user }) => {
 		name: "Someone Someone",
 		dp: "https://thispersondoesnotexist.com/image",
 	}
-	const activeChat = useSelector(state => state.live.activeChat)
+	const activeChat = useSelector(state => state.live.activeChat.data)
 	const dispatch = useDispatch()
 	useEffect(() => {
 		dispatch(fetchActiveChat(user.id))

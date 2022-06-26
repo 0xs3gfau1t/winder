@@ -11,9 +11,18 @@ export function connect() {
 	return { type: "CONNECT" }
 }
 
-export const chatUpdate = data => dispatch => {
-	console.log("Chat update action")
+export const chatUpdate = data => (dispatch, getState) => {
+	// console.log("Chat update action")
 	dispatch({ type: CHAT_UPDATE, payload: data })
+	const activeChat = getState().live.activeChat.id
+	if (data.senderId === activeChat) {
+		dispatch({
+			type: FETCH_ACTIVE_CHAT,
+			payload: [data],
+			id: data.senderId,
+			live: true,
+		})
+	}
 }
 
 export const notiUpdate = data => dispatch => {
@@ -47,9 +56,10 @@ export const fetchActiveChat =
 				// console.log("Chat data: ", res)
 				dispatch({
 					type: FETCH_ACTIVE_CHAT,
-					payload: res.data,
+					payload: res.data.data,
+					id: id,
+					more: res.data.nextCursor,
 				})
-				window.scrollTo(100, document.body.scrollHeight)
 			})
 			.catch(err => {
 				dispatch(console.log(err))

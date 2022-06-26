@@ -133,7 +133,7 @@ const sendMessage = async (req, res) => {
 		const status = emitChat(
 			id,
 			msg._id,
-			relation._id,
+			req.userdata._id,
 			content,
 			msg.createdAt
 		)
