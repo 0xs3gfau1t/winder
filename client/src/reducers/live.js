@@ -1,9 +1,15 @@
-import { NOTI_UPDATE, CHAT_UPDATE, FETCH_CHAT } from "../actions/types"
+import {
+	NOTI_UPDATE,
+	CHAT_UPDATE,
+	FETCH_CHAT,
+	FETCH_ACTIVE_CHAT,
+} from "../actions/types"
 
 const initialState = {
 	noti: 0,
 	chat: 0,
 	chatList: [],
+	activeChat: [],
 	notiList: {},
 }
 
@@ -26,6 +32,13 @@ export default function reducer(state = initialState, action) {
 		}
 		case FETCH_CHAT: {
 			return { ...state, chatList: action.payload }
+		}
+		case FETCH_ACTIVE_CHAT: {
+			return {
+				...state,
+				activeChat: action.payload.data.reverse(),
+				more: action.payload.nextCursor,
+			}
 		}
 		default: {
 			return state

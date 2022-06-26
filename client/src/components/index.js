@@ -6,6 +6,7 @@ import SaveChanges from "./SaveChanges"
 import ChatHead from "./ChatHead"
 import ChatBody from "./ChatBody"
 import ImageUpload from "./ImageUpload"
+import { Other, Own } from "./Messages"
 export {
 	Logo,
 	FormText,
@@ -16,4 +17,6 @@ export {
 	ChatHead,
 	ChatBody,
 	ImageUpload,
+	Other,
+	Own,
 }

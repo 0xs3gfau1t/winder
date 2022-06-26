@@ -1,50 +1,45 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchActiveChat } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
-
-const ChatBody = () => {
-	const activeChat = {
+import { Other, Own } from "./Messages"
+const ChatBody = ({ user }) => {
+	const data = {
 		name: "Someone Someone",
 		dp: "https://thispersondoesnotexist.com/image",
 	}
+	const activeChat = useSelector(state => state.live.activeChat)
+	const dispatch = useDispatch()
+	useEffect(() => {
+		dispatch(fetchActiveChat(user.id))
+	}, [])
 	return (
 		<>
 			<div className="w-full">
 				<div className="relative flex items-center p-3 border-b border-gray-300">
 					<img
 						className="object-cover w-10 h-10 rounded-full"
-						src={activeChat.dp}
-						alt="username"
+						src={user.dp ? data.dp : data.dp}
+						alt={user.userName}
 					/>
 					<span className="block ml-2 font-bold text-gray-600">
-						{activeChat.name}
+						{user.userName}
 					</span>
 				</div>
-				<div className="relative w-full p-6 overflow-y-auto h-[70vh]">
+				<div className="relative w-full p-6 overflow-y-auto justify-end h-[70vh]">
 					<ul className="space-y-2">
-						<li className="flex justify-start">
-							<div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
-								<span className="block">Hi</span>
-							</div>
-						</li>
-						<li className="flex justify-end">
-							<div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
-								<span className="block">Hiiii</span>
-							</div>
-						</li>
-						<li className="flex justify-end">
-							<div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
-								<span className="block">how are you?</span>
-							</div>
-						</li>
-						<li className="flex justify-start">
-							<div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
-								<span className="block">
-									Lorem ipsum dolor sit, amet consectetur
-									adipisicing elit.
-								</span>
-							</div>
-						</li>
+						{activeChat.map((message, index) => {
+							return (
+								<div key={index}>
+									{message.sender ? (
+										<Own text={message.content} />
+									) : (
+										<Other text={message.content} />
+									)}
+								</div>
+							)
+						})}
 					</ul>
 				</div>
 

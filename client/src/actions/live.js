@@ -1,5 +1,10 @@
 import axios from "axios"
-import { FETCH_CHAT, CHAT_UPDATE, NOTI_UPDATE } from "./types"
+import {
+	FETCH_CHAT,
+	CHAT_UPDATE,
+	NOTI_UPDATE,
+	FETCH_ACTIVE_CHAT,
+} from "./types"
 const URL = process.env.URL
 
 export function connect() {
@@ -20,7 +25,7 @@ export const fetchChats = () => dispatch => {
 	axios
 		.get(URL + "/messages", { withCredentials: true })
 		.then(res => {
-			console.log("Chat data: ", res)
+			// console.log("Chat data: ", res)
 			dispatch({
 				type: FETCH_CHAT,
 				payload: res.data.data,
@@ -30,3 +35,23 @@ export const fetchChats = () => dispatch => {
 			dispatch(console.log(err))
 		})
 }
+
+export const fetchActiveChat =
+	(id, cur = "") =>
+	dispatch => {
+		axios
+			.get(URL + "/messages" + `/${id}?cur=${cur ? cur : ""}`, {
+				withCredentials: true,
+			})
+			.then(res => {
+				// console.log("Chat data: ", res)
+				dispatch({
+					type: FETCH_ACTIVE_CHAT,
+					payload: res.data,
+				})
+				window.scrollTo(100, document.body.scrollHeight)
+			})
+			.catch(err => {
+				dispatch(console.log(err))
+			})
+	}
