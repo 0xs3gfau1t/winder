@@ -49,7 +49,6 @@ export default function reducer(state = initialState, action) {
 			}
 		}
 		case SEND_MESSAGE: {
-			console.log(action.payload)
 			return {
 				...state,
 				activeChat: {

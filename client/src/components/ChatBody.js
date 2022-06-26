@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
@@ -10,14 +10,28 @@ const ChatBody = ({ user }) => {
 	}
 	const [message, setMessage] = useState("")
 	const activeChat = useSelector(state => state.live.activeChat)
+	const ref = useRef(null)
 	const dispatch = useDispatch()
+
 	useEffect(() => {
 		dispatch(fetchActiveChat(user.id))
 	}, [])
+
+	useEffect(() => {
+		ref.current.scrollTop = ref.current.scrollHeight
+	}, [activeChat])
+
 	const sendChat = e => {
 		if (message.trim != "") dispatch(sendMessage(message, activeChat.id))
 		setMessage("")
 	}
+
+	const enterKey = e => {
+		if (e.key === "Enter") {
+			sendChat(e)
+		}
+	}
+
 	return (
 		<>
 			<div className="w-full">
@@ -31,7 +45,10 @@ const ChatBody = ({ user }) => {
 						{user.userName}
 					</span>
 				</div>
-				<div className="relative w-full p-6 overflow-y-auto justify-end h-[70vh]">
+				<div
+					ref={ref}
+					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh]"
+				>
 					<ul className="space-y-2">
 						{activeChat.data.map((message, index) => {
 							return (
@@ -53,7 +70,9 @@ const ChatBody = ({ user }) => {
 						placeholder="Type here to send..."
 						className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
 						name="message"
+						value={message}
 						onChange={e => setMessage(e.target.value)}
+						onKeyPress={e => enterKey(e)}
 						required
 					/>
 					<button type="submit" onClick={sendChat}>
