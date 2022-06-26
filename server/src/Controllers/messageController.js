@@ -30,8 +30,8 @@ const getConvoList = async (req, res) => {
 						? -convo.unreadCount
 						: convo.unreadCount
 				return {
-					id: convo._id.toString(),
-					user: convo.users[userIdx].toString(),
+					id: convo.users[userIdx].toString(),
+					relId: convo._id.toString(),
 					unreadCount,
 				}
 			}),
@@ -101,7 +101,7 @@ const getMessages = async (req, res) => {
 }
 
 const sendMessage = async (req, res) => {
-	const { id } = req.params
+	const { id } = req.params		// receiver Id
 	const { content } = req.body
 	try {
 		var relation = await relationModel.findOne(
@@ -119,7 +119,13 @@ const sendMessage = async (req, res) => {
 		relation.messages.push(msg._id)
 
 		// Send the message to the receiver through socket
-		const status = emitChat(id, msg._id, content, msg.createdAt)
+		const status = emitChat(
+			id,
+			msg._id,
+			relation._id,
+			content,
+			msg.createdAt
+		)
 
 		// Update the unreadCount
 		const userIdx =
@@ -134,7 +140,7 @@ const sendMessage = async (req, res) => {
 		await relation.save()
 		res.json({ success: true, id: msg._id, status })
 	} catch (err) {
-		console.log(err.message)
+		console.log(err)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
 	}
 }
