@@ -3,6 +3,7 @@ import {
 	CHAT_UPDATE,
 	FETCH_CHAT,
 	FETCH_ACTIVE_CHAT,
+	SEND_MESSAGE,
 } from "../actions/types"
 
 const initialState = {
@@ -45,6 +46,16 @@ export default function reducer(state = initialState, action) {
 				},
 				more: action.more,
 				chat: action.live ? state.caht - 1 : state.chat,
+			}
+		}
+		case SEND_MESSAGE: {
+			console.log(action.payload)
+			return {
+				...state,
+				activeChat: {
+					...state.activeChat,
+					data: [...state.activeChat.data, action.payload],
+				},
 			}
 		}
 		default: {

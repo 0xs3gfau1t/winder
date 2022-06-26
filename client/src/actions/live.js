@@ -4,6 +4,7 @@ import {
 	CHAT_UPDATE,
 	NOTI_UPDATE,
 	FETCH_ACTIVE_CHAT,
+	SEND_MESSAGE,
 } from "./types"
 const URL = process.env.URL
 
@@ -65,3 +66,23 @@ export const fetchActiveChat =
 				dispatch(console.log(err))
 			})
 	}
+
+export const sendMessage = (text, id) => dispatch => {
+	console.log(text)
+	axios
+		.post(
+			URL + `/messages/${id}`,
+			{ content: text },
+			{ withCredentials: true }
+		)
+		.then(res => {
+			const data = { content: text, sender: true, createdAt: Date.now() }
+			dispatch({
+				type: SEND_MESSAGE,
+				payload: data,
+			})
+		})
+		.catch(err => {
+			dispatch(console.log(err))
+		})
+}
