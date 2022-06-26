@@ -1,6 +1,6 @@
 import React from "react"
 
-function ChatHead() {
+function ChatHead(chat) {
 	const data = {
 		name: "Ram Singh Pandey",
 		lastMsg: "O hency, K xa khabar",

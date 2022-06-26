@@ -17,7 +17,7 @@ export const loadUser = () => dispatch => {
 			dispatch(connect())
 		})
 		.catch(err => {
-			dispatch(displayAlert("Session Expired! Logging Out", "danger"))
+			dispatch(displayAlert("Session Expired! Logging Out...", "danger"))
 			dispatch({
 				type: LOGOUT,
 			})

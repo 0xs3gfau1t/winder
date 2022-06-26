@@ -11,7 +11,7 @@ function Chat() {
 	useEffect(() => {
 		dispatch(fetchChats())
 	}, [])
-
+	const chatList = useSelector(state => state.live.chatList)
 	return (
 		<>
 			<Bar title={"Chats"} />
@@ -22,10 +22,10 @@ function Chat() {
 							Chats
 						</h2>
 						<div className="overflow-auto h-[85vh]">
-							{a.map((element, index) => {
+							{chatList.map((chat, index) => {
 								return (
 									<div key={index} className="chatContainer">
-										<ChatHead />
+										<ChatHead chat={chat} />
 									</div>
 								)
 							})}

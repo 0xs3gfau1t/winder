@@ -20,7 +20,7 @@ export const fetchChats = () => dispatch => {
 	axios
 		.get(URL + "/messages", { withCredentials: true })
 		.then(res => {
-			console.log("Chat data: ")
+			console.log("Chat data: ", res)
 			dispatch({
 				type: FETCH_CHAT,
 				payload: res.data.data,

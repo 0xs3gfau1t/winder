@@ -7,7 +7,7 @@ const getConvoList = async (req, res) => {
 			{ users: req.userdata._id, stat: true },
 			{ users: 1, unreadCount: 1 }
 		)
-		console.log(convoList)
+		// console.log(convoList)
 		res.json({
 			success: true,
 			data: convoList.map(convo => {
