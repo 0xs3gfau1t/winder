@@ -137,12 +137,16 @@ matched|True if the user has been matched, False otherwise
 Field|Description
 -|-
 success|True or False
-data|`[id, relId, unreadCount]`
+data|`[id, userDp, userName, relId, unreadCount]`
 error|Error message if success is False
 
-id: User id of the other user
-relId: Relation id
-unreadCount: No of unread messages. If negative the other user hasn't read last `n` messages
+| Data Field  | Description                                                                     |
+| ----------- | ------------------------------------------------------------------------------- |
+| id          | User id of the other user                                                       |
+| userDp      | Image id of the other user, `<img src='http://localhost:4000/image/:userDp>`    |
+| userName    | Name of the other user                                                          |
+| relId       | Relation id                                                                     |
+| unreadCount | No of unread messages. If negative the other user hasn't read last `n` messages |
 
 ### `/:id`
 
