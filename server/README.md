@@ -10,20 +10,24 @@ npm run devStart
 ```
 
 ## Socket
-- Join the socket like so
+
+-   Join the socket like so
+
 ```
 const {io} = require("socket.io-client")
 const socket = io("http://localhost:4000", {withCredentials: true})
 ```
 
-- Handle 2 socket events: `chat` and `notification`
+-   Handle 2 socket events: `chat` and `notification`
+
 ```
 socket.on('chat', (payload)=>{
     // append the message details to the chat box
 })
 ```
-- `chat`'s payload will be `{_id, content, createdAt}`
-- `notification`'s payload will be `{_id, title, type}`
+
+-   `chat`'s payload will be `{_id, content, createdAt}`
+-   `notification`'s payload will be `{_id, title, type}`
 
 ## **`/auth`**
 
@@ -133,8 +137,12 @@ matched|True if the user has been matched, False otherwise
 Field|Description
 -|-
 success|True or False
-data|Array of conversation list: `[users:Array, stat, unreadCount]`
+data|`[id, user, unreadCount]`
 error|Error message if success is False
+
+id: Unique id of the chat
+user: User id of the other user
+unreadCount: No of unread messages. If negative the other user hasn't read last `n` messages
 
 ### `/:id`
 

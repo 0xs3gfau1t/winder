@@ -7,8 +7,37 @@ const getConvoList = async (req, res) => {
 			{ users: req.userdata._id, stat: true },
 			{ users: 1, unreadCount: 1 }
 		)
-		res.json({ success: true, data: convoList })
+		console.log(convoList)
+		res.json({
+			success: true,
+			data: convoList.map(convo => {
+				const userIdx =
+					req.userdata._id === convo.users[0].toString() ? 1 : 0
+				var unreadCount
+				console.log({ userIdx, uC: convo.unreadCount })
+				// if (convo.unreadCount > 0) {
+				// 	unreadCount =
+				// 		userIdx === 1 ? -convo.unreadCount : convo.unreadCount
+				// } else if (convo.unreadCount < 0) {
+				// 	unreadCount =
+				// 		userIdx === 0 ? convo.unreadCount : -convo.unreadCount
+				// } else {
+				// 	unreadCount = 0
+				// }
+				unreadCount =
+					(convo.unreadCount > 0 && userIdx === 1) ||
+					(convo.unreadCount < 0 && userIdx === 1)
+						? -convo.unreadCount
+						: convo.unreadCount
+				return {
+					id: convo._id.toString(),
+					user: convo.users[userIdx].toString(),
+					unreadCount,
+				}
+			}),
+		})
 	} catch (err) {
+		console.log(err)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
 	}
 }
@@ -62,7 +91,7 @@ const getMessages = async (req, res) => {
 			nextCursor,
 			data: relation.messages.map(msg => ({
 				...msg._doc, // Document is stored in this property
-				sender: userIdx == msg._doc.sender ,
+				sender: userIdx == msg._doc.sender,
 			})),
 		})
 	} catch (err) {
