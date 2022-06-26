@@ -136,7 +136,7 @@ async function updateAcceptStatus(req, res) {
 			user: to,
 		})
 		await noti.save()
-		emitNoti(to, noti._id, title, NotificationTypes.MATCHED)
+		emitNoti(to, noti._id, noti.title, NotificationTypes.MATCHED)
 
 		res.json({ success: true, matched: true })
 	} else {
