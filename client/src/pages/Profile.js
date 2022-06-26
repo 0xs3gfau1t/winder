@@ -5,8 +5,7 @@ import { GoVerified, GoX } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { displayAlert, loadOptions } from "../actions/misc"
 import { emailVerifyRequest, updateProfile, removeDp } from "../actions/user"
-import Nav from "../components/Nav/Nav"
-import { Alert, FormSelect, Bar, SaveChanges } from "../components"
+import { Alert, FormSelect, Bar, SaveChanges, ImageUpload } from "../components"
 
 function Profile() {
 	const misc = useSelector(state => state.misc)
@@ -140,7 +139,7 @@ function Profile() {
 												" " +
 												user.lastName}
 											{user.email_verified && (
-												<GoVerified className="-mt-6 ml-32" />
+												<GoVerified className="-mt-6 ml-32 float-right" />
 											)}
 										</li>
 									</div>
@@ -168,6 +167,11 @@ function Profile() {
 							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2"
 						>
 							<h3 className="m-3">Profile</h3>
+							<ImageUpload
+								onChange={onChange}
+								settings={settings}
+								user={user}
+							/>
 							<label htmlFor="bio" className="mx-10 form-label">
 								Bio
 							</label>

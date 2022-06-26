@@ -3,10 +3,14 @@ import styled from "styled-components"
 const Wrapper = styled.main`
 	.Navbar {
 		position: fixed;
-		height: 90vh;
-		top: 10%;
+		height: 70vh;
+		top: 20%;
 		margin: 0;
-		right: 1%;
+		right: 0.5%;
+		background: var(--grey-100);
+		border-radius: 7%;
+		border: 0.01rem solid var(--grey-200);
+		padding: 1% 0;
 		display: flex;
 		flex-direction: column;
 		/* transition: width 2s; */
@@ -16,7 +20,7 @@ const Wrapper = styled.main`
 	}
 
 	.icons {
-		opacity: 50%;
+		opacity: 70%;
 		transition: 1s;
 	}
 
@@ -37,17 +41,11 @@ const Wrapper = styled.main`
 		align-items: center;
 	}
 
-	/* .Navbar:hover{
-    right: 60px;
-    
-    transition-duration: 1s;
-
-} */
-
 	.choosen_one {
 		opacity: 100%;
-		height: 3em;
-		width: 3em;
+		padding-left: 7%;
+		border-left: 3px solid navy;
+		border-radius: 20%;
 	}
 
 	.choosen_one::after {
