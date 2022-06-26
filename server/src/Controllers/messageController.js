@@ -1,4 +1,5 @@
 const { messagesModel, relationModel } = require("../Models/relationModel")
+const { userModel } = require("../Models/userModel")
 const { emitChat } = require("./socket")
 
 const getConvoList = async (req, res) => {
@@ -7,14 +8,13 @@ const getConvoList = async (req, res) => {
 			{ users: req.userdata._id, stat: true },
 			{ users: 1, unreadCount: 1 }
 		)
-		// console.log(convoList)
-		res.json({
-			success: true,
-			data: convoList.map(convo => {
+
+		const data = await Promise.all(
+			convoList.map(async convo => {
 				const userIdx =
 					req.userdata._id === convo.users[0].toString() ? 1 : 0
-				var unreadCount
-				console.log({ userIdx, uC: convo.unreadCount })
+
+				// DONOT REMOVE THIS
 				// if (convo.unreadCount > 0) {
 				// 	unreadCount =
 				// 		userIdx === 1 ? -convo.unreadCount : convo.unreadCount
@@ -24,17 +24,28 @@ const getConvoList = async (req, res) => {
 				// } else {
 				// 	unreadCount = 0
 				// }
-				unreadCount =
+				const user = await userModel.findOne(
+					{ _id: convo.users[userIdx] },
+					["firstName", "lastName", "images"]
+				)
+
+				const unreadCount =
 					(convo.unreadCount > 0 && userIdx === 1) ||
 					(convo.unreadCount < 0 && userIdx === 1)
 						? -convo.unreadCount
 						: convo.unreadCount
 				return {
-					id: convo._id.toString(),
-					user: convo.users[userIdx].toString(),
+					id: convo.users[userIdx].toString(),
+					userDp: user.images[0],
+					userName: user.firstName + " " + user.lastName,
+					relId: convo._id.toString(),
 					unreadCount,
 				}
-			}),
+			})
+		)
+		res.json({
+			success: true,
+			data,
 		})
 	} catch (err) {
 		console.log(err)
@@ -101,7 +112,7 @@ const getMessages = async (req, res) => {
 }
 
 const sendMessage = async (req, res) => {
-	const { id } = req.params
+	const { id } = req.params // receiver Id
 	const { content } = req.body
 	try {
 		var relation = await relationModel.findOne(
@@ -119,7 +130,13 @@ const sendMessage = async (req, res) => {
 		relation.messages.push(msg._id)
 
 		// Send the message to the receiver through socket
-		const status = emitChat(id, msg._id, content, msg.createdAt)
+		const status = emitChat(
+			id,
+			msg._id,
+			relation._id,
+			content,
+			msg.createdAt
+		)
 
 		// Update the unreadCount
 		const userIdx =
@@ -134,7 +151,7 @@ const sendMessage = async (req, res) => {
 		await relation.save()
 		res.json({ success: true, id: msg._id, status })
 	} catch (err) {
-		console.log(err.message)
+		console.log(err)
 		res.status(500).json({ success: false, error: "Internal Server Error" })
 	}
 }

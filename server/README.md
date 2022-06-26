@@ -26,7 +26,7 @@ socket.on('chat', (payload)=>{
 })
 ```
 
--   `chat`'s payload will be `{_id, content, createdAt}`
+-   `chat`'s payload will be `{msgId, relId, content, createdAt}`
 -   `notification`'s payload will be `{_id, title, type}`
 
 ## **`/auth`**
@@ -137,12 +137,16 @@ matched|True if the user has been matched, False otherwise
 Field|Description
 -|-
 success|True or False
-data|`[id, user, unreadCount]`
+data|`[id, userDp, userName, relId, unreadCount]`
 error|Error message if success is False
 
-id: Unique id of the chat
-user: User id of the other user
-unreadCount: No of unread messages. If negative the other user hasn't read last `n` messages
+| Data Field  | Description                                                                     |
+| ----------- | ------------------------------------------------------------------------------- |
+| id          | User id of the other user                                                       |
+| userDp      | Image id of the other user, `<img src='http://localhost:4000/image/:userDp>`    |
+| userName    | Name of the other user                                                          |
+| relId       | Relation id                                                                     |
+| unreadCount | No of unread messages. If negative the other user hasn't read last `n` messages |
 
 ### `/:id`
 
