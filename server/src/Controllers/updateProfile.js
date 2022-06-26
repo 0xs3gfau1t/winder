@@ -4,6 +4,7 @@ const { verifyToken, generateToken } = require("../Utils/jwtUtil")
 const { sendVerifyMailEmail } = require("../Controllers/sendEmail")
 
 const bcrypt = require("bcrypt")
+const { relationModel } = require("../Models/relationModel")
 
 async function updateProfile(req, response) {
 	let { user: data, validity } = req.sanitized
@@ -12,7 +13,6 @@ async function updateProfile(req, response) {
 	let preference = await userModel
 		.findOne({ _id: id }, "preference")
 		.then(user => user.preference)
-
 
 	const userData = await userModel.findOne({ _id: id })
 
@@ -152,8 +152,21 @@ async function getUserInfo(req, res) {
 			"preference",
 			"images",
 		])
+		// Get unread Count
+		const unreadCount =
+			(await relationModel.count({
+				"users.0": req.userdata._id,
+				stat: true,
+				unreadCount: { $lt: 0 },
+			})) +
+			(await relationModel.count({
+				"users.1": req.userdata._id,
+				stat: true,
+				unreadCount: { $gt: 0 },
+			}))
 		user = {
 			...JSON.parse(JSON.stringify(user)),
+			unreadCount,
 			email_verified: req.userdata.email_verified,
 		}
 		res.json({ success: true, user })
