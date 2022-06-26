@@ -39,7 +39,6 @@ const onConnectionHandler = socket => {
 
 const emitChat = (receiverId, _id, content, createdAt) => {
 	const receiverSocketId = acitveUsers.get(receiverId.toString())
-	console.log("active users", acitveUsers)
 	console.log("Receiver user id", receiverId)
 	console.log("Receiver socket id", receiverSocketId)
 	if (receiverSocketId) {

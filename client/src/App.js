@@ -22,7 +22,7 @@ const App = () => {
 		<CookiesProvider>
 			<Provider store={store}>
 				<Router>
-					<Nav current="Notification" />
+					<Nav />
 					<Routes>
 						<Route path="/" element={<Landing />} />
 						<Route path="/login" element={<Login />} />

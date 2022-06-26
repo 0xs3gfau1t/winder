@@ -5,6 +5,7 @@ import Bar from "./Bar"
 import SaveChanges from "./SaveChanges"
 import ChatHead from "./ChatHead"
 import ChatBody from "./ChatBody"
+import ImageUpload from "./ImageUpload"
 export {
 	Logo,
 	FormText,
@@ -14,4 +15,5 @@ export {
 	SaveChanges,
 	ChatHead,
 	ChatBody,
+	ImageUpload,
 }

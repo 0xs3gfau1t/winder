@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Nav from "../components/Nav/Nav"
 import { Bar, ChatBody, ChatHead } from "../components"
+import { fetchChats } from "../actions/live"
 
 function Chat() {
 	const misc = useSelector(state => state.misc)
 	const dispatch = useDispatch()
 	const a = Array.from(Array(50).keys())
-	useEffect(() => {})
+	useEffect(() => {
+		dispatch(fetchChats())
+	}, [])
 
 	return (
 		<>

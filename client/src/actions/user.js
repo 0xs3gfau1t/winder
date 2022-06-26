@@ -1,7 +1,8 @@
 import axios from "axios"
 import { DELETE_DP, LOAD_USER, LOGOUT, VERIFY_MAIL } from "./types"
 import { displayAlert } from "./misc"
-import { connect } from "./socket"
+import { logout } from "./auth"
+import { connect } from "./live"
 
 const url = process.env.URL
 
@@ -16,10 +17,11 @@ export const loadUser = () => dispatch => {
 			dispatch(connect())
 		})
 		.catch(err => {
-			// dispatch(displayAlert(err.response.data.error, "danger"))
+			dispatch(displayAlert("Session Expired! Logging Out", "danger"))
 			dispatch({
 				type: LOGOUT,
 			})
+			setTimeout(() => (window.location = "/"), 1000)
 		})
 }
 

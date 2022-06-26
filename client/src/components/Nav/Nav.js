@@ -1,10 +1,8 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../../actions/auth"
 import logo from "../../assets/images/logo-head.png"
-// import logo from '../assets/images/logo.svg'
-
 import Wrapper from "../../assets/wrappers/NavPage"
 import {
 	FaSearch,
@@ -15,11 +13,14 @@ import {
 } from "react-icons/fa"
 import { IconContext } from "react-icons"
 
-function Nav(props) {
+function Nav() {
+	const live = useSelector(state => state.live)
+	const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
 	const dispatch = useDispatch()
 	const handleLogout = () => {
 		dispatch(logout())
 	}
+	if (!isAuthenticated) return <></>
 	return (
 		<Wrapper className="Navbar">
 			<div className="Navbar">
@@ -56,6 +57,9 @@ function Nav(props) {
 								isActive ? "iconse choosen_one" : "icons"
 							}
 						>
+							{live.noti > 0 && (
+								<span className="badge">{live.noti}</span>
+							)}
 							<span>
 								<FaRegBell />
 							</span>
@@ -92,6 +96,9 @@ function Nav(props) {
 								isActive ? "iconse choosen_one" : "icons"
 							}
 						>
+							{live.chat > 0 && (
+								<span className="badge">{live.chat}</span>
+							)}
 							<span>
 								<FaRocketchat />
 							</span>

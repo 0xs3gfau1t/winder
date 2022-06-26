@@ -1,13 +1,11 @@
 import React from "react"
 import Wrapper from "../assets/wrappers/NotificationPage"
-import Nav from "../components/Nav/Nav"
+import { Bar } from "../components"
 
 function Notification() {
 	return (
 		<Wrapper>
-			<div>
-				<h1>Notification</h1>
-			</div>
+			<Bar title={"Notifications"} />
 		</Wrapper>
 	)
 }
