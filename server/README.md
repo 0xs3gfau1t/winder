@@ -140,8 +140,8 @@ success|True or False
 data|`[id, user, unreadCount]`
 error|Error message if success is False
 
-id: Unique id of the chat
-user: User id of the other user
+id: Unique id of the chat  
+user: User id of the other user  
 unreadCount: No of unread messages. If negative the other user hasn't read last `n` messages
 
 ### `/:id`
