@@ -164,7 +164,7 @@ function Login() {
 					<FormText
 						type="password"
 						name="password2"
-						labelText="Confirmn password"
+						labelText="Confirm password"
 						value={values.password2}
 						handleChange={handleChange}
 					/>
