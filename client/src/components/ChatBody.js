@@ -4,6 +4,7 @@ import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
 import { Other, Own } from "./Messages"
+
 const ChatBody = ({ user }) => {
 	const data = {
 		dp: "https://thispersondoesnotexist.com/image",
