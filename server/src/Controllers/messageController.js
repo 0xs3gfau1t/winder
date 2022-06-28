@@ -83,6 +83,13 @@ const getMessages = async (req, res) => {
 				options: { limit: 11, sort: { createdAt: -1 } },
 			})
 
+		if (!relation) {
+			return res.status(400).json({
+				success: false,
+				error: "No relation exists with this user.",
+			})
+		}
+
 		// Updating the unreadCount
 		const userIdx =
 			req.userdata._id === relation.users[1].toString() ? 1 : 0
@@ -122,6 +129,13 @@ const sendMessage = async (req, res) => {
 			},
 			["messages", "users", "unreadCount"]
 		)
+
+		if (!relation) {
+			return res.status(500).json({
+				success: false,
+				error: "No relation exists with this user.",
+			})
+		}
 
 		// Create new message document and insert into the relation.messages list
 		const sender = relation.users[1].toString() === req.userdata._id
