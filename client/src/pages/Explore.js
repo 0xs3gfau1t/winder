@@ -32,12 +32,12 @@ function Explore() {
 		(users[current] && dispatch(sendLike(users[current].id))) ||
 		console.log("No user to accept.")
 
+	if (misc.showAlert) return <Navigate to="/profile" />
 	return (
 		<>
 			<div className="navbarr">
 				<Nav current="Explore" />
 			</div>
-			{misc.showAlert && <Alert />}
 			<ExploreStyled>
 				<div className="carousel-wrapper">
 					<Carousel
