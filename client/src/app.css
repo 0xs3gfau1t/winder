@@ -347,8 +347,8 @@ ul {
 }
 .change-dp {
 	position: absolute;
-	top: 15%;
-	right: 6%;
+	top: 4rem;
+	right: 3rem;
 	height: 1rem;
 	width: 1rem;
 	margin: auto;
@@ -358,8 +358,8 @@ ul {
 }
 .remove-dp {
 	position: absolute;
-	top: 15%;
-	left: 1%;
+	top: 4rem;
+	left: 1rem;
 	height: 1rem;
 	width: 1rem;
 	margin: auto;

@@ -5,6 +5,7 @@ import {
 	FETCH_ACTIVE_CHAT,
 	SEND_MESSAGE,
 	SET_LOADING,
+	SET_LIVE_COUNT,
 } from "../actions/types"
 
 const initialState = {
@@ -55,7 +56,7 @@ export default function reducer(state = initialState, action) {
 								...state.activeChat.data,
 						  ],
 				},
-				chat: action.live ? state.caht - 1 : state.chat,
+				chat: action.live ? state.chat - 1 : state.chat,
 			}
 		}
 		case SEND_MESSAGE: {
@@ -72,6 +73,13 @@ export default function reducer(state = initialState, action) {
 			return {
 				...state,
 				activeChat: { ...state.activeChat, loading: true },
+			}
+		}
+		case SET_LIVE_COUNT: {
+			return {
+				...state,
+				noti: action.payload.noti ? action.payload.noti : state.noti,
+				chat: action.payload.chat ? action.payload.chat : state.chat,
 			}
 		}
 		default: {

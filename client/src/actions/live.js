@@ -6,6 +6,7 @@ import {
 	FETCH_ACTIVE_CHAT,
 	SEND_MESSAGE,
 	SET_LOADING,
+	SET_LIVE_COUNT,
 } from "./types"
 const URL = process.env.URL
 
@@ -37,7 +38,7 @@ export const fetchChats = () => dispatch => {
 	axios
 		.get(URL + "/messages", { withCredentials: true })
 		.then(res => {
-			// console.log("Chat data: ", res)
+			dispatch({ type: SET_LIVE_COUNT, payload: { chat: 0 } })
 			dispatch({
 				type: FETCH_CHAT,
 				payload: res.data.data,
