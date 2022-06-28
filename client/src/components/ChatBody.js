@@ -11,7 +11,6 @@ const ChatBody = ({ user }) => {
 	}
 	const [message, setMessage] = useState("")
 	const activeChat = useSelector(state => state.live.activeChat)
-	const [prevCursor, setPrevCursor] = useState(activeChat.more)
 	const ref = useRef(null)
 	const dispatch = useDispatch()
 
@@ -20,7 +19,9 @@ const ChatBody = ({ user }) => {
 	}, [])
 
 	useEffect(() => {
-		ref.current.scrollTop = ref.current.scrollHeight
+		if (activeChat.live) {
+			ref.current.scrollTop = ref.current.scrollHeight
+		} else ref.current.scrollTop += 77
 	}, [activeChat])
 
 	const sendChat = e => {

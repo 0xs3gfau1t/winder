@@ -11,7 +11,7 @@ const initialState = {
 	noti: 0,
 	chat: 0,
 	chatList: [],
-	activeChat: { data: [], loading: false, more: "" },
+	activeChat: { data: [], loading: false, more: "", live: false },
 	notiList: {},
 }
 
@@ -22,6 +22,7 @@ export default function reducer(state = initialState, action) {
 			return {
 				...state,
 				chat: state.chat + 1,
+				activeChat: { ...state.activeChat },
 			}
 		}
 		case NOTI_UPDATE: {
@@ -38,7 +39,9 @@ export default function reducer(state = initialState, action) {
 		case FETCH_ACTIVE_CHAT: {
 			return {
 				...state,
+				live: action.live,
 				activeChat: {
+					live: action.live ? true : false,
 					loading: false,
 					id: action.id,
 					more: action.more,
@@ -60,6 +63,7 @@ export default function reducer(state = initialState, action) {
 				...state,
 				activeChat: {
 					...state.activeChat,
+					live: true,
 					data: [...state.activeChat.data, action.payload],
 				},
 			}

@@ -17,6 +17,7 @@ export const chatUpdate = data => (dispatch, getState) => {
 	// console.log("Chat update action")
 	dispatch({ type: CHAT_UPDATE, payload: data })
 	const activeChat = getState().live.activeChat.id
+
 	if (data.senderId === activeChat) {
 		dispatch({
 			type: FETCH_ACTIVE_CHAT,
