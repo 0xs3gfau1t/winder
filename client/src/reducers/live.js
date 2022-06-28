@@ -4,13 +4,14 @@ import {
 	FETCH_CHAT,
 	FETCH_ACTIVE_CHAT,
 	SEND_MESSAGE,
+	SET_LOADING,
 } from "../actions/types"
 
 const initialState = {
 	noti: 0,
 	chat: 0,
 	chatList: [],
-	activeChat: { data: [] },
+	activeChat: { data: [], loading: false, more: "" },
 	notiList: {},
 }
 
@@ -38,13 +39,19 @@ export default function reducer(state = initialState, action) {
 			return {
 				...state,
 				activeChat: {
+					loading: false,
 					id: action.id,
-					data: [
-						...state.activeChat.data,
-						...action.payload.reverse(),
-					],
+					more: action.more,
+					data: action.live
+						? [
+								...state.activeChat.data,
+								...action.payload.reverse(),
+						  ]
+						: [
+								...action.payload.reverse(),
+								...state.activeChat.data,
+						  ],
 				},
-				more: action.more,
 				chat: action.live ? state.caht - 1 : state.chat,
 			}
 		}
@@ -55,6 +62,12 @@ export default function reducer(state = initialState, action) {
 					...state.activeChat,
 					data: [...state.activeChat.data, action.payload],
 				},
+			}
+		}
+		case SET_LOADING: {
+			return {
+				...state,
+				activeChat: { ...state.activeChat, loading: true },
 			}
 		}
 		default: {

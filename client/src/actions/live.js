@@ -5,6 +5,7 @@ import {
 	NOTI_UPDATE,
 	FETCH_ACTIVE_CHAT,
 	SEND_MESSAGE,
+	SET_LOADING,
 } from "./types"
 const URL = process.env.URL
 
@@ -49,17 +50,19 @@ export const fetchChats = () => dispatch => {
 export const fetchActiveChat =
 	(id, cur = "") =>
 	dispatch => {
+		console.log(id, cur)
+		dispatch({ type: SET_LOADING })
 		axios
-			.get(URL + "/messages" + `/${id}?cur=${cur ? cur : ""}`, {
+			.get(URL + "/messages" + `/${id}?cursor=${cur}`, {
 				withCredentials: true,
 			})
 			.then(res => {
-				// console.log("Chat data: ", res)
+				console.log("Next Cursor: ", res.data.nextCursor)
 				dispatch({
 					type: FETCH_ACTIVE_CHAT,
 					payload: res.data.data,
 					id: id,
-					more: res.data.nextCursor,
+					more: res.data.nextCursor ? res.data.nextCursor : "",
 				})
 			})
 			.catch(err => {
@@ -68,7 +71,6 @@ export const fetchActiveChat =
 	}
 
 export const sendMessage = (text, id) => dispatch => {
-	console.log(text)
 	axios
 		.post(
 			URL + `/messages/${id}`,
