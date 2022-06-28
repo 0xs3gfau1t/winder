@@ -1,12 +1,14 @@
 import React from "react"
-import Wrapper from "../assets/wrappers/NotificationPage"
 import { Bar } from "../components"
 
 function Notification() {
 	return (
-		<Wrapper>
+		<>
 			<Bar title={"Notifications"} />
-		</Wrapper>
+			<div className="container mx-auto w-1/2">
+				<h1>Jello Jello</h1>
+			</div>
+		</>
 	)
 }
 

@@ -5,6 +5,8 @@ import {
 	NOTI_UPDATE,
 	FETCH_ACTIVE_CHAT,
 	SEND_MESSAGE,
+	SET_LOADING,
+	SET_LIVE_COUNT,
 } from "./types"
 const URL = process.env.URL
 
@@ -16,6 +18,7 @@ export const chatUpdate = data => (dispatch, getState) => {
 	// console.log("Chat update action")
 	dispatch({ type: CHAT_UPDATE, payload: data })
 	const activeChat = getState().live.activeChat.id
+
 	if (data.senderId === activeChat) {
 		dispatch({
 			type: FETCH_ACTIVE_CHAT,
@@ -35,7 +38,7 @@ export const fetchChats = () => dispatch => {
 	axios
 		.get(URL + "/messages", { withCredentials: true })
 		.then(res => {
-			// console.log("Chat data: ", res)
+			dispatch({ type: SET_LIVE_COUNT, payload: { chat: 0 } })
 			dispatch({
 				type: FETCH_CHAT,
 				payload: res.data.data,
@@ -49,17 +52,19 @@ export const fetchChats = () => dispatch => {
 export const fetchActiveChat =
 	(id, cur = "") =>
 	dispatch => {
+		console.log(id, cur)
+		dispatch({ type: SET_LOADING })
 		axios
-			.get(URL + "/messages" + `/${id}?cur=${cur ? cur : ""}`, {
+			.get(URL + "/messages" + `/${id}?cursor=${cur}`, {
 				withCredentials: true,
 			})
 			.then(res => {
-				// console.log("Chat data: ", res)
+				console.log("Next Cursor: ", res.data.nextCursor)
 				dispatch({
 					type: FETCH_ACTIVE_CHAT,
 					payload: res.data.data,
 					id: id,
-					more: res.data.nextCursor,
+					more: res.data.nextCursor ? res.data.nextCursor : "",
 				})
 			})
 			.catch(err => {
@@ -68,7 +73,6 @@ export const fetchActiveChat =
 	}
 
 export const sendMessage = (text, id) => dispatch => {
-	console.log(text)
 	axios
 		.post(
 			URL + `/messages/${id}`,

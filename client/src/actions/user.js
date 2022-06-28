@@ -1,5 +1,11 @@
 import axios from "axios"
-import { DELETE_DP, LOAD_USER, LOGOUT, VERIFY_MAIL } from "./types"
+import {
+	DELETE_DP,
+	SET_LIVE_COUNT,
+	LOAD_USER,
+	LOGOUT,
+	VERIFY_MAIL,
+} from "./types"
 import { displayAlert } from "./misc"
 import { logout } from "./auth"
 import { connect } from "./live"
@@ -10,6 +16,16 @@ export const loadUser = () => dispatch => {
 	axios
 		.get(url + "/settings", { withCredentials: true })
 		.then(res => {
+			let data = res.data.user
+			dispatch({
+				type: SET_LIVE_COUNT,
+				payload: {
+					chat: res.data.user.msgUnreadCount,
+					noti: res.data.user.notiUnreadCount,
+				},
+			})
+			delete data["msgUnreadCount"]
+			delete data["notiUnreadCount"]
 			dispatch({
 				type: LOAD_USER,
 				payload: res.data.user,
@@ -17,11 +33,12 @@ export const loadUser = () => dispatch => {
 			dispatch(connect())
 		})
 		.catch(err => {
+			console.log(err)
 			dispatch(displayAlert("Session Expired! Logging Out...", "danger"))
 			dispatch({
 				type: LOGOUT,
 			})
-			setTimeout(() => (window.location = "/"), 1000)
+			setTimeout(() => (window.location = "/"), 2000)
 		})
 }
 

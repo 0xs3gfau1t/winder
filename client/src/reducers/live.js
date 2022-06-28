@@ -4,13 +4,15 @@ import {
 	FETCH_CHAT,
 	FETCH_ACTIVE_CHAT,
 	SEND_MESSAGE,
+	SET_LOADING,
+	SET_LIVE_COUNT,
 } from "../actions/types"
 
 const initialState = {
 	noti: 0,
 	chat: 0,
 	chatList: [],
-	activeChat: { data: [] },
+	activeChat: { data: [], loading: false, more: "", live: false },
 	notiList: {},
 }
 
@@ -21,6 +23,7 @@ export default function reducer(state = initialState, action) {
 			return {
 				...state,
 				chat: state.chat + 1,
+				activeChat: { ...state.activeChat },
 			}
 		}
 		case NOTI_UPDATE: {
@@ -37,15 +40,23 @@ export default function reducer(state = initialState, action) {
 		case FETCH_ACTIVE_CHAT: {
 			return {
 				...state,
+				live: action.live,
 				activeChat: {
+					live: action.live ? true : false,
+					loading: false,
 					id: action.id,
-					data: [
-						...state.activeChat.data,
-						...action.payload.reverse(),
-					],
+					more: action.more,
+					data: action.live
+						? [
+								...state.activeChat.data,
+								...action.payload.reverse(),
+						  ]
+						: [
+								...action.payload.reverse(),
+								...state.activeChat.data,
+						  ],
 				},
-				more: action.more,
-				chat: action.live ? state.caht - 1 : state.chat,
+				chat: action.live ? state.chat - 1 : state.chat,
 			}
 		}
 		case SEND_MESSAGE: {
@@ -53,8 +64,22 @@ export default function reducer(state = initialState, action) {
 				...state,
 				activeChat: {
 					...state.activeChat,
+					live: true,
 					data: [...state.activeChat.data, action.payload],
 				},
+			}
+		}
+		case SET_LOADING: {
+			return {
+				...state,
+				activeChat: { ...state.activeChat, loading: true },
+			}
+		}
+		case SET_LIVE_COUNT: {
+			return {
+				...state,
+				noti: action.payload.noti ? action.payload.noti : state.noti,
+				chat: action.payload.chat ? action.payload.chat : state.chat,
 			}
 		}
 		default: {

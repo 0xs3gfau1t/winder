@@ -96,29 +96,25 @@ function Profile() {
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
-					<div className="flex flex-row flex-wrap pb-4">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-md hover:drop-shadow-2xl ease-in duration-300">
-							<div className="sticky top-0 p-2 w-full profile-form">
+					<div className="flex flex-wrap pb-4 container -ml-7">
+						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 h-full rounded-md hover:drop-shadow-2xl ease-in duration-300">
+							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<img
 									className="h-60 w-64 border-2"
 									src={settings.preview}
 									alt={user.firstName}
 								/>
-								<span className="remove-dp" onClick={removeDP}>
-									<IconContext.Provider
-										value={{ color: "red", size: "1em" }}
-									>
-										<GoX />
-									</IconContext.Provider>
-								</span>
-								<label className="change-dp" htmlFor="upload">
-									<IconContext.Provider
-										value={{ color: "cyan", size: "1em" }}
+								<IconContext.Provider
+									value={{ color: "white", size: "1em" }}
+								>
+									<label
+										className="change-dp"
+										htmlFor="upload"
 									>
 										<MdEdit />
-									</IconContext.Provider>
-								</label>
+									</label>
+								</IconContext.Provider>
 								<input
 									id="upload"
 									type="file"
@@ -144,6 +140,7 @@ function Profile() {
 										</li>
 									</div>
 									<li>{user.dob}</li>
+									<li>{user.gender}</li>
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
@@ -164,14 +161,31 @@ function Profile() {
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2"
+							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4"
 						>
 							<h3 className="m-3">Profile</h3>
-							<ImageUpload
-								onChange={onChange}
-								settings={settings}
-								user={user}
-							/>
+							<div className="flex flex-row gap-8">
+								{user.images &&
+									user.images.slice(1).map(image => {
+										return (
+											<img
+												className="h-64 w-64 border-2"
+												key={image}
+												src={
+													process.env.URL +
+													`/image/${image}`
+												}
+											/>
+										)
+									})}
+								{user.images && user.images.length < 3 && (
+									<ImageUpload
+										onChange={onChange}
+										settings={settings}
+										user={user}
+									/>
+								)}
+							</div>
 							<label htmlFor="bio" className="mx-10 form-label">
 								Bio
 							</label>
@@ -219,9 +233,9 @@ function Profile() {
 													onClick={e =>
 														delPassion(passion)
 													}
-													className="absolute float-right leading-3 text-rose-600 bg-slate-400 rounded-xl leading-3"
+													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
 												>
-													x
+													-
 												</span>
 											</span>
 										</div>
@@ -240,7 +254,7 @@ function Profile() {
 													}
 													className="absolute float-right leading-3 -m-1 text-rose-600 rounded-xl"
 												>
-													x
+													-
 												</span>
 											</span>
 										</div>

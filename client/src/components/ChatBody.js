@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState, useRef, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
 import { Other, Own } from "./Messages"
+
 const ChatBody = ({ user }) => {
 	const data = {
 		dp: "https://thispersondoesnotexist.com/image",
@@ -18,7 +19,9 @@ const ChatBody = ({ user }) => {
 	}, [])
 
 	useEffect(() => {
-		ref.current.scrollTop = ref.current.scrollHeight
+		if (activeChat.live) {
+			ref.current.scrollTop = ref.current.scrollHeight
+		} else ref.current.scrollTop += 77
 	}, [activeChat])
 
 	const sendChat = e => {
@@ -31,6 +34,21 @@ const ChatBody = ({ user }) => {
 			sendChat(e)
 		}
 	}
+
+	const observer = useRef()
+	const topChatRef = useCallback(
+		node => {
+			if (activeChat.loading) return
+			if (observer.current) observer.current.disconnect()
+			observer.current = new IntersectionObserver(entries => {
+				if (entries[0].isIntersecting && activeChat.more) {
+					dispatch(fetchActiveChat(activeChat.id, activeChat.more))
+				}
+			})
+			if (node) observer.current.observe(node)
+		},
+		[activeChat.loading, activeChat.more]
+	)
 
 	return (
 		<>
@@ -52,7 +70,10 @@ const ChatBody = ({ user }) => {
 					<ul className="space-y-2">
 						{activeChat.data.map((message, index) => {
 							return (
-								<div key={index}>
+								<div
+									key={index}
+									ref={index == 0 ? topChatRef : null}
+								>
 									{message.sender ? (
 										<Own text={message.content} />
 									) : (
