@@ -233,7 +233,7 @@ function Profile() {
 													onClick={e =>
 														delPassion(passion)
 													}
-													className="absolute float-right leading-4 text-red-600 bg-gray-900 font-black rounded-xl px-0.5"
+													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
 												>
 													-
 												</span>
