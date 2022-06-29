@@ -17,6 +17,10 @@ const Wrapper = styled.main`
     margin: 10px;
     cursor: pointer;
 }
+
+.showTime{
+    color: gainsboro;
+}
 `
 
 export default Wrapper
