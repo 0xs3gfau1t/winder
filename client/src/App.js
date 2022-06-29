@@ -44,10 +44,9 @@ const App = () => {
 							exact={true}
 							path="/notification"
 							element={
-								// <PrivateRoute>
-								// 	<Notification />
-								// </PrivateRoute>
-								<Notification/>
+								<PrivateRoute>
+									<Notification />
+								</PrivateRoute>
 							}
 						/>
 						<Route
