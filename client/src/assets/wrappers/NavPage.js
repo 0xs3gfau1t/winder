@@ -8,7 +8,7 @@ const Wrapper = styled.main`
 		margin: 0;
 		right: 0.5%;
 		background: var(--grey-100);
-		border-radius: 7%;
+		border-radius: 1rem;
 		border: 0.01rem solid var(--grey-200);
 		padding: 1% 0;
 		display: flex;
@@ -45,7 +45,7 @@ const Wrapper = styled.main`
 		opacity: 100%;
 		padding-left: 7%;
 		border-left: 3px solid navy;
-		border-radius: 20%;
+		border-radius: 2rem;
 	}
 
 	.choosen_one::after {

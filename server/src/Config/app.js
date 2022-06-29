@@ -32,7 +32,7 @@ const server = require("http").createServer(app)
 // SOCKET IO
 const io = require("socket.io")(server, {
 	cors: {
-		origin: "http://localhost:8000",
+		origin: process.env.APP_URL,
 		// AccessControlAllowCredentials: true,
 		credentials: true,
 	},

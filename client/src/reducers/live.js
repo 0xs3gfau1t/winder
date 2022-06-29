@@ -22,7 +22,7 @@ export default function reducer(state = initialState, action) {
 			// console.log("Chat update received")
 			return {
 				...state,
-				chat: state.chat + 1,
+				chat: window.location.pathname !== "/chat" ? state.chat + 1 : 0,
 				activeChat: { ...state.activeChat },
 			}
 		}
@@ -76,10 +76,12 @@ export default function reducer(state = initialState, action) {
 			}
 		}
 		case SET_LIVE_COUNT: {
+			console.log("Called", action.payload)
 			return {
 				...state,
+				chat:
+					"chat" in action.payload ? action.payload.chat : state.chat,
 				noti: action.payload.noti ? action.payload.noti : state.noti,
-				chat: action.payload.chat ? action.payload.chat : state.chat,
 			}
 		}
 		default: {
