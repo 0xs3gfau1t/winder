@@ -9,40 +9,40 @@ const getConvoList = async (req, res) => {
 			{ users: 1, unreadCount: 1 }
 		)
 
-		const data = await Promise.all(
-			convoList.map(async convo => {
-				const userIdx =
-					req.userdata._id === convo.users[0].toString() ? 1 : 0
+		const data = {}
+		for (let convo of convoList) {
+			const userIdx =
+				req.userdata._id === convo.users[0].toString() ? 1 : 0
 
-				// DONOT REMOVE THIS
-				// if (convo.unreadCount > 0) {
-				// 	unreadCount =
-				// 		userIdx === 1 ? -convo.unreadCount : convo.unreadCount
-				// } else if (convo.unreadCount < 0) {
-				// 	unreadCount =
-				// 		userIdx === 0 ? convo.unreadCount : -convo.unreadCount
-				// } else {
-				// 	unreadCount = 0
-				// }
-				const user = await userModel.findOne(
-					{ _id: convo.users[userIdx] },
-					["firstName", "lastName", "images"]
-				)
+			const user = await userModel.findOne(
+				{ _id: convo.users[userIdx] },
+				["firstName", "lastName", "images"]
+			)
 
-				const unreadCount =
-					(convo.unreadCount > 0 && userIdx === 1) ||
-					(convo.unreadCount < 0 && userIdx === 1)
-						? -convo.unreadCount
-						: convo.unreadCount
-				return {
-					id: convo.users[userIdx].toString(),
-					userDp: user.images[0],
-					userName: user.firstName + " " + user.lastName,
-					relId: convo._id.toString(),
-					unreadCount,
-				}
-			})
-		)
+			// DONOT REMOVE THIS
+			// if (convo.unreadCount > 0) {
+			// 	unreadCount =
+			// 		userIdx === 1 ? -convo.unreadCount : convo.unreadCount
+			// } else if (convo.unreadCount < 0) {
+			// 	unreadCount =
+			// 		userIdx === 0 ? convo.unreadCount : -convo.unreadCount
+			// } else {
+			// 	unreadCount = 0
+			// }
+			const unreadCount =
+				(convo.unreadCount > 0 && userIdx === 1) ||
+				(convo.unreadCount < 0 && userIdx === 1)
+					? -convo.unreadCount
+					: convo.unreadCount
+
+			data[convo._id.toString()] = {
+				userId: convo.users[userIdx].toString(),
+				userDp: user.images[0],
+				userName: user.firstName + " " + user.lastName,
+				unreadCount,
+			}
+		}
+
 		res.json({
 			success: true,
 			data,
@@ -54,7 +54,7 @@ const getConvoList = async (req, res) => {
 }
 
 const getMessages = async (req, res) => {
-	const { id } = req.params
+	const { id } = req.params // Relation id
 	var { cursor } = req.query
 
 	if (cursor) {
@@ -73,7 +73,7 @@ const getMessages = async (req, res) => {
 	try {
 		var relation = await relationModel
 			.findOne(
-				{ users: { $all: [req.userdata._id, id] }, stat: true },
+				{ _id: id, stat: true },
 				{ messages: 1, users: 1, unreadCount: 1 }
 			)
 			.populate({
@@ -119,16 +119,14 @@ const getMessages = async (req, res) => {
 }
 
 const sendMessage = async (req, res) => {
-	const { id } = req.params // receiver Id
+	const { id } = req.params // relation id
 	const { content } = req.body
 	try {
-		var relation = await relationModel.findOne(
-			{
-				users: { $all: [req.userdata._id, id] },
-				stat: true,
-			},
-			["messages", "users", "unreadCount"]
-		)
+		var relation = await relationModel.findOne({ _id: id, stat: true }, [
+			"messages",
+			"users",
+			"unreadCount",
+		])
 
 		if (!relation) {
 			return res.status(500).json({
