@@ -5,8 +5,13 @@ import Popup from '../components/NotificationPopup/Popup'
 
 function Notification() {
 	const [popUp, setPopUP] = useState({type: "haha", content: "", time: "", read: false});
-  const [clicked, setClick] = useState(false)
-  const dummyy = [
+	const [clicked, setClick] = useState(false)
+	const relater = {
+		0: "Liked Your Profile",
+		1: "New Match Found",
+		2: "Promotion..."
+	}
+  	const dummyy = [
     {
     "type": 2,
     "content": "In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",
@@ -81,7 +86,7 @@ function Notification() {
   
   function handlePopup(element){
     setClick(true)
-   setPopUP({type: element.type, content: element.content, time: element.time, read: element.read})
+   setPopUP({type: relater[element.type], content: element.content, time: element.time, read: element.read})
   }
 
 
@@ -97,7 +102,7 @@ function Notification() {
               <div className='Notification-card' >
               {
                 dummyy.map((element)=>{
-                  return(<div className="card" onClick={() => handlePopup(element)}>
+                  return(<div className="card"  onClick={() => handlePopup(element)}>
                             {element.content.slice(0, 100) + "..."}
 							<div className='showTime'>{element.time}</div>
                         </div>);
