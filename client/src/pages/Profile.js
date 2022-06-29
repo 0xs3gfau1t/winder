@@ -15,7 +15,8 @@ function Profile() {
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
-		preview: "", // + user.images[0],
+		preview: "",
+		preview2: "",
 	})
 	useEffect(() => {
 		if (user.images)
@@ -27,13 +28,21 @@ function Profile() {
 	}, [user])
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (e.target.name === "images") {
+		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			setSettings(prev => ({
-				...prev,
-				preview: URL.createObjectURL(file),
-				file: file,
-			}))
+			if (e.target.name == "file") {
+				setSettings(prev => ({
+					...prev,
+					preview: URL.createObjectURL(file),
+					file: file,
+				}))
+			} else {
+				setSettings(prev => ({
+					...prev,
+					preview2: URL.createObjectURL(file),
+					file2: file,
+				}))
+			}
 		}
 		if (e.target.name == "passion") {
 			let upPassion = settings.passion
@@ -74,18 +83,18 @@ function Profile() {
 				passion: user.passion.filter(pas => pas != passion),
 			}))
 	}
-	const removeDP = () => {
-		if (user.images.length < 2) {
-			dispatch(
-				displayAlert(
-					"Can't remove! This is the only image you have.",
-					"danger"
-				)
-			)
-			return
-		}
-		dispatch(removeDp(user.images[0]))
-	}
+	// const removeDP = () => {
+	// 	if (user.images.length < 2) {
+	// 		dispatch(
+	// 			displayAlert(
+	// 				"Can't remove! This is the only image you have.",
+	// 				"danger"
+	// 			)
+	// 		)
+	// 		return
+	// 	}
+	// 	dispatch(removeDp(user.images[0]))
+	// }
 	return (
 		<>
 			<Bar title={"Settings"} />
@@ -97,7 +106,7 @@ function Profile() {
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 h-full rounded-md hover:drop-shadow-2xl ease-in duration-300">
+						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<img
@@ -161,7 +170,7 @@ function Profile() {
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4"
+							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
 							<div className="flex flex-row gap-8">
