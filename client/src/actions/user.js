@@ -1,10 +1,11 @@
 import axios from "axios"
 import {
-	DELETE_DP,
+	DELETE_PIC,
 	SET_LIVE_COUNT,
 	LOAD_USER,
 	LOGOUT,
 	VERIFY_MAIL,
+	ADD_PIC,
 } from "./types"
 import { displayAlert } from "./misc"
 import { logout } from "./auth"
@@ -105,8 +106,7 @@ export const updateProfile = data => dispatch => {
 	axios
 		.patch(url + `/settings`, update, { withCredentials: true })
 		.then(res => {
-			// console.log(res)
-			// dispatch(loadUser())
+			dispatch(loadUser())
 			dispatch(displayAlert("Profile Updated...", "success"))
 		})
 		.catch(err => {
@@ -123,13 +123,11 @@ export const updateProfile = data => dispatch => {
 			},
 			withCredentials: true,
 		}
-		console.log(data.file)
 		axios
 			.post(url + `/image`, formData, config)
 			.then(res => {
-				console.log(res)
-				// dispatch(loadUser())
 				dispatch(displayAlert("Profile Updated...", "success", true))
+				setTimeout(() => window.location.reload(), 1000)
 			})
 			.catch(err => {
 				console.log(err)
@@ -145,11 +143,12 @@ export const removeDp = id => dispatch => {
 	axios
 		.delete(url + `/image/${id}`, { withCredentials: true })
 		.then(
+			console.log("Deleted"),
 			dispatch({
-				type: DELETE_DP,
+				type: DELETE_PIC,
 				payload: id,
-			}),
-			setTimeout(() => window.location.reload(), 2000)
+			})
+			// setTimeout(() => window.location.reload(), 1000)
 		)
 		.catch(err => {
 			console.log(err)

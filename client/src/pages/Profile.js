@@ -31,7 +31,7 @@ function Profile() {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
 		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			if (e.target.name == "file") {
+			if (e.target.name == "upload1") {
 				setSettings(prev => ({
 					...prev,
 					isDP: true,
@@ -69,7 +69,7 @@ function Profile() {
 			setSettings({ ...settings, ageH: user.preferance.age[1] })
 		if ("ageH" in settings && !("ageL" in settings))
 			setSettings({ ...settings, ageL: user.preferance.age[0] })
-		setSettings({ ...settings, changed: false })
+		setSettings({ ...settings, changed: false, preview2: "", isDP: false })
 		dispatch(updateProfile(settings))
 	}
 	const delPassion = passion => {
@@ -85,8 +85,33 @@ function Profile() {
 				passion: user.passion.filter(pas => pas != passion),
 			}))
 	}
-	const removePic = () => {
-		dispatch(removeDp(user.images[0]))
+	const removePic = (e, name, image = "") => {
+		switch (name) {
+			case "dp": {
+				console.log("DP", process.env.URL + "/image/" + user.images[0])
+				setSettings({
+					...settings,
+					isDP: false,
+					file: null,
+					preview: process.env.URL + "/image/" + user.images[0],
+				})
+				break
+			}
+			case "images": {
+				dispatch(removeDp(image))
+				break
+			}
+			case "uploadPic": {
+				setSettings({
+					...settings,
+					file: null,
+					preview2: "",
+				})
+				break
+			}
+			default: {
+			}
+		}
 	}
 
 	return (
@@ -105,22 +130,27 @@ function Profile() {
 								<h5>Profile Picture</h5>
 								<div>
 									<IconContext.Provider
-										value={{ color: "cyan", size: "1em" }}
+										value={{ color: "white", size: "1em" }}
 									>
 										{!settings.preview2 && (
 											<>
+												{settings.isDP && (
+													<span
+														className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+														name="dp"
+														onClick={e =>
+															removePic(e, "dp")
+														}
+													>
+														<GoX name="dp" />
+													</span>
+												)}
 												<label
 													className="change-dp"
 													htmlFor="upload"
 												>
 													<MdEdit />
 												</label>
-												<span
-													className="remove-dp"
-													name="dp"
-												>
-													<GoX />
-												</span>
 											</>
 										)}
 									</IconContext.Provider>
@@ -133,7 +163,7 @@ function Profile() {
 										id="upload"
 										type="file"
 										accept="image/*"
-										name="file"
+										name="upload1"
 									/>
 								</div>
 								<ul className="permanent-info m-2">
@@ -183,14 +213,27 @@ function Profile() {
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
-											<img
-												className="h-64 w-64 border-2"
-												key={image}
-												src={
-													process.env.URL +
-													`/image/${image}`
-												}
-											/>
+											<div key={image}>
+												<span
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													onClick={e =>
+														removePic(
+															e,
+															"images",
+															image
+														)
+													}
+												>
+													<GoX />
+												</span>
+												<img
+													className="h-64 w-64 border-2"
+													src={
+														process.env.URL +
+														`/image/${image}`
+													}
+												/>
+											</div>
 										)
 									})}
 								{user.images && user.images.length < 4 && (

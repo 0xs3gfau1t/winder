@@ -1,5 +1,6 @@
 import React from "react"
-import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai"
+import { AiOutlinePlus } from "react-icons/ai"
+import { GoX } from "react-icons/go"
 
 const ImageUpload = ({ settings, removePic }) => {
 	return (
@@ -8,13 +9,12 @@ const ImageUpload = ({ settings, removePic }) => {
 				<div className="flex h-50 w-52 border-2 m-4">
 					{settings.preview2 ? (
 						<>
-							<label
-								className="absolute w-4 h-4 bg-black text-white"
-								htmlFor="upload2"
-								onClick={removePic}
+							<span
+								className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+								onClick={e => removePic(e, "uploadPic")}
 							>
-								<AiOutlineClose />
-							</label>
+								<GoX />
+							</span>
 							<img src={settings.preview2} />
 						</>
 					) : (
