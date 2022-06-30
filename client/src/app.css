@@ -346,9 +346,10 @@ ul {
 	color: rgb(153, 153, 153);
 }
 .change-dp {
-	position: absolute;
-	top: 4rem;
-	right: 3rem;
+	position: relative;
+	top: 1.5rem;
+	right: 2rem;
+	float: right;
 	height: 1rem;
 	width: 1rem;
 	margin: auto;
@@ -357,8 +358,8 @@ ul {
 	background: black;
 }
 .remove-dp {
-	position: absolute;
-	top: 4rem;
+	position: relative;
+	top: 1.5rem;
 	left: 1rem;
 	height: 1rem;
 	width: 1rem;

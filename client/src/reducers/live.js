@@ -76,7 +76,6 @@ export default function reducer(state = initialState, action) {
 			}
 		}
 		case SET_LIVE_COUNT: {
-			console.log("Called", action.payload)
 			return {
 				...state,
 				chat:

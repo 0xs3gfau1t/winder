@@ -116,6 +116,7 @@ export const updateProfile = data => dispatch => {
 	if (data.hasOwnProperty("file")) {
 		const formData = new FormData()
 		formData.append("file", data.file)
+		if (data.isDP) formData.append("isDP", true)
 		const config = {
 			headers: {
 				"Content-Type": "multipart/form-data",

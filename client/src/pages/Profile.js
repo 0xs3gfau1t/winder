@@ -26,6 +26,7 @@ function Profile() {
 			}))
 		dispatch(loadOptions())
 	}, [user])
+
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
 		if (e.target.type === "file") {
@@ -33,6 +34,7 @@ function Profile() {
 			if (e.target.name == "file") {
 				setSettings(prev => ({
 					...prev,
+					isDP: true,
 					preview: URL.createObjectURL(file),
 					file: file,
 				}))
@@ -40,7 +42,7 @@ function Profile() {
 				setSettings(prev => ({
 					...prev,
 					preview2: URL.createObjectURL(file),
-					file2: file,
+					file: file,
 				}))
 			}
 		}
@@ -83,18 +85,10 @@ function Profile() {
 				passion: user.passion.filter(pas => pas != passion),
 			}))
 	}
-	// const removeDP = () => {
-	// 	if (user.images.length < 2) {
-	// 		dispatch(
-	// 			displayAlert(
-	// 				"Can't remove! This is the only image you have.",
-	// 				"danger"
-	// 			)
-	// 		)
-	// 		return
-	// 	}
-	// 	dispatch(removeDp(user.images[0]))
-	// }
+	const removePic = () => {
+		dispatch(removeDp(user.images[0]))
+	}
+
 	return (
 		<>
 			<Bar title={"Settings"} />
@@ -109,27 +103,39 @@ function Profile() {
 						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<img
-									className="h-60 w-64 border-2"
-									src={settings.preview}
-									alt={user.firstName}
-								/>
-								<IconContext.Provider
-									value={{ color: "white", size: "1em" }}
-								>
-									<label
-										className="change-dp"
-										htmlFor="upload"
+								<div>
+									<IconContext.Provider
+										value={{ color: "cyan", size: "1em" }}
 									>
-										<MdEdit />
-									</label>
-								</IconContext.Provider>
-								<input
-									id="upload"
-									type="file"
-									accept="image/*"
-									name="images"
-								/>
+										{!settings.preview2 && (
+											<>
+												<label
+													className="change-dp"
+													htmlFor="upload"
+												>
+													<MdEdit />
+												</label>
+												<span
+													className="remove-dp"
+													name="dp"
+												>
+													<GoX />
+												</span>
+											</>
+										)}
+									</IconContext.Provider>
+									<img
+										className="h-60 w-64 border-2"
+										src={settings.preview}
+										alt={user.firstName}
+									/>
+									<input
+										id="upload"
+										type="file"
+										accept="image/*"
+										name="file"
+									/>
+								</div>
 								<ul className="permanent-info m-2">
 									<div
 										className={
@@ -173,7 +179,7 @@ function Profile() {
 							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="flex flex-row gap-8">
+							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
@@ -187,11 +193,12 @@ function Profile() {
 											/>
 										)
 									})}
-								{user.images && user.images.length < 3 && (
+								{user.images && user.images.length < 4 && (
 									<ImageUpload
 										onChange={onChange}
 										settings={settings}
 										user={user}
+										removePic={removePic}
 									/>
 								)}
 							</div>
