@@ -19,8 +19,8 @@ export function wsMiddleware() {
 export default function (store) {
 	// if (socket.disconnected)
 	socket.on("chat", data => {
-		console.log("Chat Received")
-		console.log("Data", data)
+		// console.log("Chat Received")
+		// console.log("Data", data)
 		store.dispatch(liveActions.chatUpdate(data))
 	})
 	socket.on("notification", data => {

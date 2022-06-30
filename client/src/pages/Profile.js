@@ -15,7 +15,8 @@ function Profile() {
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
-		preview: "", // + user.images[0],
+		preview: "",
+		preview2: "",
 	})
 	useEffect(() => {
 		if (user.images)
@@ -25,15 +26,25 @@ function Profile() {
 			}))
 		dispatch(loadOptions())
 	}, [user])
+
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (e.target.name === "images") {
+		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			setSettings(prev => ({
-				...prev,
-				preview: URL.createObjectURL(file),
-				file: file,
-			}))
+			if (e.target.name == "upload1") {
+				setSettings(prev => ({
+					...prev,
+					isDP: true,
+					preview: URL.createObjectURL(file),
+					file: file,
+				}))
+			} else {
+				setSettings(prev => ({
+					...prev,
+					preview2: URL.createObjectURL(file),
+					file: file,
+				}))
+			}
 		}
 		if (e.target.name == "passion") {
 			let upPassion = settings.passion
@@ -58,7 +69,7 @@ function Profile() {
 			setSettings({ ...settings, ageH: user.preferance.age[1] })
 		if ("ageH" in settings && !("ageL" in settings))
 			setSettings({ ...settings, ageL: user.preferance.age[0] })
-		setSettings({ ...settings, changed: false })
+		setSettings({ ...settings, changed: false, preview2: "", isDP: false })
 		dispatch(updateProfile(settings))
 	}
 	const delPassion = passion => {
@@ -74,18 +85,35 @@ function Profile() {
 				passion: user.passion.filter(pas => pas != passion),
 			}))
 	}
-	const removeDP = () => {
-		if (user.images.length < 2) {
-			dispatch(
-				displayAlert(
-					"Can't remove! This is the only image you have.",
-					"danger"
-				)
-			)
-			return
+	const removePic = (e, name, image = "") => {
+		switch (name) {
+			case "dp": {
+				console.log("DP", process.env.URL + "/image/" + user.images[0])
+				setSettings({
+					...settings,
+					isDP: false,
+					file: null,
+					preview: process.env.URL + "/image/" + user.images[0],
+				})
+				break
+			}
+			case "images": {
+				dispatch(removeDp(image))
+				break
+			}
+			case "uploadPic": {
+				setSettings({
+					...settings,
+					file: null,
+					preview2: "",
+				})
+				break
+			}
+			default: {
+			}
 		}
-		dispatch(removeDp(user.images[0]))
 	}
+
 	return (
 		<>
 			<Bar title={"Settings"} />
@@ -97,30 +125,47 @@ function Profile() {
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 h-full rounded-md hover:drop-shadow-2xl ease-in duration-300">
+						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<img
-									className="h-60 w-64 border-2"
-									src={settings.preview}
-									alt={user.firstName}
-								/>
-								<IconContext.Provider
-									value={{ color: "white", size: "1em" }}
-								>
-									<label
-										className="change-dp"
-										htmlFor="upload"
+								<div>
+									<IconContext.Provider
+										value={{ color: "white", size: "1em" }}
 									>
-										<MdEdit />
-									</label>
-								</IconContext.Provider>
-								<input
-									id="upload"
-									type="file"
-									accept="image/*"
-									name="images"
-								/>
+										{!settings.preview2 && (
+											<>
+												{settings.isDP && (
+													<span
+														className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+														name="dp"
+														onClick={e =>
+															removePic(e, "dp")
+														}
+													>
+														<GoX name="dp" />
+													</span>
+												)}
+												<label
+													className="change-dp"
+													htmlFor="upload"
+												>
+													<MdEdit />
+												</label>
+											</>
+										)}
+									</IconContext.Provider>
+									<img
+										className="h-60 w-64 border-2"
+										src={settings.preview}
+										alt={user.firstName}
+									/>
+									<input
+										id="upload"
+										type="file"
+										accept="image/*"
+										name="upload1"
+									/>
+								</div>
 								<ul className="permanent-info m-2">
 									<div
 										className={
@@ -161,28 +206,42 @@ function Profile() {
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4"
+							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="flex flex-row gap-8">
+							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
-											<img
-												className="h-64 w-64 border-2"
-												key={image}
-												src={
-													process.env.URL +
-													`/image/${image}`
-												}
-											/>
+											<div key={image}>
+												<span
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													onClick={e =>
+														removePic(
+															e,
+															"images",
+															image
+														)
+													}
+												>
+													<GoX />
+												</span>
+												<img
+													className="h-64 w-64 border-2"
+													src={
+														process.env.URL +
+														`/image/${image}`
+													}
+												/>
+											</div>
 										)
 									})}
-								{user.images && user.images.length < 3 && (
+								{user.images && user.images.length < 4 && (
 									<ImageUpload
 										onChange={onChange}
 										settings={settings}
 										user={user}
+										removePic={removePic}
 									/>
 								)}
 							</div>
