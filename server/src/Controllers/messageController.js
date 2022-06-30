@@ -73,7 +73,7 @@ const getMessages = async (req, res) => {
 	try {
 		var relation = await relationModel
 			.findOne(
-				{ _id: id, stat: true },
+				{ _id: id, stat: true, users: req.userdata._id },
 				{ messages: 1, users: 1, unreadCount: 1 }
 			)
 			.populate({
@@ -86,7 +86,7 @@ const getMessages = async (req, res) => {
 		if (!relation) {
 			return res.status(400).json({
 				success: false,
-				error: "No relation exists with this user.",
+				error: "No such relation found.",
 			})
 		}
 
