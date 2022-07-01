@@ -92,15 +92,7 @@ let userSchema = mongoose.Schema(
 			},
 		},
 	},
-	{ timestamps: true },
-	{
-		toJSON: {
-			getters: true,
-			transform: function (doc, ret) {
-				delete ret._id
-			},
-		},
-	}
+	{ timestamps: true }
 )
 
 userSchema.pre("save", function (next) {

@@ -270,7 +270,10 @@ ul {
 .radio {
 	@apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
 }
-/* alert */
+
+.badge {
+	@apply absolute px-1 text-center font-bold bg-green-600 text-white rounded-full ml-5 text-xs;
+}
 
 @keyframes spinner {
 	to {
@@ -343,12 +346,25 @@ ul {
 	color: rgb(153, 153, 153);
 }
 .change-dp {
-	position: absolute;
-	top: 5%;
-	right: 6%;
-	height: 2rem;
-	width: 2rem;
+	position: relative;
+	top: 1.5rem;
+	right: 2rem;
+	float: right;
+	height: 1rem;
+	width: 1rem;
 	margin: auto;
+	opacity: 0.7;
+	border-radius: 20%;
+	background: black;
+}
+.remove-dp {
+	position: relative;
+	top: 1.5rem;
+	left: 1rem;
+	height: 1rem;
+	width: 1rem;
+	margin: auto;
+	opacity: 0.7;
 	border-radius: 20%;
 	background: black;
 }

@@ -4,14 +4,13 @@ import {
 	LOGIN_SUCCESS,
 	LOGOUT,
 	LOAD_USER,
+	DELETE_PIC,
 } from "../actions/types"
 
 const initialState = {
 	isAuthenticated: false,
-	isLoading: true,
-	user: { preferance: {} },
+	user: { preference: {} },
 	flag: false,
-	id: null,
 }
 
 export default function (state = initialState, action) {
@@ -45,7 +44,19 @@ export default function (state = initialState, action) {
 		case LOAD_USER:
 			return {
 				...state,
+				isAuthenticated: true,
 				user: action.payload,
+			}
+		case DELETE_PIC:
+			console.log(action)
+			return {
+				...state,
+				user: {
+					...state.user,
+					images: state.user.images.filter(
+						img => img != action.payload
+					),
+				},
 			}
 		default:
 			return state

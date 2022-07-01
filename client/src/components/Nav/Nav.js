@@ -1,103 +1,126 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "../../actions/auth";
-import logo from "../../assets/images/logo-head.png";
-// import logo from '../assets/images/logo.svg'
-
-import Wrapper from "../../assets/wrappers/NavPage";
+import React from "react"
+import { NavLink } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../../actions/auth"
+import logo from "../../assets/images/logo-head.png"
+import Wrapper from "../../assets/wrappers/NavPage"
 import {
-  FaSearch,
-  FaGrinAlt,
-  FaRegBell,
-  FaRocketchat,
-  FaDoorOpen,
-} from "react-icons/fa";
-import { IconContext } from "react-icons";
+	FaSearch,
+	FaGrinAlt,
+	FaRegBell,
+	FaRocketchat,
+	FaDoorOpen,
+} from "react-icons/fa"
+import { IconContext } from "react-icons"
 
-function Nav(props) {
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-  return (
-    <Wrapper className="Navbar">
-      <div className="Navbar">
-        <Link to="/explore">
-          <img className="logo_nav" src={logo} />
-        </Link>
+function Nav() {
+	const live = useSelector(state => state.live)
+	const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+	const dispatch = useDispatch()
+	const handleLogout = () => {
+		dispatch(logout())
+	}
+	if (!isAuthenticated) return <></>
+	return (
+		<Wrapper className="Navbar">
+			<div className="Navbar">
+				<NavLink to="/explore" activeclassname="icons choosen_one">
+					<img className="logo_nav" src={logo} />
+				</NavLink>
 
-        <div className="navs">
-          <IconContext.Provider
-            value={{
-              color: "#F24E1E",
-              size: "2em",
-              className:
-                props.current == "Profile" ? "icons choosen_one" : "icons",
-            }}
-          >
-            <Link to="/profile">
-              <FaGrinAlt />
-            </Link>
-          </IconContext.Provider>
+				<div className="navs">
+					<IconContext.Provider
+						value={{
+							color: "#F24E1E",
+							size: "2em",
+						}}
+					>
+						<NavLink
+							to="/profile"
+							className={({ isActive }) =>
+								isActive ? "iconse choosen_one" : "icons"
+							}
+						>
+							<FaGrinAlt />
+						</NavLink>
+					</IconContext.Provider>
 
-          <IconContext.Provider
-            value={{
-              color: "#F24E1E",
-              size: "2em",
-              className:
-                props.current == "Notification" ? "icons choosen_one" : "icons",
-            }}
-          >
-            <Link to="/notification">
-              <span>
-                <FaRegBell />
-              </span>
-            </Link>
-          </IconContext.Provider>
+					<IconContext.Provider
+						value={{
+							color: "#F24E1E",
+							size: "2em",
+						}}
+					>
+						<NavLink
+							to="/notification"
+							className={({ isActive }) =>
+								isActive ? "iconse choosen_one" : "icons"
+							}
+						>
+							{live.noti > 0 && (
+								<span className="badge">{live.noti}</span>
+							)}
+							<span>
+								<FaRegBell />
+							</span>
+						</NavLink>
+					</IconContext.Provider>
 
-          <IconContext.Provider
-            value={{
-              color: "#F24E1E",
-              size: "2em",
-              className:
-                props.current == "Explore" ? "icons choosen_one" : "icons",
-            }}
-          >
-            <Link to="/explore">
-              <span>
-                <FaSearch />
-              </span>
-            </Link>
-          </IconContext.Provider>
+					<IconContext.Provider
+						value={{
+							color: "#F24E1E",
+							size: "2em",
+						}}
+					>
+						<NavLink
+							to="/explore"
+							className={({ isActive }) =>
+								isActive ? "iconse choosen_one" : "icons"
+							}
+						>
+							<span>
+								<FaSearch />
+							</span>
+						</NavLink>
+					</IconContext.Provider>
 
-          <IconContext.Provider
-            value={{
-              color: "#F24E1E",
-              size: "2em",
-              className:
-                props.current == "Chat" ? "icons choosen_one" : "icons",
-            }}
-          >
-            <Link to="/chat">
-              <span>
-                <FaRocketchat />
-              </span>
-            </Link>
-          </IconContext.Provider>
-          <IconContext.Provider
-            value={{ color: "#F24E1E", size: "2em", className: "icons" }}
-          >
-            <Link to="/login" onClick={handleLogout}>
-              <span>
-                <FaDoorOpen />
-              </span>
-            </Link>
-          </IconContext.Provider>
-        </div>
-      </div>
-    </Wrapper>
-  );
+					<IconContext.Provider
+						value={{
+							color: "#F24E1E",
+							size: "2em",
+						}}
+					>
+						<NavLink
+							to="/chat"
+							className={({ isActive }) =>
+								isActive ? "iconse choosen_one" : "icons"
+							}
+						>
+							{live.chat > 0 && (
+								<span className="badge">{live.chat}</span>
+							)}
+							<span>
+								<FaRocketchat />
+							</span>
+						</NavLink>
+					</IconContext.Provider>
+					<IconContext.Provider
+						value={{
+							color: "#F24E1E",
+							size: "2em",
+							className: "icons",
+						}}
+					>
+						<NavLink to="/login" onClick={handleLogout}>
+							<span>
+								<FaDoorOpen />
+							</span>
+						</NavLink>
+					</IconContext.Provider>
+				</div>
+			</div>
+		</Wrapper>
+	)
 }
 
-export default Nav;
+export default Nav

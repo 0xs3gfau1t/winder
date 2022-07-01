@@ -1,30 +1,49 @@
-import React from "react";
-import Wrapper from "../assets/wrappers/ChatPage";
-import ChatHead from "../components/ChatHead/ChatHead";
-import Nav from "../components/Nav/Nav";
+import React, { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import Nav from "../components/Nav/Nav"
+import { Bar, ChatBody, ChatHead } from "../components"
+import { fetchChats } from "../actions/live"
 
 function Chat() {
-  const a = Array.from(Array(50).keys());
+	const dispatch = useDispatch()
+	const [activeChat, setActiveChat] = useState({})
+	useEffect(() => {
+		dispatch(fetchChats())
+	}, [])
+	const chatList = useSelector(state => state.live.chatList)
 
-  return (
-    <Wrapper>
-      <div>
-        <h1>Chat</h1>
-        <div className="navbarr">
-          <Nav current="Chat" />
-        </div>
-        <div className="chatsContainer">
-          {a.map((element) => {
-            return (
-              <div className="chatContainer">
-                <ChatHead />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </Wrapper>
-  );
+	const handleCurrent = chat => {
+		setActiveChat(chat)
+	}
+	return (
+		<>
+			<Bar title={"Chats"} />
+			<div className="container ml-4">
+				<div className="min-w-full border-4 rounded-xl lg:grid lg:grid-cols-3">
+					<div className="border-r border-gray-300 lg:col-span-1">
+						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600 border-b-2">
+							Chats
+						</h2>
+						<div className="overflow-auto h-[80vh]">
+							{chatList.map((chat, index) => {
+								return (
+									<div key={index} className="chatContainer">
+										<ChatHead
+											chat={chat}
+											onClick={handleCurrent}
+										/>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+					<div className="lg:col-span-2 lg:block">
+						{activeChat.id && <ChatBody user={activeChat} />}
+					</div>
+				</div>
+			</div>
+		</>
+	)
 }
 
-export default Chat;
+export default Chat

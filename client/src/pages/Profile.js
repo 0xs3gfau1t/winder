@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { MdEdit } from "react-icons/md"
-import { GoVerified } from "react-icons/go"
+import { GoVerified, GoX } from "react-icons/go"
 import { IconContext } from "react-icons"
-import { loadOptions } from "../actions/misc"
-import { emailVerifyRequest, updateProfile, upImg } from "../actions/user"
-import Wrapper from "../assets/wrappers/SettingPage"
-import Nav from "../components/Nav/Nav"
-import { Alert, FormSelect, Bar, SaveChanges } from "../components"
+import { displayAlert, loadOptions } from "../actions/misc"
+import { emailVerifyRequest, updateProfile, removeDp } from "../actions/user"
+import { Alert, FormSelect, Bar, SaveChanges, ImageUpload } from "../components"
 
 function Profile() {
 	const misc = useSelector(state => state.misc)
@@ -17,7 +15,8 @@ function Profile() {
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
-		preview: "", // + user.images[0],
+		preview: "",
+		preview2: "",
 	})
 	useEffect(() => {
 		if (user.images)
@@ -27,15 +26,25 @@ function Profile() {
 			}))
 		dispatch(loadOptions())
 	}, [user])
+
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (e.target.name === "images") {
+		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			setSettings(prev => ({
-				...prev,
-				preview: URL.createObjectURL(file),
-				file: file,
-			}))
+			if (e.target.name == "upload1") {
+				setSettings(prev => ({
+					...prev,
+					isDP: true,
+					preview: URL.createObjectURL(file),
+					file: file,
+				}))
+			} else {
+				setSettings(prev => ({
+					...prev,
+					preview2: URL.createObjectURL(file),
+					file: file,
+				}))
+			}
 		}
 		if (e.target.name == "passion") {
 			let upPassion = settings.passion
@@ -56,50 +65,107 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
-		setSettings({ ...settings, changed: false })
+		if ("ageL" in settings && !("ageH" in settings))
+			setSettings({ ...settings, ageH: user.preferance.age[1] })
+		if ("ageH" in settings && !("ageL" in settings))
+			setSettings({ ...settings, ageL: user.preferance.age[0] })
+		setSettings({ ...settings, changed: false, preview2: "", isDP: false })
 		dispatch(updateProfile(settings))
 	}
-	const delPassion = e => {
+	const delPassion = passion => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		setSettings(prev => ({
-			...prev,
-			passion: user.passion.filter(pas => pas != e.target.textContent),
-		}))
+		if (settings.passion)
+			setSettings(prev => ({
+				...prev,
+				passion: settings.passion.filter(pas => pas != passion),
+			}))
+		else
+			setSettings(prev => ({
+				...prev,
+				passion: user.passion.filter(pas => pas != passion),
+			}))
 	}
+	const removePic = (e, name, image = "") => {
+		switch (name) {
+			case "dp": {
+				console.log("DP", process.env.URL + "/image/" + user.images[0])
+				setSettings({
+					...settings,
+					isDP: false,
+					file: null,
+					preview: process.env.URL + "/image/" + user.images[0],
+				})
+				break
+			}
+			case "images": {
+				dispatch(removeDp(image))
+				break
+			}
+			case "uploadPic": {
+				setSettings({
+					...settings,
+					file: null,
+					preview2: "",
+				})
+				break
+			}
+			default: {
+			}
+		}
+	}
+
 	return (
-		<Wrapper>
+		<>
 			<Bar title={"Settings"} />
-			<div className="navbarr">
-				<Nav current="Settings" />
-			</div>
 			<div className="container mx-auto">
-				{misc.showAlert && <Alert style={{ marginTop: "-4%" }} />}
+				{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
 				<form
 					encType="multipart/form-data"
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
-					<div className="flex flex-row flex-wrap pb-4">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-r-2 h-full">
-							<div className="sticky top-0 p-2 w-full profile-form">
+					<div className="flex flex-wrap pb-4 container -ml-7">
+						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
+							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<img
-									className="h-76 w-76"
-									src={settings.preview}
-								/>
-								<label className="change-dp" htmlFor="upload">
+								<div>
 									<IconContext.Provider
-										value={{ color: "cyan", size: "2em" }}
+										value={{ color: "white", size: "1em" }}
 									>
-										<MdEdit />
+										{!settings.preview2 && (
+											<>
+												{settings.isDP && (
+													<span
+														className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+														name="dp"
+														onClick={e =>
+															removePic(e, "dp")
+														}
+													>
+														<GoX name="dp" />
+													</span>
+												)}
+												<label
+													className="change-dp"
+													htmlFor="upload"
+												>
+													<MdEdit />
+												</label>
+											</>
+										)}
 									</IconContext.Provider>
-								</label>
-								<input
-									id="upload"
-									type="file"
-									accept="image/*"
-									name="images"
-								/>
+									<img
+										className="h-60 w-64 border-2"
+										src={settings.preview}
+										alt={user.firstName}
+									/>
+									<input
+										id="upload"
+										type="file"
+										accept="image/*"
+										name="upload1"
+									/>
+								</div>
 								<ul className="permanent-info m-2">
 									<div
 										className={
@@ -114,11 +180,12 @@ function Profile() {
 												" " +
 												user.lastName}
 											{user.email_verified && (
-												<GoVerified className="-mt-6 ml-32" />
+												<GoVerified className="-mt-6 ml-32 float-right" />
 											)}
 										</li>
 									</div>
 									<li>{user.dob}</li>
+									<li>{user.gender}</li>
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
@@ -139,9 +206,45 @@ function Profile() {
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2"
+							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
+							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+								{user.images &&
+									user.images.slice(1).map(image => {
+										return (
+											<div key={image}>
+												<span
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													onClick={e =>
+														removePic(
+															e,
+															"images",
+															image
+														)
+													}
+												>
+													<GoX />
+												</span>
+												<img
+													className="h-64 w-64 border-2"
+													src={
+														process.env.URL +
+														`/image/${image}`
+													}
+												/>
+											</div>
+										)
+									})}
+								{user.images && user.images.length < 4 && (
+									<ImageUpload
+										onChange={onChange}
+										settings={settings}
+										user={user}
+										removePic={removePic}
+									/>
+								)}
+							</div>
 							<label htmlFor="bio" className="mx-10 form-label">
 								Bio
 							</label>
@@ -182,23 +285,38 @@ function Profile() {
 								{user.passion &&
 									!settings.passion &&
 									user.passion.map((passion, index) => (
-										<span
-											className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
-											key={index}
-											onClick={delPassion}
-										>
-											{passion}
-										</span>
+										<div key={index}>
+											<span className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200">
+												{passion}
+												<span
+													onClick={e =>
+														delPassion(passion)
+													}
+													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
+												>
+													-
+												</span>
+											</span>
+										</div>
 									))}
 								{settings.passion &&
 									settings.passion.map((passion, index) => (
-										<span
-											className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
-											key={index}
-											onClick={delPassion}
-										>
-											{passion}
-										</span>
+										<div key={index}>
+											<span
+												className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+												key={index}
+											>
+												{passion}
+												<span
+													onClick={e =>
+														delPassion(passion)
+													}
+													className="absolute float-right leading-3 -m-1 text-rose-600 rounded-xl"
+												>
+													-
+												</span>
+											</span>
+										</div>
 									))}
 								<FormSelect
 									name="passion"
@@ -270,7 +388,7 @@ function Profile() {
 											size="2"
 											name="ageL"
 											placeholder={
-												user.preference
+												user.preference.age
 													? user.preference.age[0]
 													: "Min"
 											}
@@ -284,7 +402,7 @@ function Profile() {
 											maxLength="2"
 											name="ageH"
 											placeholder={
-												user.preference
+												user.preference.age
 													? user.preference.age[1]
 													: "Max"
 											}
@@ -297,7 +415,7 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
-		</Wrapper>
+		</>
 	)
 }
 

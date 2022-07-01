@@ -5,7 +5,7 @@ const session = require("express-session")
 const app = express()
 
 // Configure middleware
-app.use(cors({ origin: [process.env.FRONTEND_URL], credentials: true })) //enable cors for dev purpose only
+app.use(cors({ origin: [process.env.APP_URL], credentials: true })) //enable cors for dev purpose only
 // https://stackoverflow.com/a/66553425/13001607
 app.use(
 	session({
@@ -31,7 +31,11 @@ const server = require("http").createServer(app)
 
 // SOCKET IO
 const io = require("socket.io")(server, {
-	cors: { origin: process.env.FRONTEND_URL, credentials: true },
+	cors: {
+		origin: process.env.APP_URL,
+		// AccessControlAllowCredentials: true,
+		credentials: true,
+	},
 })
 
 module.exports = { app, io, server }
