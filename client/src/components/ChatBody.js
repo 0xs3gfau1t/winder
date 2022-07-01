@@ -21,7 +21,7 @@ const ChatBody = ({ user }) => {
 	useEffect(() => {
 		if (activeChat.live) {
 			ref.current.scrollTop = ref.current.scrollHeight
-		} else ref.current.scrollTop += 77
+		} else ref.current.scrollTop = 70
 	}, [activeChat])
 
 	const sendChat = e => {

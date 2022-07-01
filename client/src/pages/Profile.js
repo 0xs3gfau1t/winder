@@ -121,9 +121,6 @@ function Profile() {
 			}
 		}
 	}
-	const changeBio = e => {
-		setFlags({ ...flags, editBio: true })
-	}
 	return (
 		<>
 			<Bar title={"Settings"} />
@@ -199,7 +196,7 @@ function Profile() {
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
-											<span className="text-green-500">
+											<span className="text-green-700">
 												Email Verified
 											</span>
 										) : (
@@ -210,6 +207,17 @@ function Profile() {
 												Verify email
 											</span>
 										)}
+									</li>
+									<li
+										className="text-red-500 text-bold cursor-pointer"
+										onClick={e => {
+											setFlags({
+												...flags,
+												changePS: true,
+											})
+										}}
+									>
+										Change password
 									</li>
 								</ul>
 							</div>
@@ -266,6 +274,7 @@ function Profile() {
 							</label>
 							{flags.editBio ? (
 								<input
+									type="text"
 									name="bio"
 									size="70"
 									className="m-10 text-orange-700 my-2 h-12 font-bold resize-none"
@@ -275,17 +284,14 @@ function Profile() {
 									defaultValue={settings.bio}
 								/>
 							) : (
-								<>
-									<span className="mx-10  inline-block pb-4 py-2 px-8 mb-8">
-										<span className="font-bold text-orange-700 bg-gray-200 p-4">
-											{user.bio}
-										</span>
-										<MdEdit
-											className="-mt-10 ml-auto"
-											onClick={changeBio}
-										/>
-									</span>
-								</>
+								<p
+									className="cursor-pointer font-bold text-orange-700 bg-gray-200 ml-12 py-2 pl-4 mb-8"
+									onClick={e => {
+										setFlags({ ...flags, editBio: true })
+									}}
+								>
+									{user.bio}
+								</p>
 							)}
 							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
 								<div className="grid grid-row-2">

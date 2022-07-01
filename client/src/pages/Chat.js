@@ -24,7 +24,7 @@ function Chat() {
 						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600 border-b-2">
 							Chats
 						</h2>
-						<div className="overflow-auto h-[80vh]">
+						<div className="overflow-auto h-[80vh] scroll-smooth">
 							{chatList.map((chat, index) => {
 								return (
 									<div key={index} className="chatContainer">
