@@ -5,7 +5,15 @@ import { GoVerified, GoX } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { displayAlert, loadOptions } from "../actions/misc"
 import { emailVerifyRequest, updateProfile, removeDp } from "../actions/user"
-import { Alert, FormSelect, Bar, SaveChanges, ImageUpload } from "../components"
+import {
+	Alert,
+	FormSelect,
+	Bar,
+	SaveChanges,
+	ImageUpload,
+	Popup,
+	ChangePswForm,
+} from "../components"
 
 function Profile() {
 	//load states from redux store
@@ -120,6 +128,9 @@ function Profile() {
 			default: {
 			}
 		}
+	}
+	const handlePopupClose = e => {
+		setFlags({ ...flags, changePS: false })
 	}
 	return (
 		<>
@@ -453,6 +464,9 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
+			<Popup handlePopupClose={handlePopupClose} clicked={flags.changePS}>
+				<ChangePswForm />
+			</Popup>
 		</>
 	)
 }

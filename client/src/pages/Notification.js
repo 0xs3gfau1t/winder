@@ -144,15 +144,9 @@ function Notification() {
 								</div>
 							)
 						})}
-						<Popup clicked={clicked}>
+						<Popup setClick={setClick} clicked={clicked}>
 							<h2>{popUp.type}</h2>
 							<span>{popUp.content}</span>
-							<button
-								className="close-btn"
-								onClick={handlePopupClose}
-							>
-								Close
-							</button>
 						</Popup>
 					</div>
 				</div>
