@@ -1,6 +1,12 @@
 import React, { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { displayAlert } from "../actions/misc"
+import { Alert } from "../components"
+import { changePass } from "../actions/user"
 
-const ChangePswForm = () => {
+const ChangePswForm = ({ handlePopupClose }) => {
+	const dispatch = useDispatch()
+	const misc = useSelector(state => state.misc)
 	const [password, setPassword] = useState({
 		oldPass: "",
 		new1: "",
@@ -10,13 +16,29 @@ const ChangePswForm = () => {
 	const onChange = e => {
 		let name = e.target.name
 		let value = e.target.value
-		console.log(value)
-		setPassword({ ...password, name: value })
+		setPassword({ ...password, [name]: value })
+	}
+
+	const changePassword = e => {
+		e.preventDefault()
+		const { oldPass, new1, new2 } = password
+		if (!new1 || !new2 || !oldPass) {
+			dispatch(displayAlert("All fields are required", "danger"))
+			return
+		}
+		if (new1 !== new2) {
+			dispatch(displayAlert("Password didn't match.", "danger"))
+			return
+		}
+		dispatch(changePass(oldPass, new1))
+		handlePopupClose()
 	}
 	return (
 		<div className="mx-auto w-2/3">
+			{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
 			<form
 				onChange={onChange}
+				onSubmit={changePassword}
 				className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
 			>
 				<div className="mb-4">
@@ -62,7 +84,7 @@ const ChangePswForm = () => {
 				<div className="flex items-center justify-between">
 					<button
 						className="mx-auto bg-orange-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						type="button"
+						type="submit"
 					>
 						Change Password
 					</button>
