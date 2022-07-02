@@ -62,14 +62,14 @@ export const login =
 	}
 
 export const logout = () => dispatch => {
-	axios
-		.delete(url + "/auth/logout", user_data, { withCredentials: true })
-		.then(res => {
-			dispatch({
-				type: CLEAR_ALERT,
-			})
-			dispatch({
-				type: LOGOUT,
-			})
+	axios.delete(url + "/auth/logout", { withCredentials: true }).then(res => {
+		console.log(res)
+		dispatch({
+			type: CLEAR_ALERT,
 		})
+		dispatch({
+			type: LOGOUT,
+		})
+		window.location = "/login"
+	})
 }
