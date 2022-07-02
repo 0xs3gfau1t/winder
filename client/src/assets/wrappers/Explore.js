@@ -1,37 +1,53 @@
 import styled from "styled-components"
 
 const ExploreStyled = styled.div`
-	width: 100vw;
-	height: 100vh;
 	display: flex;
-	/* border: 3px solid green; */
+	flex-direction: column;
+	align-items: center;
 
-	.carousel-wrapper {
-		flex: 0 0 35%;
-		padding: 1rem;
-	}
-
+//	border: 3px solid green;
+	margin-top: 1em;
+	
 	.outer {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		flex: 0 0 50%;
-		padding: 1rem;
-		/* border: 3px solid blue; */
+		margin-bottom: 1em;
+//		border: 3px solid blue;
 	}
+	
+	.carousel-wrapper {
+		width: 40vw;
+		height: 80vh;
+		
+		margin-right: 2vw;
 
+//		border: 2px solid black;
+	}
 	.details {
-		flex-grow: 1;
-		width: 100%;
 		display: flex;
-		justify-content: center;
+		align-items: center;
+
+		background-color: #eeddee;
+		width: 40vw;
+		padding-left: 4em;
+
+		border: 5px solid;
+		border-image-slice: 1;
+		border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+		border-radius: inherit;
 	}
 
 	.actions {
 		display: flex;
-		width: 100%;
-		justify-content: space-around;
+		gap: 5em;
+		justify-content: center;
+		align-items: center;
+		
+		padding: 1em;
+//		border: 2px solid black;
+	}
+	.actions > span:hover {
+		transition: .2s;
+		transform: scale(1.3)
 	}
 `
 

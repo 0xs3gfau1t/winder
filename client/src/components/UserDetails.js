@@ -23,45 +23,31 @@ const UserDetails = ({ user }) => {
 	return (
 		<IconContext.Provider value={{ color: "#f24e1e", size: "2em" }}>
 			<UserDetailsStyled>
-				<div className="detail">
-					<AiFillTag />
-					<span>{username}</span>
-				</div>
-				<div className="detail">
-					<BiRename />
-					<span>
-						{firstName} {lastName}
-					</span>
-				</div>
-				<div className="detail">
-					<BsGenderAmbiguous />
-					<span>{gender}</span>
-				</div>
-				<div className="detail">
-					<FaUniversity />
-					<span>{university}</span>
-				</div>
-				<div className="detail">
-					<FaBook />
-					<span>{program}</span>
-				</div>
-				<div className="detail">
-					<AiTwotoneCalendar />
-					<span>{batch}</span>
-				</div>
-				<div className="detail">
-					<BiMessageSquareDetail />
+				<div className="detail bio">
+					<h1>Bio</h1>
 					<span>{bio}</span>
 				</div>
-				<div className="detail">
-					<MdSportsCricket />
-					<span>
-						[
+				<div className="detail academics">
+					<h1>Academics</h1>
+					<div className="uni">
+						<p>
+							Studies<span>{program}</span> at
+							<span>{university}</span>
+						</p>
+					</div>
+					<div className="batch">
+						<p>
+							Batch of <span>{batch}</span>
+						</p>
+					</div>
+				</div>
+				<div className="detail passions">
+					<h1>Passions</h1>
+					<div className="passion-container">
 						{passion?.map((item, idx) => {
-							return (idx === 0 ? "" : ", ") + item
+							return <span>{item}</span>
 						})}
-						]
-					</span>
+					</div>
 					{/* <span>{passion}</span> */}
 				</div>
 			</UserDetailsStyled>
