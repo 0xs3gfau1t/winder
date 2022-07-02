@@ -19,7 +19,7 @@ export const chatUpdate = data => (dispatch, getState) => {
 	dispatch({ type: CHAT_UPDATE, payload: data })
 	const activeChat = getState().live.activeChat.id
 
-	if (data.senderId === activeChat) {
+	if (data.relnID === activeChat) {
 		dispatch({
 			type: FETCH_ACTIVE_CHAT,
 			payload: [data],
@@ -59,13 +59,14 @@ export const fetchActiveChat =
 				withCredentials: true,
 			})
 			.then(res => {
-				console.log("Next Cursor: ", res.data.nextCursor)
-				dispatch({
-					type: FETCH_ACTIVE_CHAT,
-					payload: res.data.data,
-					id: id,
-					more: res.data.nextCursor ? res.data.nextCursor : "",
-				})
+				setTimeout(() => {
+					dispatch({
+						type: FETCH_ACTIVE_CHAT,
+						payload: res.data.data,
+						id: id,
+						more: res.data.nextCursor ? res.data.nextCursor : "",
+					})
+				}, 10)
 			})
 			.catch(err => {
 				dispatch(console.log(err))

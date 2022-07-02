@@ -22,10 +22,7 @@ const ChatBody = ({ user }) => {
 		if (activeChat.live) {
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
-			ref.current.scrollTop += 60
-			setTimeout(() => {
-				ref.current.scrollTop -= 20
-			}, 200)
+			ref.current.scrollTop = 70
 		}
 	}, [activeChat])
 
@@ -45,11 +42,16 @@ const ChatBody = ({ user }) => {
 		node => {
 			if (activeChat.loading) return
 			if (observer.current) observer.current.disconnect()
-			observer.current = new IntersectionObserver(entries => {
-				if (entries[0].isIntersecting && activeChat.more) {
-					dispatch(fetchActiveChat(activeChat.id, activeChat.more))
-				}
-			})
+			observer.current = new IntersectionObserver(
+				entries => {
+					if (entries[0].isIntersecting && activeChat.more) {
+						dispatch(
+							fetchActiveChat(activeChat.id, activeChat.more)
+						)
+					}
+				},
+				{ threshold: 1, rootMargin: "-100px 0px 0px 0px" }
+			)
 			if (node) observer.current.observe(node)
 		},
 		[activeChat.loading, activeChat.more]

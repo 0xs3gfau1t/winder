@@ -119,14 +119,13 @@ const getMessages = async (req, res) => {
 }
 
 const sendMessage = async (req, res) => {
-	const { id } = req.params // relation id
+	const relnID = req.params.id // relation id
 	const { content } = req.body
 	try {
-		var relation = await relationModel.findOne({ _id: id, stat: true }, [
-			"messages",
-			"users",
-			"unreadCount",
-		])
+		var relation = await relationModel.findOne(
+			{ _id: relnID, stat: true },
+			["messages", "users", "unreadCount"]
+		)
 
 		if (!relation) {
 			return res.status(500).json({
@@ -142,9 +141,9 @@ const sendMessage = async (req, res) => {
 
 		// Send the message to the receiver through socket
 		const status = emitChat(
-			relation.users[0].toString(),
+			sender ? relation.users[0] : relation.users[1],
 			msg._id,
-			req.userdata._id,
+			relnID,
 			content,
 			msg.createdAt
 		)
