@@ -123,14 +123,14 @@ const sendMessage = async (req, res) => {
 	const { content } = req.body
 	try {
 		var relation = await relationModel.findOne(
-			{ _id: relnID, stat: true },
+			{ _id: relnID, users: req.userdata._id, stat: true },
 			["messages", "users", "unreadCount"]
 		)
 
 		if (!relation) {
 			return res.status(500).json({
 				success: false,
-				error: "No relation exists with this user.",
+				error: "No such relation found.",
 			})
 		}
 		// Create new message document and insert into the relation.messages list

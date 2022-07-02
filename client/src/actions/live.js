@@ -74,6 +74,7 @@ export const fetchActiveChat =
 	}
 
 export const sendMessage = (text, id) => dispatch => {
+	console.log(id)
 	axios
 		.post(
 			URL + `/messages/${id}`,
