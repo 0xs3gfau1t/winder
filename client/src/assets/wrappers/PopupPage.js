@@ -16,18 +16,15 @@ const Wrapper = styled.main`
 
 .popup-inner{
     position: relative;
-    padding: 10vw;
     width: 60vw;
+    padding: 4vw;
     background-color: #fff;
 }
 
 .popup-inner .close-btn{
     position: absolute;
-    bottom: 10px;
-    right: 50%;
-    border: 1px solid black;
-    padding: 3px;
-    border-radius: 10px;
+    top: 10px;
+    right: 10px;
 }
 `
 

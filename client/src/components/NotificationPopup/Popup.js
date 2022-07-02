@@ -1,5 +1,7 @@
 import React from 'react'
 import Wrapper from '../../assets/wrappers/PopupPage'
+import {FaWindowClose} from 'react-icons/fa'
+
 
 function Popup(props) {
   return(props.clicked)? (
@@ -8,7 +10,7 @@ function Popup(props) {
             <div className='popup-inner'>
                 <h2>{props.type}</h2>
                 <span>{props.content}</span>
-                <button className='close-btn' onClick = {props.close}>Close</button>
+                <button className='close-btn' onClick = {props.close}><FaWindowClose/></button>
             </div>
         </div>
     </Wrapper>

@@ -6,18 +6,9 @@ const Wrapper = styled.main`
     padding: 0 20vw;
 }
 
-// .card0 {
-//     background-color: red;
-//     z-index: 5;
-// }
-
-// .card1 {
-//     background-color: #f24e1e;
-// }
-
-// .card2 {
-//     background-color: green;
-// }
+.read{
+    background-color: #77787A;
+}
 
 .Notification-card{
     width: 60vw;
