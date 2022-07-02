@@ -5,19 +5,34 @@ import { GoVerified, GoX } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { displayAlert, loadOptions } from "../actions/misc"
 import { emailVerifyRequest, updateProfile, removeDp } from "../actions/user"
-import { Alert, FormSelect, Bar, SaveChanges, ImageUpload } from "../components"
+import {
+	Alert,
+	FormSelect,
+	Bar,
+	SaveChanges,
+	ImageUpload,
+	Popup,
+	ChangePswForm,
+} from "../components"
 
 function Profile() {
+	//load states from redux store
 	const misc = useSelector(state => state.misc)
 	const user = useSelector(state => state.auth.user)
 
-	const dispatch = useDispatch()
+	//component level states
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
 		preview: "",
 		preview2: "",
 	})
+	const [flags, setFlags] = useState({ changePS: false, editBio: false })
+
+	//component level dispatcher
+	const dispatch = useDispatch()
+
+	//useEffect hooks
 	useEffect(() => {
 		if (user.images)
 			setSettings(prev => ({
@@ -27,6 +42,7 @@ function Profile() {
 		dispatch(loadOptions())
 	}, [user])
 
+	//event handlers
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
 		if (e.target.type === "file") {
@@ -113,7 +129,9 @@ function Profile() {
 			}
 		}
 	}
-
+	const handlePopupClose = e => {
+		setFlags({ ...flags, changePS: false })
+	}
 	return (
 		<>
 			<Bar title={"Settings"} />
@@ -128,7 +146,7 @@ function Profile() {
 						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div>
+								<div className="border-2 rounded-xl border-amber-900">
 									<IconContext.Provider
 										value={{ color: "white", size: "1em" }}
 									>
@@ -155,7 +173,7 @@ function Profile() {
 										)}
 									</IconContext.Provider>
 									<img
-										className="h-60 w-64 border-2"
+										className="h-60 w-64"
 										src={settings.preview}
 										alt={user.firstName}
 									/>
@@ -189,7 +207,7 @@ function Profile() {
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
-											<span className="text-green-500">
+											<span className="text-green-700">
 												Email Verified
 											</span>
 										) : (
@@ -201,6 +219,17 @@ function Profile() {
 											</span>
 										)}
 									</li>
+									<li
+										className="text-red-500 text-bold cursor-pointer"
+										onClick={e => {
+											setFlags({
+												...flags,
+												changePS: true,
+											})
+										}}
+									>
+										Change password
+									</li>
 								</ul>
 							</div>
 						</aside>
@@ -209,11 +238,14 @@ function Profile() {
 							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-4 pb-6">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
-											<div key={image}>
+											<div
+												key={image}
+												className="border-2 rounded-xl border-amber-900"
+											>
 												<span
 													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
 													onClick={e =>
@@ -227,7 +259,7 @@ function Profile() {
 													<GoX />
 												</span>
 												<img
-													className="h-64 w-64 border-2"
+													className="h-60 w-64"
 													src={
 														process.env.URL +
 														`/image/${image}`
@@ -245,16 +277,33 @@ function Profile() {
 									/>
 								)}
 							</div>
-							<label htmlFor="bio" className="mx-10 form-label">
+							<label
+								htmlFor="bio"
+								className="mt-4 mx-10 form-label font-bold text-lg"
+							>
 								Bio
 							</label>
-							<input
-								name="bio"
-								className="m-10 text-orange-700 my-2 font-bold"
-								placeholder={user.bio}
-								value={settings.bio}
-								onChange={onChange}
-							/>
+							{flags.editBio ? (
+								<input
+									type="text"
+									name="bio"
+									size="70"
+									className="m-10 text-orange-700 my-2 h-12 font-bold resize-none"
+									placeholder={user.bio}
+									value={settings.bio}
+									onChange={onChange}
+									defaultValue={settings.bio}
+								/>
+							) : (
+								<p
+									className="cursor-pointer font-bold text-orange-700 bg-gray-200 ml-12 py-2 pl-4 mb-8"
+									onClick={e => {
+										setFlags({ ...flags, editBio: true })
+									}}
+								>
+									{user.bio}
+								</p>
+							)}
 							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
 								<div className="grid grid-row-2">
 									<label
@@ -374,7 +423,7 @@ function Profile() {
 										options={["male", "female", "other"]}
 									/>
 								</div>
-								<div className="grid grid-row-2">
+								<div className="grid grid-row-2 pb-8">
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
@@ -415,6 +464,9 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
+			<Popup handlePopupClose={handlePopupClose} clicked={flags.changePS}>
+				<ChangePswForm handlePopupClose={handlePopupClose} />
+			</Popup>
 		</>
 	)
 }

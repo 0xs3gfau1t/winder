@@ -155,3 +155,20 @@ export const removeDp = id => dispatch => {
 			dispatch(displayAlert(err.response.data.message, "danger", true))
 		})
 }
+
+export const changePass = (oldPass, new1) => dispatch => {
+	console.log(oldPass, new1)
+	axios
+		.patch(
+			url + `/settings/changepassword`,
+			{ oldPassword: oldPass, newPassword: new1 },
+			{ withCredentials: true }
+		)
+		.then(res => {
+			dispatch(displayAlert("Password Changed", "success"))
+		})
+		.catch(err => {
+			console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger"))
+		})
+}
