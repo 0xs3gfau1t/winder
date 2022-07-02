@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-function ChatHead({ chat, onClick }) {
+function ChatHead({ chat, onClick, relation }) {
 	const data = {
 		name: "Ram Singh Pandey",
 		lastMsg: "O hency, K xa khabar",
@@ -10,7 +10,7 @@ function ChatHead({ chat, onClick }) {
 
 	return (
 		<div
-			onClick={e => onClick(chat)}
+			onClick={e => onClick(chat, relation)}
 			className="flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none"
 		>
 			<img

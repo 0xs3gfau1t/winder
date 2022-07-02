@@ -134,7 +134,6 @@ const sendMessage = async (req, res) => {
 				error: "No relation exists with this user.",
 			})
 		}
-
 		// Create new message document and insert into the relation.messages list
 		const sender = relation.users[1].toString() === req.userdata._id
 		const msg = new messagesModel({ content, sender })
@@ -143,7 +142,7 @@ const sendMessage = async (req, res) => {
 
 		// Send the message to the receiver through socket
 		const status = emitChat(
-			id,
+			relation.users[0].toString(),
 			msg._id,
 			req.userdata._id,
 			content,

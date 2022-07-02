@@ -11,7 +11,7 @@ import {
 const initialState = {
 	noti: 0,
 	chat: 0,
-	chatList: [],
+	chatList: {},
 	activeChat: { data: [], loading: false, more: "", live: false },
 	notiList: {},
 }
@@ -19,7 +19,7 @@ const initialState = {
 export default function reducer(state = initialState, action) {
 	switch (action.type) {
 		case CHAT_UPDATE: {
-			// console.log("Chat update received")
+			console.log("Chat update received")
 			return {
 				...state,
 				chat: window.location.pathname !== "/chat" ? state.chat + 1 : 0,
@@ -38,9 +38,12 @@ export default function reducer(state = initialState, action) {
 			return { ...state, chatList: action.payload }
 		}
 		case FETCH_ACTIVE_CHAT: {
+			let update = state.chatList[action.id]
+			update.unreadCount = 0
 			return {
 				...state,
 				live: action.live,
+				chatList: { ...state.chatList, [action.id]: update },
 				activeChat: {
 					live: action.live ? true : false,
 					loading: false,

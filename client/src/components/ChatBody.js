@@ -15,13 +15,18 @@ const ChatBody = ({ user }) => {
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		dispatch(fetchActiveChat(user.id))
+		dispatch(fetchActiveChat(user.relnID))
 	}, [])
 
 	useEffect(() => {
 		if (activeChat.live) {
 			ref.current.scrollTop = ref.current.scrollHeight
-		} else ref.current.scrollTop = 70
+		} else {
+			ref.current.scrollTop += 60
+			setTimeout(() => {
+				ref.current.scrollTop -= 20
+			}, 200)
+		}
 	}, [activeChat])
 
 	const sendChat = e => {
@@ -65,12 +70,13 @@ const ChatBody = ({ user }) => {
 				</div>
 				<div
 					ref={ref}
-					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh]"
+					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y"
 				>
 					<ul className="space-y-2">
 						{activeChat.data.map((message, index) => {
 							return (
 								<div
+									className="snap-always snap-start"
 									key={index}
 									ref={index == 0 ? topChatRef : null}
 								>

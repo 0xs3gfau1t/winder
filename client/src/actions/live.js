@@ -52,7 +52,7 @@ export const fetchChats = () => dispatch => {
 export const fetchActiveChat =
 	(id, cur = "") =>
 	dispatch => {
-		console.log(id, cur)
+		// console.log(id, cur)
 		dispatch({ type: SET_LOADING })
 		axios
 			.get(URL + "/messages" + `/${id}?cursor=${cur}`, {
