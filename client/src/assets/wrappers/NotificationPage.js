@@ -6,7 +6,12 @@ const Wrapper = styled.main`
     padding: 0 20vw;
 }
 
-.read{
+
+.notificationDetails{
+    padding: 10px;
+}
+
+.read div{
     background-color: #77787A;
 }
 
@@ -19,7 +24,6 @@ const Wrapper = styled.main`
     padding: 10px;
     // background-color: grey;
     border-bottom: 1px #f24e1e groove;
-    margin: 10px;
     cursor: pointer;
 }
 

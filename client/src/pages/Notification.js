@@ -103,8 +103,10 @@ function Notification() {
               {
                 dummyy.map((element)=>{
                   return(<div className={"card" + element.type  +( element.read ?  " card " : " card  read" )}   onClick={() => handlePopup(element)}>
-							{element.content.slice(0, 100) + "..."}
-							<div className='showTime'>{element.time}</div>
+                    <div className='notificationDetails'>
+                        {element.content.slice(0, 100) + "..."}
+							          <div className='showTime'>{element.time}</div>
+                    </div>
                         </div>);
                 })
               }
