@@ -7,6 +7,8 @@ import ChatHead from "./ChatHead"
 import ChatBody from "./ChatBody"
 import ImageUpload from "./ImageUpload"
 import { Other, Own } from "./Messages"
+import Popup from "./Popup"
+import ChangePswForm from "./ChangePswForm"
 export {
 	Logo,
 	FormText,
@@ -19,4 +21,6 @@ export {
 	ImageUpload,
 	Other,
 	Own,
+	Popup,
+	ChangePswForm,
 }

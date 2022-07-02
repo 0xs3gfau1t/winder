@@ -5,18 +5,34 @@ import { GoVerified, GoX } from "react-icons/go"
 import { IconContext } from "react-icons"
 import { displayAlert, loadOptions } from "../actions/misc"
 import { emailVerifyRequest, updateProfile, removeDp } from "../actions/user"
-import { Alert, FormSelect, Bar, SaveChanges, ImageUpload } from "../components"
+import {
+	Alert,
+	FormSelect,
+	Bar,
+	SaveChanges,
+	ImageUpload,
+	Popup,
+	ChangePswForm,
+} from "../components"
 
 function Profile() {
+	//load states from redux store
 	const misc = useSelector(state => state.misc)
 	const user = useSelector(state => state.auth.user)
 
-	const dispatch = useDispatch()
+	//component level states
 	const [settings, setSettings] = useState({
 		changed: false,
 		bio: "",
-		preview: "", // + user.images[0],
+		preview: "",
+		preview2: "",
 	})
+	const [flags, setFlags] = useState({ changePS: false, editBio: false })
+
+	//component level dispatcher
+	const dispatch = useDispatch()
+
+	//useEffect hooks
 	useEffect(() => {
 		if (user.images)
 			setSettings(prev => ({
@@ -25,15 +41,26 @@ function Profile() {
 			}))
 		dispatch(loadOptions())
 	}, [user])
+
+	//event handlers
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (e.target.name === "images") {
+		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			setSettings(prev => ({
-				...prev,
-				preview: URL.createObjectURL(file),
-				file: file,
-			}))
+			if (e.target.name == "upload1") {
+				setSettings(prev => ({
+					...prev,
+					isDP: true,
+					preview: URL.createObjectURL(file),
+					file: file,
+				}))
+			} else {
+				setSettings(prev => ({
+					...prev,
+					preview2: URL.createObjectURL(file),
+					file: file,
+				}))
+			}
 		}
 		if (e.target.name == "passion") {
 			let upPassion = settings.passion
@@ -58,7 +85,7 @@ function Profile() {
 			setSettings({ ...settings, ageH: user.preferance.age[1] })
 		if ("ageH" in settings && !("ageL" in settings))
 			setSettings({ ...settings, ageL: user.preferance.age[0] })
-		setSettings({ ...settings, changed: false })
+		setSettings({ ...settings, changed: false, preview2: "", isDP: false })
 		dispatch(updateProfile(settings))
 	}
 	const delPassion = passion => {
@@ -74,17 +101,36 @@ function Profile() {
 				passion: user.passion.filter(pas => pas != passion),
 			}))
 	}
-	const removeDP = () => {
-		if (user.images.length < 2) {
-			dispatch(
-				displayAlert(
-					"Can't remove! This is the only image you have.",
-					"danger"
-				)
-			)
-			return
+	const removePic = (e, name, image = "") => {
+		switch (name) {
+			case "dp": {
+				console.log("DP", process.env.URL + "/image/" + user.images[0])
+				setSettings({
+					...settings,
+					isDP: false,
+					file: null,
+					preview: process.env.URL + "/image/" + user.images[0],
+				})
+				break
+			}
+			case "images": {
+				dispatch(removeDp(image))
+				break
+			}
+			case "uploadPic": {
+				setSettings({
+					...settings,
+					file: null,
+					preview2: "",
+				})
+				break
+			}
+			default: {
+			}
 		}
-		dispatch(removeDp(user.images[0]))
+	}
+	const handlePopupClose = e => {
+		setFlags({ ...flags, changePS: false })
 	}
 	return (
 		<>
@@ -97,30 +143,47 @@ function Profile() {
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 h-full rounded-md hover:drop-shadow-2xl ease-in duration-300">
+						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<img
-									className="h-60 w-64 border-2"
-									src={settings.preview}
-									alt={user.firstName}
-								/>
-								<IconContext.Provider
-									value={{ color: "white", size: "1em" }}
-								>
-									<label
-										className="change-dp"
-										htmlFor="upload"
+								<div className="border-2 rounded-xl border-amber-900">
+									<IconContext.Provider
+										value={{ color: "white", size: "1em" }}
 									>
-										<MdEdit />
-									</label>
-								</IconContext.Provider>
-								<input
-									id="upload"
-									type="file"
-									accept="image/*"
-									name="images"
-								/>
+										{!settings.preview2 && (
+											<>
+												{settings.isDP && (
+													<span
+														className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+														name="dp"
+														onClick={e =>
+															removePic(e, "dp")
+														}
+													>
+														<GoX name="dp" />
+													</span>
+												)}
+												<label
+													className="change-dp"
+													htmlFor="upload"
+												>
+													<MdEdit />
+												</label>
+											</>
+										)}
+									</IconContext.Provider>
+									<img
+										className="h-60 w-64"
+										src={settings.preview}
+										alt={user.firstName}
+									/>
+									<input
+										id="upload"
+										type="file"
+										accept="image/*"
+										name="upload1"
+									/>
+								</div>
 								<ul className="permanent-info m-2">
 									<div
 										className={
@@ -144,7 +207,7 @@ function Profile() {
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
-											<span className="text-green-500">
+											<span className="text-green-700">
 												Email Verified
 											</span>
 										) : (
@@ -156,46 +219,91 @@ function Profile() {
 											</span>
 										)}
 									</li>
+									<li
+										className="text-red-500 text-bold cursor-pointer"
+										onClick={e => {
+											setFlags({
+												...flags,
+												changePS: true,
+											})
+										}}
+									>
+										Change password
+									</li>
 								</ul>
 							</div>
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4"
+							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="flex flex-row gap-8">
+							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-4 pb-6">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
-											<img
-												className="h-64 w-64 border-2"
+											<div
 												key={image}
-												src={
-													process.env.URL +
-													`/image/${image}`
-												}
-											/>
+												className="border-2 rounded-xl border-amber-900"
+											>
+												<span
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													onClick={e =>
+														removePic(
+															e,
+															"images",
+															image
+														)
+													}
+												>
+													<GoX />
+												</span>
+												<img
+													className="h-60 w-64"
+													src={
+														process.env.URL +
+														`/image/${image}`
+													}
+												/>
+											</div>
 										)
 									})}
-								{user.images && user.images.length < 3 && (
+								{user.images && user.images.length < 4 && (
 									<ImageUpload
 										onChange={onChange}
 										settings={settings}
 										user={user}
+										removePic={removePic}
 									/>
 								)}
 							</div>
-							<label htmlFor="bio" className="mx-10 form-label">
+							<label
+								htmlFor="bio"
+								className="mt-4 mx-10 form-label font-bold text-lg"
+							>
 								Bio
 							</label>
-							<input
-								name="bio"
-								className="m-10 text-orange-700 my-2 font-bold"
-								placeholder={user.bio}
-								value={settings.bio}
-								onChange={onChange}
-							/>
+							{flags.editBio ? (
+								<input
+									type="text"
+									name="bio"
+									size="70"
+									className="m-10 text-orange-700 my-2 h-12 font-bold resize-none"
+									placeholder={user.bio}
+									value={settings.bio}
+									onChange={onChange}
+									defaultValue={settings.bio}
+								/>
+							) : (
+								<p
+									className="cursor-pointer font-bold text-orange-700 bg-gray-200 ml-12 py-2 pl-4 mb-8"
+									onClick={e => {
+										setFlags({ ...flags, editBio: true })
+									}}
+								>
+									{user.bio}
+								</p>
+							)}
 							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
 								<div className="grid grid-row-2">
 									<label
@@ -315,7 +423,7 @@ function Profile() {
 										options={["male", "female", "other"]}
 									/>
 								</div>
-								<div className="grid grid-row-2">
+								<div className="grid grid-row-2 pb-8">
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
@@ -356,6 +464,9 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
+			<Popup handlePopupClose={handlePopupClose} clicked={flags.changePS}>
+				<ChangePswForm handlePopupClose={handlePopupClose} />
+			</Popup>
 		</>
 	)
 }

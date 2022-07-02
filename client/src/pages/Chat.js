@@ -12,8 +12,8 @@ function Chat() {
 	}, [])
 	const chatList = useSelector(state => state.live.chatList)
 
-	const handleCurrent = chat => {
-		setActiveChat(chat)
+	const handleCurrent = (chat, relation) => {
+		setActiveChat({ ...chat, relnID: relation })
 	}
 	return (
 		<>
@@ -24,12 +24,16 @@ function Chat() {
 						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600 border-b-2">
 							Chats
 						</h2>
-						<div className="overflow-auto h-[80vh]">
-							{chatList.map((chat, index) => {
+						<div className="overflow-auto h-[80vh] scroll-smooth">
+							{Object.keys(chatList).map(relation => {
 								return (
-									<div key={index} className="chatContainer">
+									<div
+										key={relation}
+										className="chatContainer"
+									>
 										<ChatHead
-											chat={chat}
+											chat={chatList[relation]}
+											relation={relation}
 											onClick={handleCurrent}
 										/>
 									</div>
@@ -38,7 +42,7 @@ function Chat() {
 						</div>
 					</div>
 					<div className="lg:col-span-2 lg:block">
-						{activeChat.id && <ChatBody user={activeChat} />}
+						{activeChat.relnID && <ChatBody user={activeChat} />}
 					</div>
 				</div>
 			</div>

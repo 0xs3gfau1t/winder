@@ -346,20 +346,10 @@ ul {
 	color: rgb(153, 153, 153);
 }
 .change-dp {
-	position: absolute;
-	top: 4rem;
-	right: 3rem;
-	height: 1rem;
-	width: 1rem;
-	margin: auto;
-	opacity: 0.7;
-	border-radius: 20%;
-	background: black;
-}
-.remove-dp {
-	position: absolute;
-	top: 4rem;
-	left: 1rem;
+	position: relative;
+	top: 1.5rem;
+	right: 2rem;
+	float: right;
 	height: 1rem;
 	width: 1rem;
 	margin: auto;

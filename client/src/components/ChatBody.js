@@ -15,13 +15,15 @@ const ChatBody = ({ user }) => {
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		dispatch(fetchActiveChat(user.id))
+		dispatch(fetchActiveChat(user.relnID))
 	}, [])
 
 	useEffect(() => {
 		if (activeChat.live) {
 			ref.current.scrollTop = ref.current.scrollHeight
-		} else ref.current.scrollTop += 77
+		} else {
+			ref.current.scrollTop = 70
+		}
 	}, [activeChat])
 
 	const sendChat = e => {
@@ -40,11 +42,16 @@ const ChatBody = ({ user }) => {
 		node => {
 			if (activeChat.loading) return
 			if (observer.current) observer.current.disconnect()
-			observer.current = new IntersectionObserver(entries => {
-				if (entries[0].isIntersecting && activeChat.more) {
-					dispatch(fetchActiveChat(activeChat.id, activeChat.more))
-				}
-			})
+			observer.current = new IntersectionObserver(
+				entries => {
+					if (entries[0].isIntersecting && activeChat.more) {
+						dispatch(
+							fetchActiveChat(activeChat.id, activeChat.more)
+						)
+					}
+				},
+				{ threshold: 1, rootMargin: "-100px 0px 0px 0px" }
+			)
 			if (node) observer.current.observe(node)
 		},
 		[activeChat.loading, activeChat.more]
@@ -65,12 +72,13 @@ const ChatBody = ({ user }) => {
 				</div>
 				<div
 					ref={ref}
-					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh]"
+					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y"
 				>
 					<ul className="space-y-2">
 						{activeChat.data.map((message, index) => {
 							return (
 								<div
+									className="snap-always snap-start"
 									key={index}
 									ref={index == 0 ? topChatRef : null}
 								>

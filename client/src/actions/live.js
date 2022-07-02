@@ -19,7 +19,7 @@ export const chatUpdate = data => (dispatch, getState) => {
 	dispatch({ type: CHAT_UPDATE, payload: data })
 	const activeChat = getState().live.activeChat.id
 
-	if (data.senderId === activeChat) {
+	if (data.relnID === activeChat) {
 		dispatch({
 			type: FETCH_ACTIVE_CHAT,
 			payload: [data],
@@ -52,20 +52,21 @@ export const fetchChats = () => dispatch => {
 export const fetchActiveChat =
 	(id, cur = "") =>
 	dispatch => {
-		console.log(id, cur)
+		// console.log(id, cur)
 		dispatch({ type: SET_LOADING })
 		axios
 			.get(URL + "/messages" + `/${id}?cursor=${cur}`, {
 				withCredentials: true,
 			})
 			.then(res => {
-				console.log("Next Cursor: ", res.data.nextCursor)
-				dispatch({
-					type: FETCH_ACTIVE_CHAT,
-					payload: res.data.data,
-					id: id,
-					more: res.data.nextCursor ? res.data.nextCursor : "",
-				})
+				setTimeout(() => {
+					dispatch({
+						type: FETCH_ACTIVE_CHAT,
+						payload: res.data.data,
+						id: id,
+						more: res.data.nextCursor ? res.data.nextCursor : "",
+					})
+				}, 10)
 			})
 			.catch(err => {
 				dispatch(console.log(err))
@@ -73,6 +74,7 @@ export const fetchActiveChat =
 	}
 
 export const sendMessage = (text, id) => dispatch => {
+	console.log(id)
 	axios
 		.post(
 			URL + `/messages/${id}`,

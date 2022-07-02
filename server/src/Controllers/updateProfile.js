@@ -82,7 +82,7 @@ async function changePassword(req, response) {
 	} else {
 		response.status(401)
 		res.success = false
-		res.message = "unauthorized"
+		res.message = "Incorrect Password! Please try again."
 	}
 
 	return response.json(res)

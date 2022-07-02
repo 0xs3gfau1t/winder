@@ -4,7 +4,7 @@ import {
 	LOGIN_SUCCESS,
 	LOGOUT,
 	LOAD_USER,
-	DELETE_DP,
+	DELETE_PIC,
 } from "../actions/types"
 
 const initialState = {
@@ -47,11 +47,16 @@ export default function (state = initialState, action) {
 				isAuthenticated: true,
 				user: action.payload,
 			}
-		case DELETE_DP:
-			let imageUp = state.user.images
+		case DELETE_PIC:
+			console.log(action)
 			return {
 				...state,
-				image: imageUp.shift(),
+				user: {
+					...state.user,
+					images: state.user.images.filter(
+						img => img != action.payload
+					),
+				},
 			}
 		default:
 			return state
