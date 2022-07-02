@@ -119,11 +119,11 @@ const getMessages = async (req, res) => {
 }
 
 const sendMessage = async (req, res) => {
-	const { id } = req.params // relation id
+	const relnID = req.params.id // relation id
 	const { content } = req.body
 	try {
 		var relation = await relationModel.findOne(
-			{ _id: id, users: req.userdata._id, stat: true },
+			{ _id: relnID, users: req.userdata._id, stat: true },
 			["messages", "users", "unreadCount"]
 		)
 
@@ -133,7 +133,6 @@ const sendMessage = async (req, res) => {
 				error: "No such relation found.",
 			})
 		}
-
 		// Create new message document and insert into the relation.messages list
 		const sender = relation.users[1].toString() === req.userdata._id
 		const msg = new messagesModel({ content, sender })
@@ -144,7 +143,7 @@ const sendMessage = async (req, res) => {
 		const status = emitChat(
 			sender ? relation.users[0] : relation.users[1],
 			msg._id,
-			req.userdata._id,
+			relnID,
 			content,
 			msg.createdAt
 		)
