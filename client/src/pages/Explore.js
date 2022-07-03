@@ -45,6 +45,7 @@ function Explore() {
 									"https://via.placeholder.com/300/000000/FFFFFF/?text=No+Images+To+Load",
 								]
 							}
+							user={users[current]}
 						/>
 					</div>
 					<div className="details">

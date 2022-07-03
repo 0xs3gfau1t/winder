@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { IconContext } from "react-icons"
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
+import { FaArrowLeft, FaArrowRight, FaCircle } from "react-icons/fa"
 
 import CarouselStyled from "../assets/wrappers/Carousel"
 import DropDown from "./DropDown"
 
-const Carousel = ({ imgs, width, height, options = [] }) => {
+const Carousel = ({ imgs, width, height, options = [], user }) => {
 	const [current, setCurrent] = useState(0)
-
 	const download = async () => {
 		const image = await fetch(imgs[current])
 		const imageURL = URL.createObjectURL(await image.blob())
@@ -47,6 +46,14 @@ const Carousel = ({ imgs, width, height, options = [] }) => {
 				))}
 			</div>
 			<IconContext.Provider value={{ color: "white", size: "2rem" }}>
+				<div className="name">
+					<div className="firstName">{user?.firstName}</div>
+					<div className="lastName">{user?.lastName}</div>
+					{
+						user?.dob ? 
+							<div className="age"><FaCircle size={".3em"} color={"#ff3c00"}/>{user?.dob || "?"}</div>: ''
+					}
+				</div>
 				<button
 					className="carousel-control carousel-control--left"
 					onClick={moveLeft}

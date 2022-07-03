@@ -41,7 +41,7 @@ const UserDetailsStyled = styled.div`
 	}
 	.academics > div > p > span{
 		border: 2px solid #ff3c00;
-		background-color: #ff7d5155;
+//		background-color: #ff7d5155;
 		border-radius: .5em;
 
 		text-align: center;
@@ -54,7 +54,7 @@ const UserDetailsStyled = styled.div`
 	}
 	.passion-container > span{
 		border: 2px solid #ff3c00;
-		background-color: #ff7d5155;
+//		background-color: #ff7d5155;
 		border-radius: .5em;
 
 		text-align: center;

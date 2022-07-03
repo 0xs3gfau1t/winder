@@ -7,6 +7,10 @@ const CarouselStyled = styled.div`
 	border-radius: 1rem;
 	background: rgb(2, 0, 36);
 
+	display: flex;
+	flex-direction: column;
+	border: 2px solid red;
+
 	.carousel-items {
 		position: relative;
 		width: inherit;
@@ -96,6 +100,22 @@ const CarouselStyled = styled.div`
 		position: absolute;
 		top: 2rem;
 		width: 100%;
+	}
+	.name{
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		font-size: 1.5em;
+		background: -webkit-linear-gradient(#ff3c00, #d53a9d);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+
+		margin: 1em;
+	}
+	.name > .age{
+		display: flex;
+		align-items: center;
+		gap: 1em;
 	}
 `
 
