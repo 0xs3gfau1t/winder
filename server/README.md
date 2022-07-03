@@ -221,7 +221,7 @@ Field|Description
 success|True of False
 notification|Full notification detail: `{_id, type, title, content}`
 
-## **`/changepassword`**
+## **`/forgotpassword`**
 
 ### `/:id`
 
