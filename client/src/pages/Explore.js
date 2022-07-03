@@ -56,9 +56,9 @@ function Explore() {
 					value={{ color: "#743ad5", size: "2em" }}
 				>
 					<div className="actions">
-						<span><ImCross /></span>
-						<span><FaHeart /></span>
-						<span><BsCheckLg onClick={accept} /></span>
+						<span><ImCross color="#eb1e07"/></span>
+						<span><FaHeart color="#ab0a73"/></span>
+						<span><BsCheckLg onClick={accept} color="#0dbd4b"/></span>
 					</div>
 				</IconContext.Provider>
 			</ExploreStyled>

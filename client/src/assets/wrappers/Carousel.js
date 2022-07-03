@@ -9,7 +9,6 @@ const CarouselStyled = styled.div`
 
 	display: flex;
 	flex-direction: column;
-	border: 2px solid red;
 
 	.carousel-items {
 		position: relative;
