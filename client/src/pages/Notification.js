@@ -11,6 +11,13 @@ function Notification() {
 		read: false,
 	})
 	const [clicked, setClick] = useState(false)
+	const relater = {
+		0: "Liked Your Profile",
+		1: "New Match Found",
+		2: "Promotion..."
+	}
+
+	
 	const dummyy = [
 		{
 			"type": 2,
@@ -144,8 +151,8 @@ function Notification() {
 								</div>
 							)
 						})}
-						<Popup setClick={setClick} clicked={clicked}>
-							<h2>{popUp.type}</h2>
+						<Popup setClick={setClick} clicked={clicked} close={handlePopupClose}>
+							<h2>{relater[popUp.type]}</h2>
 							<span>{popUp.content}</span>
 						</Popup>
 					</div>

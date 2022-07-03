@@ -8,6 +8,7 @@ const authenticateToken = require("../Middlewares/authenticateToken")
 const sanitizer = require("../Middlewares/sanitizer")
 
 router.post("/register", sanitizer, async (req, res) => {
+	console.log(req.sanitized.user)
 	let { email, password, dob, gender, firstName, lastName } =
 		req.sanitized.user
 	if (!email || !password || !dob || !gender || !firstName || !lastName)

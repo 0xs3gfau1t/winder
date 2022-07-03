@@ -14,7 +14,7 @@ async function sendForgotPasswordEmail(mail, token) {
             <h1>Winder: Password Reset Request</h1>\
             <p>You recently requested to reset your forgotton password. If you don't\
             know about this then please delete this email.</p><br>\
-            <b><a href='${process.env.APP_URL}/changepassword/${token}'>\
+            <b><a href='${process.env.APP_URL}/resetpassword/${token}'>\
             Click here to change your password</a></b>`, // html body
 		})
 	} catch (e) {

@@ -464,7 +464,7 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
-			<Popup handlePopupClose={handlePopupClose} clicked={flags.changePS}>
+			<Popup close={handlePopupClose} clicked={flags.changePS}>
 				<ChangePswForm handlePopupClose={handlePopupClose} />
 			</Popup>
 		</>

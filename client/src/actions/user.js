@@ -172,3 +172,41 @@ export const changePass = (oldPass, new1) => dispatch => {
 			dispatch(displayAlert(err.response.data.message, "danger"))
 		})
 }
+
+export const forgotPassword = email => dispatch => {
+	axios
+		.post(url + `/changepassword`, { email: email })
+		.then(res => {
+			dispatch(
+				displayAlert(
+					"Password Reset Requested, please check your mail",
+					"success"
+				)
+			)
+		})
+		.catch(err => {
+			// console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger"))
+		})
+}
+
+export const resetPassword = (password, token) => dispatch => {
+	console.log(password, token)
+	axios
+		.post(url + `/changepassword/${token}`, { password: password })
+		.then(res => {
+			dispatch(
+				displayAlert(
+					"Password Changed, redirecting to login",
+					"success"
+				)
+			)
+			setTimeout(() => {
+				window.location = "/login"
+			}, 3000)
+		})
+		.catch(err => {
+			// console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger"))
+		})
+}

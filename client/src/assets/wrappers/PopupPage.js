@@ -20,14 +20,22 @@ const Wrapper = styled.main`
 		background-color: #fff;
 	}
 
-	.popup-inner .close-btn {
-		position: absolute;
-		bottom: 10px;
-		right: 50%;
-		border: 1px solid black;
-		padding: 3px;
-		border-radius: 10px;
-	}
+
+
+.popup-inner .close-btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+// .popup-inner .close-btn {
+// 		position: absolute;
+// 		bottom: 10px;
+// 		right: 50%;
+// 		border: 1px solid black;
+// 		padding: 3px;
+// 		border-radius: 10px;
+// 	}
 `
 
 export default Wrapper

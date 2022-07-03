@@ -12,6 +12,7 @@ import {
 	Profile,
 	Notification,
 	Chat,
+	ResetPassword,
 } from "./pages"
 import PrivateRoute from "./components/privateRoute"
 import Nav from "./components/Nav/Nav"
@@ -27,8 +28,12 @@ const App = () => {
 						<Route path="/" element={<Landing />} />
 						<Route path="/login" element={<Login />} />
 						<Route
-							path="/changepassword/:token"
+							path="/verifyemail/:token"
 							element={<Verify />}
+						/>
+						<Route
+							path="/resetpassword/:token"
+							element={<ResetPassword />}
 						/>
 						<Route path="*" element={<Error />} />
 						<Route
@@ -44,9 +49,10 @@ const App = () => {
 							exact={true}
 							path="/notification"
 							element={
-								<PrivateRoute>
-									<Notification />
-								</PrivateRoute>
+								// <PrivateRoute>
+								// 	<Notification />
+								// </PrivateRoute>
+								<Notification />
 							}
 						/>
 						<Route
