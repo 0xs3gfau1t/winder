@@ -45,7 +45,19 @@ async function getList(req, res) {
 			? {} // if there is no pagination
 			: { _id: { $gt: user.pagination.incoming } } // if there is pagination
 
-	const fetch = ["name", "university", "program", "batch", "bio", "passion"]
+	const fetch = [
+		"firstName",
+		"lastName",
+		"gender",
+		"username",
+		"university",
+		"program",
+		"batch",
+		"bio",
+		"passion",
+		"images",
+		"dob",
+	]
 	try {
 		// Ids of all the users that has sent a match request
 		var incomingUserIds = await relationModel
@@ -82,12 +94,19 @@ async function getList(req, res) {
 			)
 			.sort({ _id: 1 })
 			.limit(PAGINATION_LIMIT)
+			.lean()
 
+		// Modify dob to change to approx age
+		for (const u of userList) {
+			let d = Date.parse(u.dob)
+			d = new Date(new Date() - d)
+			u.dob = Math.floor(d / (1000 * 60 * 60 * 24 * 365))
+		}
 		const newPagination = {
 			newExplore:
 				userList.length < PAGINATION_LIMIT
 					? "null"
-					: userList[PAGINATION_LIMIT]._id.toString(),
+					: userList[PAGINATION_LIMIT - 1]._id.toString(),
 			incoming:
 				incomingUserIds.length < 1
 					? "null"
@@ -98,8 +117,8 @@ async function getList(req, res) {
 
 		res.json({ success: true, userList: [...userList, ...incomingUser] })
 	} catch (err) {
-		console.log(err.message)
-		res.json({ success: false, error: "Internal Server Error" })
+		console.log(err)
+		res.status(400).json({ success: false, error: "Internal Server Error" })
 	}
 }
 
@@ -110,10 +129,9 @@ async function updateAcceptStatus(req, res) {
 	let r = { matched: false }
 
 	// Check if user_from has already initiated relation with user_to
-	const relCount = await relationModel.count({ users: [from, to] })
-	console.log(relCount)
+	const relCount = await relationModel.exists({ users: [from, to] })
 	if (relCount)
-		return res.json({
+		return res.status(400).json({
 			success: false,
 			error: "Relation with this user already exists.",
 		})
