@@ -27,7 +27,7 @@ const App = () => {
 						<Route path="/" element={<Landing />} />
 						<Route path="/login" element={<Login />} />
 						<Route
-							path="/changepassword/:token"
+							path="/verifyemail/:token"
 							element={<Verify />}
 						/>
 						<Route path="*" element={<Error />} />
@@ -47,7 +47,7 @@ const App = () => {
 								// <PrivateRoute>
 								// 	<Notification />
 								// </PrivateRoute>
-								<Notification/>
+								<Notification />
 							}
 						/>
 						<Route

@@ -15,9 +15,9 @@ export const register = user_data => dispatch => {
 	let data = JSON.parse(JSON.stringify(user_data))
 	delete data["password2"]
 	delete data["isMember"]
-
+	console.log(data)
 	axios
-		.post(url + "/auth/register", user_data, { withCredentials: true })
+		.post(url + "/auth/register", data, { withCredentials: true })
 		.then(res => {
 			dispatch(
 				displayAlert("Account created! Proceeding to login.", "success")
