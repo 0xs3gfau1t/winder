@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { displayAlert } from "../actions/misc"
 import { Alert } from "../components"
+import { forgotPassword } from "../actions/user"
 
 const ForgotPsw = () => {
 	const dispatch = useDispatch()
@@ -17,9 +18,7 @@ const ForgotPsw = () => {
 			dispatch(displayAlert("Email is required!", "danger", true))
 			return
 		}
-		dispatch(
-			displayAlert("Birsera kah paiyo, samjina paryo k!", "danger", true)
-		)
+		dispatch(forgotPassword(email))
 	}
 	return (
 		<div className="mx-auto w-2/3">

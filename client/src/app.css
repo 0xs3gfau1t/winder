@@ -228,7 +228,7 @@ ul {
 	box-shadow: var(--shadow-4);
 }
 .form-label {
-	display: block;
+	float: left;
 	font-size: var(--smallText);
 	margin-bottom: 0.5rem;
 	text-transform: capitalize;

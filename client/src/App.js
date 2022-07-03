@@ -12,6 +12,7 @@ import {
 	Profile,
 	Notification,
 	Chat,
+	ResetPassword,
 } from "./pages"
 import PrivateRoute from "./components/privateRoute"
 import Nav from "./components/Nav/Nav"
@@ -29,6 +30,10 @@ const App = () => {
 						<Route
 							path="/verifyemail/:token"
 							element={<Verify />}
+						/>
+						<Route
+							path="/resetpassword/:token"
+							element={<ResetPassword />}
 						/>
 						<Route path="*" element={<Error />} />
 						<Route
