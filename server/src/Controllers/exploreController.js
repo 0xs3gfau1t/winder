@@ -56,6 +56,7 @@ async function getList(req, res) {
 		"bio",
 		"passion",
 		"images",
+		"dob",
 	]
 	try {
 		// Ids of all the users that has sent a match request
@@ -93,7 +94,14 @@ async function getList(req, res) {
 			)
 			.sort({ _id: 1 })
 			.limit(PAGINATION_LIMIT)
+			.lean()
 
+		// Modify dob to change to approx age
+		for (const u of userList) {
+			let d = Date.parse(u.dob)
+			d = new Date(new Date() - d)
+			u.dob = Math.floor(d / (1000 * 60 * 60 * 24 * 365))
+		}
 		const newPagination = {
 			newExplore:
 				userList.length < PAGINATION_LIMIT
