@@ -135,7 +135,7 @@ function Profile() {
 	return (
 		<>
 			<Bar title={"Settings"} />
-			<div className="container mx-auto">
+			<div className="container mx-auto md:w-full sm:w-2/3">
 				{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
 				<form
 					encType="multipart/form-data"
@@ -143,7 +143,7 @@ function Profile() {
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
+						<aside className="w-full md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
 							<div className="sticky top-0 p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<div className="border-2 rounded-xl border-amber-900">
@@ -198,7 +198,7 @@ function Profile() {
 												" " +
 												user.lastName}
 											{user.email_verified && (
-												<GoVerified className="-mt-6 ml-32 float-right" />
+												<GoVerified className="ml-32 float-right" />
 											)}
 										</li>
 									</div>
@@ -235,7 +235,7 @@ function Profile() {
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
+							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
 							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-4 pb-6">

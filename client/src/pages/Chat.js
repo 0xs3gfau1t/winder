@@ -25,6 +25,14 @@ function Chat() {
 							Chats
 						</h2>
 						<div className="overflow-auto h-[80vh] scroll-smooth">
+							{!Object.keys(chatList).length > 0 && (
+								<h5 className="mt-8 px-4 text-center">
+									<span className="text-red-700">
+										So sorry !
+									</span>{" "}
+									You got no friend to chat with...
+								</h5>
+							)}
 							{Object.keys(chatList).map(relation => {
 								return (
 									<div
@@ -42,7 +50,13 @@ function Chat() {
 						</div>
 					</div>
 					<div className="lg:col-span-2 lg:block">
-						{activeChat.relnID && <ChatBody user={activeChat} />}
+						{activeChat.relnID ? (
+							<ChatBody user={activeChat} />
+						) : (
+							<span className="grid h-[90vh] place-items-center text-lg">
+								Select a conversation to start chatting...
+							</span>
+						)}
 					</div>
 				</div>
 			</div>
