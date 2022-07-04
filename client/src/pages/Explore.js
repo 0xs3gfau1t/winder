@@ -12,6 +12,7 @@ import { loadExplore, sendLike } from "../actions/explore"
 // Components
 import Carousel from "../components/Carousel"
 import UserDetails from "../components/UserDetails"
+import Alert from "../components/Alert"
 
 // Styles
 import ExploreStyled from "../assets/wrappers/Explore"
@@ -19,6 +20,7 @@ import ExploreStyled from "../assets/wrappers/Explore"
 function Explore() {
 	const misc = useSelector(state => state.misc)
 	const users = useSelector(state => state.explore.users)
+	const user = useSelector(state => state.auth.user)
 	const current = useSelector(state => state.explore.current)
 
 	const dispatch = useDispatch()
@@ -27,13 +29,16 @@ function Explore() {
 		dispatch(loadExplore())
 	}, [])
 
-	const accept = e =>
-		(users[current] && dispatch(sendLike(users[current].id))) ||
-		console.log("No user to accept.")
+	const accept = e => {
+		if (users[current]) dispatch(sendLike(users[current].id))
+		else console.log("No user to accept.")
+	}
 
-	if (misc.showAlert) return <Navigate to="/profile" />
+	if (!user.email_verified) return <Navigate to="/profile" />
+
 	return (
 		<>
+			{misc.showAlert && <Alert />}
 			<ExploreStyled>
 				<div className="outer">
 					<div className="carousel-wrapper">
@@ -52,13 +57,17 @@ function Explore() {
 						<UserDetails user={users[current] || {}} />
 					</div>
 				</div>
-				<IconContext.Provider
-					value={{ color: "#743ad5", size: "2em" }}
-				>
+				<IconContext.Provider value={{ color: "#743ad5", size: "2em" }}>
 					<div className="actions">
-						<span><ImCross color="#eb1e07"/></span>
-						<span><FaHeart color="#ab0a73"/></span>
-						<span><BsCheckLg onClick={accept} color="#0dbd4b"/></span>
+						<span>
+							<ImCross color="#eb1e07" />
+						</span>
+						<span>
+							<FaHeart color="#ab0a73" />
+						</span>
+						<span>
+							<BsCheckLg onClick={accept} color="#0dbd4b" />
+						</span>
 					</div>
 				</IconContext.Provider>
 			</ExploreStyled>
