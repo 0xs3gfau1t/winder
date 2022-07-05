@@ -96,26 +96,32 @@ async function getList(req, res) {
 			.limit(PAGINATION_LIMIT)
 			.lean()
 
+		const response_list = [...userList, ...incomingUser]
+
 		// Modify dob to change to approx age
-		for (const u of userList) {
+		for (const u of response_list) {
+			u.id = u._id
+			delete u._id
+
 			let d = Date.parse(u.dob)
 			d = new Date(new Date() - d)
 			u.dob = Math.floor(d / (1000 * 60 * 60 * 24 * 365))
 		}
+
 		const newPagination = {
 			newExplore:
 				userList.length < PAGINATION_LIMIT
 					? "null"
-					: userList[PAGINATION_LIMIT - 1]._id.toString(),
+					: userList[PAGINATION_LIMIT - 1].id.toString(),
 			incoming:
 				incomingUserIds.length < 1
 					? "null"
-					: incomingUserIds[0]._id.toString(),
+					: incomingUserIds[0].id.toString(),
 		}
 
 		await user.updateOne({ pagination: newPagination })
 
-		res.json({ success: true, userList: [...userList, ...incomingUser] })
+		res.json({ success: true, userList: response_list })
 	} catch (err) {
 		console.log(err)
 		res.status(400).json({ success: false, error: "Internal Server Error" })
