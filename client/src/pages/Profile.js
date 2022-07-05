@@ -419,7 +419,7 @@ function Profile() {
 												? user.preference.gender
 												: ""
 										}
-										name="gender"
+										name="genderPreference"
 										options={["male", "female", "other"]}
 									/>
 								</div>
