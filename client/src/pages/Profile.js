@@ -21,12 +21,13 @@ function Profile() {
 	const user = useSelector(state => state.auth.user)
 
 	//component level states
-	const [settings, setSettings] = useState({
+	const initState = {
 		changed: false,
 		bio: "",
 		preview: "",
 		preview2: "",
-	})
+	}
+	const [settings, setSettings] = useState(initState)
 	const [flags, setFlags] = useState({ changePS: false, editBio: false })
 
 	//component level dispatcher
@@ -81,12 +82,12 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
-		if ("ageL" in settings && !("ageH" in settings))
-			setSettings({ ...settings, ageH: user.preferance.age[1] })
-		if ("ageH" in settings && !("ageL" in settings))
-			setSettings({ ...settings, ageL: user.preferance.age[0] })
-		setSettings({ ...settings, changed: false, preview2: "", isDP: false })
-		dispatch(updateProfile(settings))
+		let update = JSON.parse(JSON.stringify(settings))
+		if (update.ageL && !update.ageH) update.ageH = user.preference.age[1]
+		if (update.ageH && !update.ageL) update.ageL = user.preference.age[0]
+		console.log(update)
+		setSettings(initState)
+		dispatch(updateProfile(update))
 	}
 	const delPassion = passion => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
@@ -143,8 +144,8 @@ function Profile() {
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
-							<div className=" p-2 profile-form">
+						<aside className="w-full md:w-1/4 px-2  h-full">
+							<div className="fixed border-4 w-[23vw] rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<div className="border-2 rounded-xl border-amber-900">
 									<IconContext.Provider
@@ -173,7 +174,7 @@ function Profile() {
 										)}
 									</IconContext.Provider>
 									<img
-										className="h-60 w-64"
+										className="h-58 w-58"
 										src={settings.preview}
 										alt={user.firstName}
 									/>

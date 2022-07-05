@@ -32,12 +32,12 @@ const ResetPassword = () => {
 	}
 	return (
 		<Wrapper className="full-page">
+			{misc.showAlert && <Alert />}
 			<form className="form" onSubmit={onSubmit}>
 				<Link to="/">
 					<Logo />
 				</Link>
 				<h3>Reset Password</h3>
-				{misc.showAlert && <Alert />}
 				<FormText
 					type="password"
 					name="pass1"

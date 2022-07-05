@@ -23,7 +23,7 @@ const ForgotPsw = () => {
 	return (
 		<div className="mx-auto w-2/3">
 			<h4>Forgot password?</h4>
-			{misc.showAlert && <Alert />}
+			{misc.showAlert && <Alert float={false} />}
 			<form
 				onChange={e => {
 					setEmail(e.target.value)
