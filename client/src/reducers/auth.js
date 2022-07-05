@@ -9,7 +9,7 @@ import {
 
 const initialState = {
 	isAuthenticated: false,
-	user: { preference: {} },
+	user: { preference: {}, email_verified: true },
 	flag: false,
 }
 
