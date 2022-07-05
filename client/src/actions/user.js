@@ -175,7 +175,7 @@ export const changePass = (oldPass, new1) => dispatch => {
 
 export const forgotPassword = email => dispatch => {
 	axios
-		.post(url + `/changepassword`, { email: email })
+		.post(url + `/forgotpassword`, { email: email })
 		.then(res => {
 			dispatch(
 				displayAlert(
@@ -193,7 +193,7 @@ export const forgotPassword = email => dispatch => {
 export const resetPassword = (password, token) => dispatch => {
 	console.log(password, token)
 	axios
-		.post(url + `/changepassword/${token}`, { password: password })
+		.post(url + `/forgotpassword/${token}`, { password: password })
 		.then(res => {
 			dispatch(
 				displayAlert(
