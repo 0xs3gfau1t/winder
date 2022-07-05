@@ -49,10 +49,14 @@ const Carousel = ({ imgs, width, height, options = [], user }) => {
 				<div className="name">
 					<div className="firstName">{user?.firstName}</div>
 					<div className="lastName">{user?.lastName}</div>
-					{
-						user?.dob ? 
-							<div className="age"><FaCircle size={".3em"} color={"#ff3c00"}/>{user?.dob || "?"}</div>: ''
-					}
+					{user?.dob ? (
+						<div className="age">
+							<FaCircle size={".3em"} color={"#ff3c00"} />
+							{user?.dob || "?"}
+						</div>
+					) : (
+						""
+					)}
 				</div>
 				<button
 					className="carousel-control carousel-control--left"
@@ -82,9 +86,9 @@ const Carousel = ({ imgs, width, height, options = [], user }) => {
 						></button>
 					))}
 				</div>
-				<div className="context-menu">
+				{/* <div className="context-menu">
 					<DropDown options={[...options, ["Download", download]]} />
-				</div>
+				</div> */}
 			</div>
 		</CarouselStyled>
 	)
