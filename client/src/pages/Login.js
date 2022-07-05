@@ -35,7 +35,7 @@ function Login() {
 
 		if (!email || !password || (!isMember && !firstName && !password2)) {
 			const message = "One or more field is missing!"
-			dispatch(displayAlert(message), "danger")
+			dispatch(displayAlert(message, "danger"))
 			return
 		}
 		if (password !== password2 && !isMember) {
@@ -79,7 +79,7 @@ function Login() {
 			>
 				<Logo />
 				<h3>{values.isMember ? "Login" : "Register"}</h3>
-				{misc.showAlert && <Alert />}
+				{misc.showAlert && <Alert float={false} />}
 				{/* name input */}
 				{!values.isMember && (
 					<div className="grid grid-cols-2 gap-4">

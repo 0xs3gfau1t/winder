@@ -135,8 +135,8 @@ function Profile() {
 	return (
 		<>
 			<Bar title={"Settings"} />
+			{misc.showAlert && <Alert />}
 			<div className="container mx-auto md:w-full sm:w-2/3">
-				{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
 				<form
 					encType="multipart/form-data"
 					onChange={onChange}
@@ -144,7 +144,7 @@ function Profile() {
 				>
 					<div className="flex flex-wrap pb-4 container -ml-7">
 						<aside className="w-full md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
-							<div className="sticky top-0 p-2 profile-form">
+							<div className=" p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<div className="border-2 rounded-xl border-amber-900">
 									<IconContext.Provider
@@ -259,7 +259,7 @@ function Profile() {
 													<GoX />
 												</span>
 												<img
-													className="h-60 w-64"
+													className="h-58 w-58"
 													src={
 														process.env.URL +
 														`/image/${image}`
@@ -288,15 +288,14 @@ function Profile() {
 									type="text"
 									name="bio"
 									size="70"
-									className="m-10 text-orange-700 my-2 h-12 font-bold resize-none"
+									className="mx-10 my-2 text-orange-700 h-12 font-bold resize-none"
 									placeholder={user.bio}
 									value={settings.bio}
 									onChange={onChange}
-									defaultValue={settings.bio}
 								/>
 							) : (
 								<p
-									className="cursor-pointer font-bold text-orange-700 bg-gray-200 ml-12 py-2 pl-4 mb-8"
+									className="mx-10 mt-12 cursor-pointer font-bold text-orange-700 bg-gray-200 py-2 pl-4"
 									onClick={e => {
 										setFlags({ ...flags, editBio: true })
 									}}
