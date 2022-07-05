@@ -3,6 +3,7 @@ import styled from "styled-components"
 const CarouselStyled = styled.div`
 	width: ${props => props.width || "100%"};
 	height: ${props => props.height || "100%"};
+	background-color: #222222;
 	overflow: hidden;
 
 	.carousel-items {
@@ -24,8 +25,8 @@ const CarouselStyled = styled.div`
 	.carousel-items > img {
 		width: 100%;
 		height: 100%;
-
-		border-radius: .5em;
+		object-fit: cover;
+		border-radius: 0.5em;
 	}
 
 	position: relative;
@@ -37,7 +38,6 @@ const CarouselStyled = styled.div`
 		width: 100%;
 		position: absolute;
 		top: 0px;
-
 	}
 
 	.indicator-btn {
@@ -62,7 +62,7 @@ const CarouselStyled = styled.div`
 		position: absolute;
 		top: 45%;
 
-		opacity: .07;
+		opacity: 0.07;
 		transition: 0.5s;
 	}
 	.carousel-control:hover {
@@ -72,11 +72,22 @@ const CarouselStyled = styled.div`
 	.carousel-control--right {
 		right: 0;
 	}
-
-	.name {
+	.name-container {
 		position: absolute;
 		bottom: 0;
 
+		display: flex;
+
+		background-color: #222222cc;
+
+		border: 1px solid #ff3c00;
+		border-top-left-radius: 2em;
+		border-bottom-right-radius: 2em;
+
+		margin: 1em;
+		padding: 0 1.3em;
+	}
+	.name {
 		display: flex;
 		align-items: center;
 		gap: 1em;
@@ -85,8 +96,6 @@ const CarouselStyled = styled.div`
 		-webkit-background-clip: text;
 		background-clip: text;
 		-webkit-text-fill-color: transparent;
-
-		margin: 1em;
 	}
 	.name > .age {
 		display: flex;

@@ -27,6 +27,11 @@ const Carousel = ({ imgs, width, height, options = [], user }) => {
 		setCurrent(current => {
 			return current === imgs.length - 1 ? 0 : current + 1
 		})
+	const toggleImagePreview = e => {
+		if (e.target.style.objectFit == "cover")
+			e.target.style.objectFit = "contain"
+		else e.target.style.objectFit = "cover"
+	}
 
 	useEffect(() => {
 		setCurrent(0)
@@ -42,21 +47,24 @@ const Carousel = ({ imgs, width, height, options = [], user }) => {
 						className={`carousel-item ${
 							idx === current ? "active" : ""
 						}`}
+						onClick={toggleImagePreview}
 					/>
 				))}
 			</div>
 			<IconContext.Provider value={{ color: "white", size: "2rem" }}>
-				<div className="name">
-					<div className="firstName">{user?.firstName}</div>
-					<div className="lastName">{user?.lastName}</div>
-					{user?.dob ? (
-						<div className="age">
-							<FaCircle size={".3em"} color={"#ff3c00"} />
-							{user?.dob || "?"}
-						</div>
-					) : (
-						""
-					)}
+				<div className="name-container">
+					<div className="name">
+						<div className="firstName">{user?.firstName}</div>
+						<div className="lastName">{user?.lastName}</div>
+						{user?.dob ? (
+							<div className="age">
+								<FaCircle size={".3em"} color={"#ff3c00"} />
+								{user?.dob || "?"}
+							</div>
+						) : (
+							""
+						)}
+					</div>
 				</div>
 				<button
 					className="carousel-control carousel-control--left"
