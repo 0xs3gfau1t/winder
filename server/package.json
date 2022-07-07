@@ -1,23 +1,10 @@
 {
-	"name": "winder",
+	"name": "winder-server",
 	"version": "1.0.0",
-	"description": "Tinder ko bau Winder",
-	"main": "Server.js",
+	"description": "Tinder ko bau Winder ko server side",
 	"scripts": {
-		"devStart": "nodemon src/index.js",
-		"client": "npm run serve --prefix ../client",
-		"start": "concurrently --kill-others-on-fail \"npm run devStart\" \" npm run client\""
+		"devStart": "nodemon src/index.js"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bimarshak7/winder.git"
-	},
-	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/bimarshak7/winder/issues"
-	},
-	"homepage": "https://github.com/bimarshak7/winder#readme",
 	"dependencies": {
 		"bcrypt": "^5.0.1",
 		"concurrently": "^7.2.1",

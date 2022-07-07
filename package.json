@@ -1,0 +1,25 @@
+{
+	"name": "winder",
+	"version": "1.0.0",
+	"description": "Tinder ko bau Winder",
+	"scripts": {
+		"devStart": "nodemon server/src/index.js",
+		"client": "npm run serve --prefix client",
+		"start": "npm run devStart & npm run client"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bimarshak7/winder.git"
+	},
+	"author": "Winder Coorp",
+	"license": "UNLICENSED",
+	"private": true,
+	"bugs": {
+		"url": "https://github.com/bimarshak7/winder/issues"
+	},
+	"homepage": "https://github.com/bimarshak7/winder#readme",
+	"dependencies": {
+		"server": "file:./server",
+		"client": "file:./client"
+	}
+}
