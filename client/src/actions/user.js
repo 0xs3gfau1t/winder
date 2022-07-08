@@ -90,7 +90,8 @@ export const updateProfile = data => dispatch => {
 	delete update["images"]
 	delete update["changed"]
 	delete update["preview"]
-	if (update.hasOwnProperty("ageL") && update.hasOwnProperty("ageH")) {
+	delete update["preview2"]
+	if (update.ageL && update.ageH) {
 		update["agePreference"] = [update.ageL, update.ageH]
 		delete update["ageL"]
 		delete update["ageH"]
@@ -127,7 +128,7 @@ export const updateProfile = data => dispatch => {
 			.post(url + `/image`, formData, config)
 			.then(res => {
 				dispatch(displayAlert("Profile Updated...", "success", true))
-				setTimeout(() => window.location.reload(), 1000)
+				// setTimeout(() => window.location.reload(), 1000)
 			})
 			.catch(err => {
 				console.log(err)

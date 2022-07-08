@@ -21,12 +21,16 @@ function Profile() {
 	const user = useSelector(state => state.auth.user)
 
 	//component level states
-	const [settings, setSettings] = useState({
+	const initState = {
 		changed: false,
 		bio: "",
 		preview: "",
 		preview2: "",
-	})
+		ageL: "",
+		ageH: "",
+		passion: [],
+	}
+	const [settings, setSettings] = useState(initState)
 	const [flags, setFlags] = useState({ changePS: false, editBio: false })
 
 	//component level dispatcher
@@ -38,6 +42,9 @@ function Profile() {
 			setSettings(prev => ({
 				...prev,
 				preview: process.env.URL + "/image/" + user.images[0],
+				ageH: user.preference.age[1],
+				ageL: user.preference.age[0],
+				passion: user.passion,
 			}))
 		dispatch(loadOptions())
 	}, [user])
@@ -45,8 +52,15 @@ function Profile() {
 	//event handlers
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
+		if (e.target.name == "ageL" && e.target.value > settings.ageH) {
+			setSettings({ ...settings, ageH: parseInt(e.target.value) + 1 })
+		}
+		if (e.target.name == "ageH" && e.target.value < settings.ageL) {
+			setSettings({ ...settings, ageL: parseInt(e.target.value) - 1 })
+		}
 		if (e.target.type === "file") {
 			let file = e.target.files[0]
+			console.log(e.target.files[0])
 			if (e.target.name == "upload1") {
 				setSettings(prev => ({
 					...prev,
@@ -63,12 +77,9 @@ function Profile() {
 			}
 		}
 		if (e.target.name == "passion") {
-			let upPassion = settings.passion
-				? [...settings.passion]
-				: [...user.passion]
 			setSettings(prev => ({
 				...prev,
-				passion: [...upPassion, e.target.value],
+				passion: [...settings.passion, e.target.value],
 			}))
 		} else {
 			let field_name = e.target.name
@@ -81,25 +92,15 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
-		if ("ageL" in settings && !("ageH" in settings))
-			setSettings({ ...settings, ageH: user.preferance.age[1] })
-		if ("ageH" in settings && !("ageL" in settings))
-			setSettings({ ...settings, ageL: user.preferance.age[0] })
-		setSettings({ ...settings, changed: false, preview2: "", isDP: false })
+		setSettings(initState)
 		dispatch(updateProfile(settings))
 	}
 	const delPassion = passion => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (settings.passion)
-			setSettings(prev => ({
-				...prev,
-				passion: settings.passion.filter(pas => pas != passion),
-			}))
-		else
-			setSettings(prev => ({
-				...prev,
-				passion: user.passion.filter(pas => pas != passion),
-			}))
+		setSettings(prev => ({
+			...prev,
+			passion: settings.passion.filter(pas => pas != passion),
+		}))
 	}
 	const removePic = (e, name, image = "") => {
 		switch (name) {
@@ -135,16 +136,16 @@ function Profile() {
 	return (
 		<>
 			<Bar title={"Settings"} />
-			<div className="container mx-auto">
-				{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
+			{misc.showAlert && <Alert />}
+			<div className="container mx-auto md:w-full">
 				<form
 					encType="multipart/form-data"
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
-					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full sm:w-1/3 md:w-1/4 px-2 border-4 rounded-xl h-full hover:drop-shadow-2xl ease-in duration-300">
-							<div className="sticky top-0 p-2 profile-form">
+					<div className="flex flex-wrap pb-4 -ml-7">
+						<aside className="w-full md:w-1/4  px-2  h-full">
+							<div className="fixed border-4  rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<div className="border-2 rounded-xl border-amber-900">
 									<IconContext.Provider
@@ -164,7 +165,7 @@ function Profile() {
 													</span>
 												)}
 												<label
-													className="change-dp"
+													className="change-pic"
 													htmlFor="upload"
 												>
 													<MdEdit />
@@ -173,7 +174,7 @@ function Profile() {
 										)}
 									</IconContext.Provider>
 									<img
-										className="h-60 w-64"
+										className="h-58 w-58"
 										src={settings.preview}
 										alt={user.firstName}
 									/>
@@ -193,18 +194,22 @@ function Profile() {
 												: "")
 										}
 									>
-										<li>
+										<li className="capitalize">
 											{user.firstName +
 												" " +
 												user.lastName}
 											{user.email_verified && (
-												<GoVerified className="-mt-6 ml-32 float-right" />
+												<GoVerified className="ml-32 float-right" />
 											)}
 										</li>
 									</div>
 									<li>{user.dob}</li>
-									<li>{user.gender}</li>
-									<li>{user.email}</li>
+									<li className="capitalize">
+										{user.gender}
+									</li>
+									<li className="text-ellipsis">
+										{user.email}
+									</li>
 									<li>
 										{user.email_verified ? (
 											<span className="text-green-700">
@@ -235,7 +240,7 @@ function Profile() {
 						</aside>
 						<main
 							role="main"
-							className="w-full sm:w-2/3 md:w-3/4 pt-1 px-2 border-4 rounded-xl"
+							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
 							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-4 pb-6">
@@ -259,7 +264,7 @@ function Profile() {
 													<GoX />
 												</span>
 												<img
-													className="h-60 w-64"
+													className="h-58 w-58"
 													src={
 														process.env.URL +
 														`/image/${image}`
@@ -288,15 +293,14 @@ function Profile() {
 									type="text"
 									name="bio"
 									size="70"
-									className="m-10 text-orange-700 my-2 h-12 font-bold resize-none"
+									className="mx-10 my-2 text-orange-700 h-12 font-bold resize-none"
 									placeholder={user.bio}
 									value={settings.bio}
 									onChange={onChange}
-									defaultValue={settings.bio}
 								/>
 							) : (
 								<p
-									className="cursor-pointer font-bold text-orange-700 bg-gray-200 ml-12 py-2 pl-4 mb-8"
+									className="mx-10 mt-12 cursor-pointer font-bold text-orange-700 bg-gray-200 py-2 pl-4"
 									onClick={e => {
 										setFlags({ ...flags, editBio: true })
 									}}
@@ -331,28 +335,11 @@ function Profile() {
 							</div>
 							<h5 className="mt-6 mx-3">Passions</h5>
 							<div className="flex flex-wrap mx-7">
-								{user.passion &&
-									!settings.passion &&
-									user.passion.map((passion, index) => (
-										<div key={index}>
-											<span className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200">
-												{passion}
-												<span
-													onClick={e =>
-														delPassion(passion)
-													}
-													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
-												>
-													-
-												</span>
-											</span>
-										</div>
-									))}
 								{settings.passion &&
 									settings.passion.map((passion, index) => (
 										<div key={index}>
 											<span
-												className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+												className="mx-2 mb-4 p-1 border-2 cursor-pointer rounded-lg bg-green-600 text-white"
 												key={index}
 											>
 												{passion}
@@ -360,9 +347,9 @@ function Profile() {
 													onClick={e =>
 														delPassion(passion)
 													}
-													className="absolute float-right leading-3 -m-1 text-rose-600 rounded-xl"
+													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 rounded-full"
 												>
-													-
+													x
 												</span>
 											</span>
 										</div>
@@ -423,38 +410,33 @@ function Profile() {
 										options={["male", "female", "other"]}
 									/>
 								</div>
-								<div className="grid grid-row-2 pb-8">
+								<div className="grid grid-row-3 pb-8">
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
-									<div className="grid grid-cols-4">
-										<span className="px-2">From</span>
+									<div className="grid mx-auto place-items-center values">
+										{settings.ageL} - {settings.ageH} years
+									</div>
+									<div className="slider-container">
+										<div className="slider-track"></div>
 										<input
-											className="w-24"
-											type="number"
-											max="51"
-											min="18"
-											size="2"
+											type="range"
+											id="agePref"
 											name="ageL"
-											placeholder={
-												user.preference.age
-													? user.preference.age[0]
-													: "Min"
-											}
+											min="18"
+											max="50"
+											value={settings.ageL}
+											onChange={onChange}
 										/>
-										<span className="px-2">to</span>
+
 										<input
-											className="w-24"
-											type="number"
-											max="52"
-											min="19"
-											maxLength="2"
+											type="range"
+											id="agePref"
 											name="ageH"
-											placeholder={
-												user.preference.age
-													? user.preference.age[1]
-													: "Max"
-											}
+											min="18"
+											max="50"
+											value={settings.ageH}
+											onChange={onChange}
 										/>
 									</div>
 								</div>

@@ -81,11 +81,6 @@ body {
 	color: var(--textColor);
 }
 
-p {
-	margin-bottom: 1.5rem;
-	max-width: 40em;
-}
-
 h1,
 h2,
 h3,
@@ -141,12 +136,6 @@ ul {
 	list-style-type: none;
 	padding: 0;
 }
-
-.img {
-	width: 100%;
-	display: block;
-	object-fit: cover;
-}
 /* buttons */
 
 .btn {
@@ -166,34 +155,11 @@ ul {
 	background: var(--primary-900);
 	box-shadow: var(--shadow-3);
 }
-.btn-hipster {
-	color: var(--primary-500);
-	background: var(--primary-200);
-}
-.btn-hipster:hover {
-	color: var(--primary-200);
-	background: var(--primary-700);
-}
+
 .btn-block {
 	width: 100%;
 }
-.btn-hero {
-	font-size: 1.25rem;
-	padding: 0.5rem 1.25rem;
-}
-.btn-danger {
-	background: var(--red-light);
-	color: var(--red-dark);
-}
-.btn-danger:hover {
-	background: var(--red-dark);
-	color: var(--white);
-}
-.member-btn {
-	color: var(--primary-500);
-	background: none;
-	border: none;
-}
+
 /* alerts */
 .alert {
 	padding: 0.375rem 0.75rem;
@@ -248,62 +214,18 @@ ul {
 .btn-block {
 	height: 35px;
 }
-.form-row {
-	margin-bottom: 1rem;
-}
-.form-col {
-	display: flex;
-	justify-content: space-around;
-}
-.form-textarea {
-	height: 7rem;
-}
+
 ::placeholder {
 	font-family: inherit;
 	color: var(--grey-400);
 }
-.form-alert {
-	color: var(--red-dark);
-	letter-spacing: var(--letterSpacing);
-	text-transform: capitalize;
-}
+
 .radio {
 	@apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
 }
 
 .badge {
 	@apply absolute px-1 text-center font-bold bg-green-600 text-white rounded-full ml-5 text-xs;
-}
-
-@keyframes spinner {
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-.loading {
-	width: 6rem;
-	height: 6rem;
-	border: 5px solid var(--grey-400);
-	border-radius: 50%;
-	border-top-color: var(--primary-500);
-	animation: spinner 2s linear infinite;
-}
-.loading-center {
-	margin: 0 auto;
-}
-/* title */
-
-.title {
-	text-align: center;
-}
-
-.title-underline {
-	background: var(--primary-500);
-	width: 7rem;
-	height: 0.25rem;
-	margin: 0 auto;
-	margin-top: -1rem;
 }
 
 .containerM {
@@ -315,28 +237,6 @@ ul {
 	min-height: 90vh;
 }
 
-.coffee-info {
-	text-align: center;
-	text-transform: capitalize;
-	margin-bottom: 1rem;
-	letter-spacing: var(--letterSpacing);
-}
-.coffee-info span {
-	display: block;
-}
-.coffee-info a {
-	color: var(--primary-500);
-}
-
-@media screen and (min-width: 992px) {
-	.coffee-info {
-		text-align: left;
-	}
-	.coffee-info span {
-		display: inline-block;
-		margin-right: 0.5rem;
-	}
-}
 .profile-form input[type="file"] {
 	position: absolute;
 	z-index: 1;
@@ -345,15 +245,56 @@ ul {
 	font-size: 15px;
 	color: rgb(153, 153, 153);
 }
-.change-dp {
-	position: relative;
-	top: 1.5rem;
-	right: 2rem;
-	float: right;
-	height: 1rem;
-	width: 1rem;
+
+.change-pic {
+	@apply absolute mt-4 right-6 bg-black w-4 h-4 bg-black text-white;
+}
+
+/* Age preferance range selector */
+.slider-container {
+	@apply w-full h-8 relative inline-block;
+}
+.slider-track {
+	@apply w-full h-2 absolute m-auto top-0 bottom-0 rounded-sm bg-red-500;
+}
+.slider-container > input[type="range"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	position: absolute;
 	margin: auto;
-	opacity: 0.7;
-	border-radius: 20%;
-	background: black;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	outline: none;
+	background-color: transparent;
+	pointer-events: none;
+}
+
+.slider-container > input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	height: 1em;
+	width: 1em;
+	background-color: #3264fe;
+	cursor: pointer;
+	pointer-events: auto;
+	border-radius: 50%;
+}
+.slider-container > input[type="range"]::-moz-range-thumb {
+	-moz-appearance: none;
+	height: 1em;
+	width: 1em;
+	cursor: pointer;
+	border: none;
+	border-radius: 50%;
+	background-color: #3264fe;
+	pointer-events: auto;
+}
+
+.values {
+	@apply bg-blue-800 relative px-2 py-1 rounded-lg text-white;
+}
+
+.values:before {
+	@apply content-[""] absolute h-0 w-0 m-auto left-0 right-0 -bottom-2 border-x-8 border-t-8 border-x-transparent border-t-blue-800;
 }
