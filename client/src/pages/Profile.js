@@ -137,15 +137,15 @@ function Profile() {
 		<>
 			<Bar title={"Settings"} />
 			{misc.showAlert && <Alert />}
-			<div className="container mx-auto md:w-full sm:w-2/3">
+			<div className="container mx-auto md:w-full">
 				<form
 					encType="multipart/form-data"
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
-					<div className="flex flex-wrap pb-4 container -ml-7">
-						<aside className="w-full md:w-1/4 px-2  h-full">
-							<div className="fixed border-4 w-[23vw] rounded-xl p-2 profile-form">
+					<div className="flex flex-wrap pb-4 -ml-7">
+						<aside className="w-full md:w-1/4  px-2  h-full">
+							<div className="fixed border-4  rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<div className="border-2 rounded-xl border-amber-900">
 									<IconContext.Provider
@@ -207,7 +207,9 @@ function Profile() {
 									<li className="capitalize">
 										{user.gender}
 									</li>
-									<li>{user.email}</li>
+									<li className="text-ellipsis">
+										{user.email}
+									</li>
 									<li>
 										{user.email_verified ? (
 											<span className="text-green-700">
@@ -337,7 +339,7 @@ function Profile() {
 									settings.passion.map((passion, index) => (
 										<div key={index}>
 											<span
-												className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200"
+												className="mx-2 mb-4 p-1 border-2 cursor-pointer rounded-lg bg-green-600 text-white"
 												key={index}
 											>
 												{passion}
@@ -345,9 +347,9 @@ function Profile() {
 													onClick={e =>
 														delPassion(passion)
 													}
-													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
+													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 rounded-full"
 												>
-													-
+													x
 												</span>
 											</span>
 										</div>
@@ -415,8 +417,8 @@ function Profile() {
 									<div className="grid mx-auto place-items-center values">
 										{settings.ageL} - {settings.ageH} years
 									</div>
-									<div class="slider-container">
-										<div class="slider-track"></div>
+									<div className="slider-container">
+										<div className="slider-track"></div>
 										<input
 											type="range"
 											id="agePref"
