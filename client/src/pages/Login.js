@@ -201,7 +201,7 @@ function Login() {
 					<button
 						type="button"
 						onClick={toggleMember}
-						className="member-btn"
+						className="mx-1 text-blue-500"
 					>
 						{values.isMember ? "Register" : "Login"}
 					</button>
