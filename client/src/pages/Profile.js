@@ -26,6 +26,9 @@ function Profile() {
 		bio: "",
 		preview: "",
 		preview2: "",
+		ageL: "",
+		ageH: "",
+		passion: [],
 	}
 	const [settings, setSettings] = useState(initState)
 	const [flags, setFlags] = useState({ changePS: false, editBio: false })
@@ -39,6 +42,9 @@ function Profile() {
 			setSettings(prev => ({
 				...prev,
 				preview: process.env.URL + "/image/" + user.images[0],
+				ageH: user.preference.age[1],
+				ageL: user.preference.age[0],
+				passion: user.passion,
 			}))
 		dispatch(loadOptions())
 	}, [user])
@@ -46,8 +52,15 @@ function Profile() {
 	//event handlers
 	const onChange = e => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
+		if (e.target.name == "ageL" && e.target.value > settings.ageH) {
+			setSettings({ ...settings, ageH: parseInt(e.target.value) + 1 })
+		}
+		if (e.target.name == "ageH" && e.target.value < settings.ageL) {
+			setSettings({ ...settings, ageL: parseInt(e.target.value) - 1 })
+		}
 		if (e.target.type === "file") {
 			let file = e.target.files[0]
+			console.log(e.target.files[0])
 			if (e.target.name == "upload1") {
 				setSettings(prev => ({
 					...prev,
@@ -64,12 +77,9 @@ function Profile() {
 			}
 		}
 		if (e.target.name == "passion") {
-			let upPassion = settings.passion
-				? [...settings.passion]
-				: [...user.passion]
 			setSettings(prev => ({
 				...prev,
-				passion: [...upPassion, e.target.value],
+				passion: [...settings.passion, e.target.value],
 			}))
 		} else {
 			let field_name = e.target.name
@@ -82,25 +92,15 @@ function Profile() {
 	}
 	const onSubmit = e => {
 		e.preventDefault()
-		let update = JSON.parse(JSON.stringify(settings))
-		if (update.ageL && !update.ageH) update.ageH = user.preference.age[1]
-		if (update.ageH && !update.ageL) update.ageL = user.preference.age[0]
-		console.log(update)
 		setSettings(initState)
-		dispatch(updateProfile(update))
+		dispatch(updateProfile(settings))
 	}
 	const delPassion = passion => {
 		if (!settings.changed) setSettings({ ...settings, changed: true })
-		if (settings.passion)
-			setSettings(prev => ({
-				...prev,
-				passion: settings.passion.filter(pas => pas != passion),
-			}))
-		else
-			setSettings(prev => ({
-				...prev,
-				passion: user.passion.filter(pas => pas != passion),
-			}))
+		setSettings(prev => ({
+			...prev,
+			passion: settings.passion.filter(pas => pas != passion),
+		}))
 	}
 	const removePic = (e, name, image = "") => {
 		switch (name) {
@@ -165,7 +165,7 @@ function Profile() {
 													</span>
 												)}
 												<label
-													className="change-dp"
+													className="change-pic"
 													htmlFor="upload"
 												>
 													<MdEdit />
@@ -194,7 +194,7 @@ function Profile() {
 												: "")
 										}
 									>
-										<li>
+										<li className="capitalize">
 											{user.firstName +
 												" " +
 												user.lastName}
@@ -204,7 +204,9 @@ function Profile() {
 										</li>
 									</div>
 									<li>{user.dob}</li>
-									<li>{user.gender}</li>
+									<li className="capitalize">
+										{user.gender}
+									</li>
 									<li>{user.email}</li>
 									<li>
 										{user.email_verified ? (
@@ -331,23 +333,6 @@ function Profile() {
 							</div>
 							<h5 className="mt-6 mx-3">Passions</h5>
 							<div className="flex flex-wrap mx-7">
-								{user.passion &&
-									!settings.passion &&
-									user.passion.map((passion, index) => (
-										<div key={index}>
-											<span className="mx-2 mb-2 p-1 border-2 cursor-pointer rounded-md bg-slate-200">
-												{passion}
-												<span
-													onClick={e =>
-														delPassion(passion)
-													}
-													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
-												>
-													-
-												</span>
-											</span>
-										</div>
-									))}
 								{settings.passion &&
 									settings.passion.map((passion, index) => (
 										<div key={index}>
@@ -360,7 +345,7 @@ function Profile() {
 													onClick={e =>
 														delPassion(passion)
 													}
-													className="absolute float-right leading-3 -m-1 text-rose-600 rounded-xl"
+													className="absolute float-right -mt-1 -ml-1 leading-3 text-red-100 bg-red-900 h-3 px-1 pb-1 rounded-xl"
 												>
 													-
 												</span>
@@ -423,38 +408,33 @@ function Profile() {
 										options={["male", "female", "other"]}
 									/>
 								</div>
-								<div className="grid grid-row-2 pb-8">
+								<div className="grid grid-row-3 pb-8">
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
-									<div className="grid grid-cols-4">
-										<span className="px-2">From</span>
+									<div className="grid mx-auto place-items-center values">
+										{settings.ageL} - {settings.ageH} years
+									</div>
+									<div class="slider-container">
+										<div class="slider-track"></div>
 										<input
-											className="w-24"
-											type="number"
-											max="51"
-											min="18"
-											size="2"
+											type="range"
+											id="agePref"
 											name="ageL"
-											placeholder={
-												user.preference.age
-													? user.preference.age[0]
-													: "Min"
-											}
+											min="18"
+											max="50"
+											value={settings.ageL}
+											onChange={onChange}
 										/>
-										<span className="px-2">to</span>
+
 										<input
-											className="w-24"
-											type="number"
-											max="52"
-											min="19"
-											maxLength="2"
+											type="range"
+											id="agePref"
 											name="ageH"
-											placeholder={
-												user.preference.age
-													? user.preference.age[1]
-													: "Max"
-											}
+											min="18"
+											max="50"
+											value={settings.ageH}
+											onChange={onChange}
 										/>
 									</div>
 								</div>
