@@ -143,7 +143,7 @@ function Profile() {
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
-					<div className="flex flex-wrap pb-4 -ml-7">
+					<div className="flex flex-wrap pb-4 -ml-7 container">
 						<aside className="w-full md:w-1/4  px-2  h-full">
 							<div className="fixed border-4  rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
@@ -407,14 +407,14 @@ function Profile() {
 												: ""
 										}
 										name="genderPreference"
-										options={["male", "female", "other"]}
+										options={["Male", "Female", "Other"]}
 									/>
 								</div>
 								<div className="grid grid-row-3 pb-8">
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
-									<div className="grid mx-auto place-items-center values">
+									<div className="grid mx-auto place-items-center slider-values">
 										{settings.ageL} - {settings.ageH} years
 									</div>
 									<div className="slider-container">

@@ -291,10 +291,10 @@ ul {
 	pointer-events: auto;
 }
 
-.values {
-	@apply bg-blue-800 relative px-2 py-1 rounded-lg text-white;
+.slider-values {
+	@apply bg-blue-800 relative px-2 py-1 rounded-lg text-white text-sm;
 }
 
-.values:before {
+.slider-values:before {
 	@apply content-[""] absolute h-0 w-0 m-auto left-0 right-0 -bottom-2 border-x-8 border-t-8 border-x-transparent border-t-blue-800;
 }
