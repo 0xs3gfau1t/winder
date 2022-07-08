@@ -13,6 +13,7 @@ import { loadExplore, sendLike } from "../actions/explore"
 import Carousel from "../components/Carousel"
 import UserDetails from "../components/UserDetails"
 import { Bar } from "../components"
+import Alert from "../components/Alert"
 
 // Styles
 import ExploreStyled from "../assets/wrappers/Explore"
@@ -20,6 +21,7 @@ import ExploreStyled from "../assets/wrappers/Explore"
 function Explore() {
 	const misc = useSelector(state => state.misc)
 	const users = useSelector(state => state.explore.users)
+	const user = useSelector(state => state.auth.user)
 	const current = useSelector(state => state.explore.current)
 
 	const dispatch = useDispatch()
@@ -28,14 +30,17 @@ function Explore() {
 		dispatch(loadExplore())
 	}, [])
 
-	const accept = e =>
-		(users[current] && dispatch(sendLike(users[current].id))) ||
-		console.log("No user to accept.")
+	const accept = e => {
+		if (users[current]) dispatch(sendLike(users[current].id))
+		else console.log("No user to accept.")
+	}
 
-	if (misc.showAlert) return <Navigate to="/profile" />
+	if (!user.email_verified) return <Navigate to="/profile" />
+
 	return (
 		<>
 			<Bar title={"Explore"} />
+			{misc.showAlert && <Alert />}
 			<ExploreStyled>
 				<div className="outer">
 					<div className="carousel-wrapper">

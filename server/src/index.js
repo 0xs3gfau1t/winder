@@ -42,7 +42,7 @@ app.use(
 	checkEmailVerification,
 	require("./Routes/Explore.js")
 )
-app.use("/changepassword", require("./Routes/ChangePassword.js"))
+app.use("/forgotpassword", require("./Routes/ForgotPassword.js"))
 app.use("/image", require("./Routes/Image.js"))
 
 // Start the server specied in PORT from .env

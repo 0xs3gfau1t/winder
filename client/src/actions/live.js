@@ -23,7 +23,7 @@ export const chatUpdate = data => (dispatch, getState) => {
 		dispatch({
 			type: FETCH_ACTIVE_CHAT,
 			payload: [data],
-			id: data.senderId,
+			id: data.relnID,
 			live: true,
 		})
 	}
