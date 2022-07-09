@@ -23,7 +23,7 @@ const FormSelect = ({ name, options = [], defaultV, hint }) => {
 		<select
 			name={name}
 			onChange={onchange}
-			className="py-1 px-4 bg-red-500 text-white font-black text-base h-8 border-red-700 border-2"
+			className="py-1 px-4 bg-red-500 text-white text-base h-8 border-red-700 border-2"
 		>
 			<option value="" hidden={!defaultV} className="bg-blue-500">
 				{defaultV ? defaultV : hint || "Select one"}

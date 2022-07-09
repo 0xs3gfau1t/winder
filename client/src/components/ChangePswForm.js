@@ -34,7 +34,7 @@ const ChangePswForm = ({ handlePopupClose }) => {
 		handlePopupClose()
 	}
 	return (
-		<div className="mx-auto w-2/3">
+		<div className="mx-auto w-full">
 			{misc.showAlert && <Alert />}
 			<form
 				onChange={onChange}
