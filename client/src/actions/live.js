@@ -23,7 +23,7 @@ export const chatUpdate = data => (dispatch, getState) => {
 		dispatch({
 			type: FETCH_ACTIVE_CHAT,
 			payload: [data],
-			id: data.senderId,
+			id: data.relnID,
 			live: true,
 		})
 	}
@@ -74,7 +74,7 @@ export const fetchActiveChat =
 	}
 
 export const sendMessage = (text, id) => dispatch => {
-	console.log(id)
+	// console.log(id)
 	axios
 		.post(
 			URL + `/messages/${id}`,

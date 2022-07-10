@@ -2,7 +2,7 @@ import React from "react"
 
 const FormText = ({ type, name, value, handleChange, labelText }) => {
 	return (
-		<div className="form-row">
+		<div className="mb-4">
 			<label htmlFor={name} className="form-label">
 				{labelText || name}
 			</label>

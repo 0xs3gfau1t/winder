@@ -90,7 +90,8 @@ export const updateProfile = data => dispatch => {
 	delete update["images"]
 	delete update["changed"]
 	delete update["preview"]
-	if (update.hasOwnProperty("ageL") && update.hasOwnProperty("ageH")) {
+	delete update["preview2"]
+	if (update.ageL && update.ageH) {
 		update["agePreference"] = [update.ageL, update.ageH]
 		delete update["ageL"]
 		delete update["ageH"]
@@ -127,7 +128,7 @@ export const updateProfile = data => dispatch => {
 			.post(url + `/image`, formData, config)
 			.then(res => {
 				dispatch(displayAlert("Profile Updated...", "success", true))
-				setTimeout(() => window.location.reload(), 1000)
+				// setTimeout(() => window.location.reload(), 1000)
 			})
 			.catch(err => {
 				console.log(err)
@@ -169,6 +170,44 @@ export const changePass = (oldPass, new1) => dispatch => {
 		})
 		.catch(err => {
 			console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger"))
+		})
+}
+
+export const forgotPassword = email => dispatch => {
+	axios
+		.post(url + `/forgotpassword`, { email: email })
+		.then(res => {
+			dispatch(
+				displayAlert(
+					"Password Reset Requested, please check your mail",
+					"success"
+				)
+			)
+		})
+		.catch(err => {
+			// console.log(err)
+			dispatch(displayAlert(err.response.data.message, "danger"))
+		})
+}
+
+export const resetPassword = (password, token) => dispatch => {
+	console.log(password, token)
+	axios
+		.post(url + `/forgotpassword/${token}`, { password: password })
+		.then(res => {
+			dispatch(
+				displayAlert(
+					"Password Changed, redirecting to login",
+					"success"
+				)
+			)
+			setTimeout(() => {
+				window.location = "/login"
+			}, 3000)
+		})
+		.catch(err => {
+			// console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger"))
 		})
 }

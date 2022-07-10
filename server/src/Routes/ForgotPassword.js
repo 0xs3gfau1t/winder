@@ -9,7 +9,7 @@ router = express.Router()
 
 router
 	.post("/:authtoken", async (req, res) => {
-		const t = req.params.authtoken
+		const t = atob(req.params.authtoken)
 
 		const { data, expired } = verifyToken(t)
 
@@ -20,7 +20,7 @@ router
 			// And store a new refresh token
 
 			const pass = await bcrypt.hash(req.body.password, 10)
-
+			// console.log("Data:", data)
 			const usr = await userModel.findOneAndUpdate(
 				{ email: data.email },
 				{
@@ -29,10 +29,9 @@ router
 				}
 			)
 
-			usr.save()
+			usr.save({ validateBeforeSave: false })
 			res.json({ success: true })
-		}
-		res.json({ success: false, error: "Token expired." })
+		} else res.status(500).json({ success: false, error: "Token expired." })
 	})
 	.post("/", async (req, res) => {
 		const mail = req.body.email
@@ -40,13 +39,17 @@ router
 		console.log("Received email: ", mail)
 
 		if (await userModel.findOne({ email: mail })) {
-			const token = generateToken({ email: mail }, `${10 * 60}s`)
+			const token = btoa(generateToken({ email: mail }, `${10 * 60}s`))
 			console.log("Token generated as: ", token)
 
 			await sendForgotPasswordEmail(mail, token)
+			res.json({ success: true })
+		} else {
+			res.status(404).json({
+				success: false,
+				message: "User not found with this mail ",
+			})
 		}
-
-		res.json({ success: true })
 	})
 
 module.exports = router

@@ -59,8 +59,8 @@ const randomProp = arr => {
 
 const populateDB = async count => {
 	for (let i = 0; i < count; i++) {
-		let email = randomString(6, 15)
-		let password = randomString(4, 8)
+		let email = `${randomString(6, 15)}@gmail.com`
+		let password = randomString(8, 16)
 		fs.appendFile(
 			"userCreds.txt",
 			`Email: ${email}\nPassword: ${password}\n\n`,
@@ -80,12 +80,12 @@ const populateDB = async count => {
 				randomProp(availableOptions.passion)
 			),
 			// Uncomment this if you want random preference instead of preferred ones
-			// preference: {
-			// 	gender: randomProp(availableOptions.genderPreference),
-			// 	program: randomProp(availableOptions.program),
-			// 	university: randomProp(availableOptions.university),
-			// 	age: [18, 40],
-			// },
+			preference: {
+				gender: randomProp(availableOptions.genderPreference),
+				program: randomProp(availableOptions.program),
+				university: randomProp(availableOptions.university),
+				age: [18, 40],
+			},
 			email,
 			password: await bcrypt.hash(password, 10),
 			dob: new Date(new Date().setFullYear(randomProp(availableOptions.dob))),

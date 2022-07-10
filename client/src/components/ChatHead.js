@@ -2,9 +2,6 @@ import React, { useEffect } from "react"
 
 function ChatHead({ chat, onClick, relation }) {
 	const data = {
-		name: "Ram Singh Pandey",
-		lastMsg: "O hency, K xa khabar",
-		lastTime: "3h",
 		dp: "https://thispersondoesnotexist.com/image",
 	}
 

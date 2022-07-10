@@ -13,16 +13,18 @@ const ChatBody = ({ user }) => {
 	const activeChat = useSelector(state => state.live.activeChat)
 	const ref = useRef(null)
 	const dispatch = useDispatch()
-
+	const [count, setCount] = useState(0)
 	useEffect(() => {
 		dispatch(fetchActiveChat(user.relnID))
+		ref.current.scrollTop = ref.current.scrollHeight
 	}, [])
 
 	useEffect(() => {
-		if (activeChat.live) {
+		setCount(count + 1)
+		if (activeChat.live || count < 4) {
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
-			ref.current.scrollTop = 70
+			ref.current.scrollTop = 55
 		}
 	}, [activeChat])
 
@@ -50,7 +52,7 @@ const ChatBody = ({ user }) => {
 						)
 					}
 				},
-				{ threshold: 1, rootMargin: "-100px 0px 0px 0px" }
+				{ threshold: 1, rootMargin: "-100px 0px -100px 0px" }
 			)
 			if (node) observer.current.observe(node)
 		},
@@ -63,7 +65,7 @@ const ChatBody = ({ user }) => {
 				<div className="relative flex items-center p-3 border-b border-gray-300">
 					<img
 						className="object-cover w-10 h-10 rounded-full"
-						src={user.dp ? data.dp : data.dp}
+						src={user.dp ? user.dp : data.dp}
 						alt={user.userName}
 					/>
 					<span className="block ml-2 font-bold text-gray-600">
@@ -72,7 +74,7 @@ const ChatBody = ({ user }) => {
 				</div>
 				<div
 					ref={ref}
-					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y"
+					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y scroll-smooth"
 				>
 					<ul className="space-y-2">
 						{activeChat.data.map((message, index) => {

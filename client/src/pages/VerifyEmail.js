@@ -20,7 +20,7 @@ const Verify = () => {
 		<Wrapper className="full-page">
 			<div>
 				<img src={img} alt="not found" />
-				<Alert />
+				<Alert float={false} />
 				<Link to="/login" onClick={handleLog}>
 					Login to continue
 				</Link>

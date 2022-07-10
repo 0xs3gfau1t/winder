@@ -9,6 +9,7 @@ import ImageUpload from "./ImageUpload"
 import { Other, Own } from "./Messages"
 import Popup from "./Popup"
 import ChangePswForm from "./ChangePswForm"
+import ForgotPsw from "./ForgotPsw"
 export {
 	Logo,
 	FormText,
@@ -23,4 +24,5 @@ export {
 	Own,
 	Popup,
 	ChangePswForm,
+	ForgotPsw,
 }

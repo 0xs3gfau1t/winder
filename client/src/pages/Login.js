@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker"
 import { useDispatch, useSelector } from "react-redux"
 import { Navigate } from "react-router-dom"
 import Wrapper from "../assets/wrappers/LandingPage"
-import { Logo, FormText, Alert } from "../components"
+import { Logo, FormText, Alert, ForgotPsw, Popup } from "../components"
 import { displayAlert } from "../actions/misc"
 import { register, login } from "../actions/auth"
 
@@ -35,13 +35,22 @@ function Login() {
 
 		if (!email || !password || (!isMember && !firstName && !password2)) {
 			const message = "One or more field is missing!"
-			dispatch(displayAlert(message), "danger")
+			dispatch(displayAlert(message, "danger"))
 			return
 		}
 		if (password !== password2 && !isMember) {
 			const message =
 				"Paswords didn't match. Don't get too desparate to find love"
 			dispatch(displayAlert(message, "danger"))
+			return
+		}
+		if (password.length < 8 && !isMember) {
+			dispatch(
+				displayAlert(
+					"Password must be atleast 8 character long.",
+					"danger"
+				)
+			)
 			return
 		}
 		if (isMember) dispatch(login(values))
@@ -54,6 +63,10 @@ function Login() {
 		setValues({ ...values, dob: date })
 	}
 	const flag = useSelector(state => state.auth)
+	const [forgot, setForgot] = useState(false)
+	const handleClose = e => {
+		setForgot(false)
+	}
 
 	if (flag.isAuthenticated || flag.cookie) {
 		return <Navigate to="/explore" />
@@ -66,7 +79,7 @@ function Login() {
 			>
 				<Logo />
 				<h3>{values.isMember ? "Login" : "Register"}</h3>
-				{misc.showAlert && <Alert />}
+				{misc.showAlert && <Alert float={false} />}
 				{/* name input */}
 				{!values.isMember && (
 					<div className="grid grid-cols-2 gap-4">
@@ -164,7 +177,7 @@ function Login() {
 					<FormText
 						type="password"
 						name="password2"
-						labelText="Confirmn password"
+						labelText="Confirm password"
 						value={values.password2}
 						handleChange={handleChange}
 					/>
@@ -173,6 +186,14 @@ function Login() {
 					submit
 				</button>
 				<p className="m-2">
+					{values.isMember && (
+						<span
+							className="block text-blue-700 cursor-pointer"
+							onClick={e => setForgot(true)}
+						>
+							Forgot Password?
+						</span>
+					)}
 					{values.isMember
 						? "Not a member yet?"
 						: "Already a member?"}
@@ -180,12 +201,15 @@ function Login() {
 					<button
 						type="button"
 						onClick={toggleMember}
-						className="member-btn"
+						className="mx-1 text-blue-500"
 					>
 						{values.isMember ? "Register" : "Login"}
 					</button>
 				</p>
 			</form>
+			<Popup clicked={forgot} close={handleClose}>
+				<ForgotPsw />
+			</Popup>
 		</Wrapper>
 	)
 }

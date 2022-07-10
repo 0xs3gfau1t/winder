@@ -69,8 +69,11 @@ async function changePassword(req, response) {
 	const user = await userModel.findOne({ _id: req.userdata._id }, [
 		"password",
 	])
-
-	if (await bcrypt.compare(oldPassword, user.password)) {
+	if (newPassword.length < 8) {
+		response.status(401)
+		res.success = false
+		res.message = "Password must be at least 8 characters long."
+	} else if (await bcrypt.compare(oldPassword, user.password)) {
 		user.password = await bcrypt.hash(newPassword, 10)
 		try {
 			await user.save()
