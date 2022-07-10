@@ -93,6 +93,7 @@ function Profile() {
 	const onSubmit = e => {
 		e.preventDefault()
 		setSettings(initState)
+		setFlags({ changePS: false, editBio: false })
 		dispatch(updateProfile(settings))
 	}
 	const delPassion = passion => {
@@ -143,36 +144,32 @@ function Profile() {
 					onChange={onChange}
 					onSubmit={onSubmit}
 				>
-					<div className="flex flex-wrap pb-4 -ml-7">
-						<aside className="w-full md:w-1/4  px-2  h-full">
-							<div className="fixed border-4  rounded-xl p-2 profile-form">
+					<div className="flex flex-wrap pb-4 -ml-7 container">
+						<aside className="w-full md:w-1/4  px-2  h-full float-left">
+							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[23vw] sm:w-full sm:content-center border-2 border-green-700  rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div className="border-2 rounded-xl border-amber-900">
-									<IconContext.Provider
-										value={{ color: "white", size: "1em" }}
-									>
-										{!settings.preview2 && (
-											<>
-												{settings.isDP && (
-													<span
-														className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
-														name="dp"
-														onClick={e =>
-															removePic(e, "dp")
-														}
-													>
-														<GoX name="dp" />
-													</span>
-												)}
-												<label
-													className="change-pic"
-													htmlFor="upload"
+								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 w-fit">
+									{!settings.preview2 && (
+										<>
+											{settings.isDP && (
+												<span
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													name="dp"
+													onClick={e =>
+														removePic(e, "dp")
+													}
 												>
-													<MdEdit />
-												</label>
-											</>
-										)}
-									</IconContext.Provider>
+													<GoX name="dp" />
+												</span>
+											)}
+											<label
+												className="change-pic"
+												htmlFor="upload"
+											>
+												<MdEdit />
+											</label>
+										</>
+									)}
 									<img
 										className="h-58 w-58"
 										src={settings.preview}
@@ -185,24 +182,14 @@ function Profile() {
 										name="upload1"
 									/>
 								</div>
-								<ul className="permanent-info m-2">
-									<div
-										className={
-											"grid" +
-											(user.email_verified
-												? "grid-col-2"
-												: "")
-										}
-									>
-										<li className="capitalize">
-											{user.firstName +
-												" " +
-												user.lastName}
-											{user.email_verified && (
-												<GoVerified className="ml-32 float-right" />
-											)}
-										</li>
-									</div>
+								<ul className="sm:text-center permanent-info m-2">
+									<li className="capitalize">
+										{user.firstName + " " + user.lastName}
+										{user.email_verified && (
+											<GoVerified className="inline ml-2" />
+										)}
+									</li>
+
 									<li>{user.dob}</li>
 									<li className="capitalize">
 										{user.gender}
@@ -243,13 +230,13 @@ function Profile() {
 							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-4 pb-6">
+							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-b-green-700 pb-6">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
 											<div
 												key={image}
-												className="border-2 rounded-xl border-amber-900"
+												className="border-2 w-fit rounded-xl border-amber-900"
 											>
 												<span
 													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
@@ -286,28 +273,40 @@ function Profile() {
 								htmlFor="bio"
 								className="mt-4 mx-10 form-label font-bold text-lg"
 							>
-								Bio
-							</label>
-							{flags.editBio ? (
-								<input
-									type="text"
-									name="bio"
-									size="70"
-									className="mx-10 my-2 text-orange-700 h-12 font-bold resize-none"
-									placeholder={user.bio}
-									value={settings.bio}
-									onChange={onChange}
-								/>
-							) : (
-								<p
-									className="mx-10 mt-12 cursor-pointer font-bold text-orange-700 bg-gray-200 py-2 pl-4"
+								Bio{" "}
+								<span
+									className="inline-block hover:text-red-500"
 									onClick={e => {
 										setFlags({ ...flags, editBio: true })
 									}}
 								>
-									{user.bio}
-								</p>
-							)}
+									<MdEdit />
+								</span>
+							</label>
+
+							<Popup
+								close={e => {
+									setFlags({ ...flags, editBio: false })
+								}}
+								clicked={flags.editBio}
+							>
+								<div className="grid grid-row-2 flex justify-center">
+									<h5 className="text-center">Edit Bio</h5>
+									<textarea
+										type="text"
+										name="bio"
+										className="block h-32 w-96 my-2 text-orange-700 font-bold resize-none bg-gray-200"
+										placeholder={user.bio}
+										value={settings.bio}
+										onChange={onChange}
+									/>
+								</div>
+							</Popup>
+
+							<p className="mt-12 cursor-pointer font-bold text-orange-700 pb-4">
+								{user.bio}
+							</p>
+
 							<div className="grid grid-cols-2 gap-5 px-1 mx-10">
 								<div className="grid grid-row-2">
 									<label
@@ -339,7 +338,7 @@ function Profile() {
 									settings.passion.map((passion, index) => (
 										<div key={index}>
 											<span
-												className="mx-2 mb-4 p-1 border-2 cursor-pointer rounded-lg bg-green-600 text-white"
+												className="mx-2 mb-4 p-1 border-2 border-green-900 cursor-pointer rounded-lg bg-green-600 text-white"
 												key={index}
 											>
 												{passion}
@@ -407,14 +406,14 @@ function Profile() {
 												: ""
 										}
 										name="genderPreference"
-										options={["male", "female", "other"]}
+										options={["Male", "Female", "Other"]}
 									/>
 								</div>
 								<div className="grid grid-row-3 pb-8">
 									<label htmlFor="age" className="form-label">
 										Age Range
 									</label>
-									<div className="grid mx-auto place-items-center values">
+									<div className="grid mx-auto place-items-center slider-values">
 										{settings.ageL} - {settings.ageH} years
 									</div>
 									<div className="slider-container">
@@ -446,8 +445,17 @@ function Profile() {
 					{settings.changed && <SaveChanges />}
 				</form>
 			</div>
-			<Popup close={handlePopupClose} clicked={flags.changePS}>
-				<ChangePswForm handlePopupClose={handlePopupClose} />
+			<Popup
+				close={e => {
+					setFlags({ ...flags, changePS: false })
+				}}
+				clicked={flags.changePS}
+			>
+				<ChangePswForm
+					handlePopupClose={e => {
+						setFlags({ ...flags, changePS: false })
+					}}
+				/>
 			</Popup>
 		</>
 	)

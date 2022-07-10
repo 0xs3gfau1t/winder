@@ -20,8 +20,12 @@ const FormText = ({ type, name, value, handleChange, labelText }) => {
 
 const FormSelect = ({ name, options = [], defaultV, hint }) => {
 	return (
-		<select name={name} onChange={onchange} className="h-9">
-			<option value="" hidden={!defaultV}>
+		<select
+			name={name}
+			onChange={onchange}
+			className="py-1 px-4 bg-red-500 text-white text-base h-8 border-red-700 border-2"
+		>
+			<option value="" hidden={!defaultV} className="bg-blue-500">
 				{defaultV ? defaultV : hint || "Select one"}
 			</option>
 			{options.map((opt, index) => (
