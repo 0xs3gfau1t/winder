@@ -18,29 +18,16 @@ html {
 :root {
 	/* colors */
 	--primary-50: #e0fcff;
-	--primary-100: #bef8fd;
-	--primary-200: #87eaf2;
-	--primary-300: #54d1db;
-	--primary-400: #38bec9;
 	--primary-500: #f24f1ee3;
-	--primary-600: #14919b;
 	--primary-700: #cc3b0fcb;
-	--primary-800: #0a6c74;
 	--primary-900: #f24e1e;
 
 	/* grey */
 	--grey-50: #f0f4f8;
-	--grey-100: #d9e2ec;
 	--grey-200: #bcccdc;
-	--grey-300: #9fb3c8;
 	--grey-400: #829ab1;
-	--grey-500: #627d98;
-	--grey-600: #486581;
-	--grey-700: #334e68;
-	--grey-800: #243b53;
 	--grey-900: #102a43;
 	/* rest of the colors */
-	--black: #222;
 	--white: #fff;
 	--red-light: #f8d7da;
 	--red-dark: #842029;
@@ -51,7 +38,6 @@ html {
 	--headingFont: "Roboto Condensed", Sans-Serif;
 	--bodyFont: "Cabin", Sans-Serif;
 	--small-text: 0.875rem;
-	--extra-small-text: 0.7em;
 	/* rest of the vars */
 	--backgroundColor: var(--grey-50);
 	--textColor: var(--grey-900);
@@ -59,12 +45,9 @@ html {
 	--letterSpacing: 1px;
 	--transition: 0.3s ease-in-out all;
 	--max-width: 1120px;
-	--fixed-width: 600px;
 	--fluid-width: 90vw;
-	--breakpoint-lg: 992px;
 	--nav-height: 6rem;
 	/* box shadow*/
-	--shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 	--shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
 		0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	--shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
