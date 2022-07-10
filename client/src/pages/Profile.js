@@ -145,35 +145,31 @@ function Profile() {
 					onSubmit={onSubmit}
 				>
 					<div className="flex flex-wrap pb-4 -ml-7 container">
-						<aside className="w-full md:w-1/4  px-2  h-full">
-							<div className="fixed border-4  rounded-xl p-2 profile-form">
+						<aside className="w-full md:w-1/4  px-2  h-full float-left">
+							<div className="grid justify-items-center left-0 lg:fixed md:fixed md:w-[23vw] sm:w-full sm:content-center border-4  rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div className="border-2 rounded-xl border-amber-900">
-									<IconContext.Provider
-										value={{ color: "white", size: "1em" }}
-									>
-										{!settings.preview2 && (
-											<>
-												{settings.isDP && (
-													<span
-														className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
-														name="dp"
-														onClick={e =>
-															removePic(e, "dp")
-														}
-													>
-														<GoX name="dp" />
-													</span>
-												)}
-												<label
-													className="change-pic"
-													htmlFor="upload"
+								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 w-fit">
+									{!settings.preview2 && (
+										<>
+											{settings.isDP && (
+												<span
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													name="dp"
+													onClick={e =>
+														removePic(e, "dp")
+													}
 												>
-													<MdEdit />
-												</label>
-											</>
-										)}
-									</IconContext.Provider>
+													<GoX name="dp" />
+												</span>
+											)}
+											<label
+												className="change-pic"
+												htmlFor="upload"
+											>
+												<MdEdit />
+											</label>
+										</>
+									)}
 									<img
 										className="h-58 w-58"
 										src={settings.preview}
@@ -186,24 +182,14 @@ function Profile() {
 										name="upload1"
 									/>
 								</div>
-								<ul className="permanent-info m-2">
-									<div
-										className={
-											"grid" +
-											(user.email_verified
-												? "grid-col-2"
-												: "")
-										}
-									>
-										<li className="capitalize">
-											{user.firstName +
-												" " +
-												user.lastName}
-											{user.email_verified && (
-												<GoVerified className="ml-32 float-right" />
-											)}
-										</li>
-									</div>
+								<ul className="sm:text-center permanent-info m-2">
+									<li className="capitalize">
+										{user.firstName + " " + user.lastName}
+										{user.email_verified && (
+											<GoVerified className="inline ml-2" />
+										)}
+									</li>
+
 									<li>{user.dob}</li>
 									<li className="capitalize">
 										{user.gender}
@@ -250,7 +236,7 @@ function Profile() {
 										return (
 											<div
 												key={image}
-												className="border-2 rounded-xl border-amber-900"
+												className="border-2 w-fit rounded-xl border-amber-900"
 											>
 												<span
 													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"

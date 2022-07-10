@@ -8,7 +8,7 @@ const Alert = ({ float = true }) => {
 		<div
 			className={`${
 				!float ? "my-2" : "fixed w-1/3 top-8"
-			} opacity-95 left-1/3 text-center drop-shadow-lg border px-4 py-2 rounded alert-${alertType}`}
+			} opacity-95 left-1/3 text-center drop-shadow-lg border px-4 py-2 rounded z-[100] alert-${alertType}`}
 			role="alert"
 		>
 			<span className="block sm:inline">{alertMsg}</span>

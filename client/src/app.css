@@ -247,7 +247,7 @@ ul {
 }
 
 .change-pic {
-	@apply absolute mt-4 right-6 bg-black w-4 h-4 bg-black text-white;
+	@apply mt-4 ml-5 bg-black w-4 h-4 bg-black text-white;
 }
 
 /* Age preferance range selector */
