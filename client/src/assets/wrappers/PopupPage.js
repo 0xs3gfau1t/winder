@@ -22,8 +22,8 @@ const Wrapper = styled.main`
 
 	.popup-inner .close-btn {
 		position: absolute;
-		top: 10px;
-		right: 10px;
+		top: 20px;
+		right: 25px;
 	}
 
 	// .popup-inner .close-btn {
