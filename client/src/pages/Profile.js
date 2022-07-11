@@ -406,7 +406,7 @@ function Profile() {
 												: ""
 										}
 										name="genderPreference"
-										options={["Male", "Female", "Other"]}
+										options={["male", "female", "other"]}
 									/>
 								</div>
 								<div className="grid grid-row-3 pb-8">
