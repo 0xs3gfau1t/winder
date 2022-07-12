@@ -15,11 +15,14 @@ const Wrapper = styled.main`
 	.popup-inner {
 		position: relative;
 		padding: 2vw 7vw;
-		width: fit-content;
+		max-width: 70vw;
 		background-color: #fff;
 		border-radius: 1rem;
 	}
 
+	.popup-inner:hover {
+		box-shadow: -11px 1px 15px 12px #e652192b;
+	}
 	.popup-inner .close-btn {
 		position: absolute;
 		top: 1.25em;

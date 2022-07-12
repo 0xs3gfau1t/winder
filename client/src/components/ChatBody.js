@@ -22,7 +22,7 @@ const ChatBody = ({ user }) => {
 
 	useEffect(() => {
 		setCount(count + 1)
-		if (activeChat.live || count < 7) {
+		if (activeChat.live || count < 5) {
 			console.log("LOL")
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
