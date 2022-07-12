@@ -114,7 +114,7 @@ userSchema.pre("save", function (next) {
 	next()
 })
 
-// get data in JSON format form model
+// get data in JSON format from model
 userSchema.options.toJSON = {
 	transform: function (doc, ret, options) {
 		ret.id = ret._id.toString()
@@ -128,9 +128,8 @@ userSchema.options.toJSON = {
 				year: "numeric",
 			})
 		const genderRevMap = { 1: "male", "-1": "female", 0: "other" }
-
-		if (ret.preference?.gender)
-			ret.preference.gender = genderRevMap[ret.preference?.gender]
+		if ("gender" in ret.preference)
+			ret.preference.gender = genderRevMap[ret.preference.gender]
 
 		if (ret.gender) ret.gender = genderRevMap[ret.gender]
 		return ret

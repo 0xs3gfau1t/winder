@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import InputEmoji from "react-input-emoji"
 import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
@@ -21,21 +22,19 @@ const ChatBody = ({ user }) => {
 
 	useEffect(() => {
 		setCount(count + 1)
-		if (activeChat.live || count < 4) {
+		if (activeChat.live || count < 5) {
+			console.log("LOL")
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
+			console.log("LOL2")
 			ref.current.scrollTop = 55
 		}
 	}, [activeChat])
 
 	const sendChat = e => {
-		if (message.trim != "") dispatch(sendMessage(message, activeChat.id))
-		setMessage("")
-	}
-
-	const enterKey = e => {
-		if (e.key === "Enter") {
-			sendChat(e)
+		if (message.trim() !== "") {
+			dispatch(sendMessage(message, activeChat.id))
+			setMessage("")
 		}
 	}
 
@@ -96,15 +95,15 @@ const ChatBody = ({ user }) => {
 				</div>
 
 				<div className="flex items-center justify-between w-full p-3 border-t border-gray-300">
-					<input
+					<InputEmoji
 						type="text"
 						placeholder="Type here to send..."
 						className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
 						name="message"
 						value={message}
-						onChange={e => setMessage(e.target.value)}
-						onKeyPress={e => enterKey(e)}
-						required
+						onChange={setMessage}
+						onEnter={sendChat}
+						theme="light"
 					/>
 					<button type="submit" onClick={sendChat}>
 						<IconContext.Provider
