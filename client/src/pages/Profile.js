@@ -291,11 +291,12 @@ function Profile() {
 								clicked={flags.editBio}
 							>
 								<div className="grid grid-row-2 flex justify-center">
-									<h5 className="text-center">Edit Bio</h5>
+									<h4 className="text-center">Edit Bio</h4>
 									<textarea
 										type="text"
 										name="bio"
-										className="block h-32 w-96 my-2 text-orange-700 font-bold resize-none bg-gray-200"
+										cols={"40"}
+										className="block h-32 w-[96] mb-1 text-orange-700 font-bold resize-none"
 										placeholder={user.bio}
 										value={settings.bio}
 										onChange={onChange}
