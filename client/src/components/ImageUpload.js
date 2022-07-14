@@ -6,7 +6,7 @@ const ImageUpload = ({ settings, removePic }) => {
 	return (
 		<>
 			{!settings.isDP && (
-				<div className="flex border-2 m-4">
+				<div className="flex">
 					{settings.preview2 ? (
 						<div className="border-2 rounded-xl border-amber-900">
 							<span
@@ -17,7 +17,7 @@ const ImageUpload = ({ settings, removePic }) => {
 							</span>
 							<img
 								src={settings.preview2}
-								className="h-58 w-58"
+								className="h-56 w-56"
 							/>
 						</div>
 					) : (

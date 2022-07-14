@@ -146,9 +146,9 @@ function Profile() {
 				>
 					<div className="flex flex-wrap pb-4 -ml-7 container">
 						<aside className="w-full md:w-1/4  px-2  h-full float-left">
-							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[23vw] sm:w-full sm:content-center border-2 border-green-700  rounded-xl p-2 profile-form">
+							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[24vw] sm:w-full sm:content-center border-2 border-green-700  rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 w-fit">
+								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 w-56 h-56">
 									{!settings.preview2 && (
 										<>
 											{settings.isDP && (
@@ -162,16 +162,18 @@ function Profile() {
 													<GoX name="dp" />
 												</span>
 											)}
-											<label
-												className="change-pic"
-												htmlFor="upload"
-											>
-												<MdEdit />
-											</label>
+											{!settings.isDP && (
+												<label
+													className="change-pic"
+													htmlFor="upload"
+												>
+													<MdEdit />
+												</label>
+											)}
 										</>
 									)}
 									<img
-										className="h-58 w-58"
+										className="h-56 w-56"
 										src={settings.preview}
 										alt={user.firstName}
 									/>
@@ -230,13 +232,13 @@ function Profile() {
 							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-b-green-700 pb-6">
+							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3  border-b-2 border-b-green-700 pb-4">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
 											<div
 												key={image}
-												className="border-2 w-fit rounded-xl border-amber-900"
+												className="border-2 w-fit rounded-xl border-amber-900 h-60 w-60 my-1"
 											>
 												<span
 													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
@@ -251,7 +253,7 @@ function Profile() {
 													<GoX />
 												</span>
 												<img
-													className="h-58 w-58"
+													className="h-60 w-60"
 													src={
 														process.env.URL +
 														`/image/${image}`
