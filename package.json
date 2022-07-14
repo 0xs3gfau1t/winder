@@ -3,9 +3,12 @@
 	"version": "1.0.0",
 	"description": "Tinder ko bau Winder",
 	"scripts": {
-		"devStart": "nodemon server/src/index.js",
+		"_": "--------- Development scripts-----------",
+		"server": "npm run devStart --prefix server",
 		"client": "npm run serve --prefix client",
-		"start": "npm run devStart & npm run client"
+		"__": "--------- Production scripts-----------",
+		"build": "npm run build --prefix client",
+		"prodServerStart": "npm run prodStart --prefix server"
 	},
 	"repository": {
 		"type": "git",
@@ -19,7 +22,7 @@
 	},
 	"homepage": "https://github.com/bimarshak7/winder#readme",
 	"dependencies": {
-		"server": "file:./server",
-		"client": "file:./client"
+		"client": "file:./client",
+		"server": "file:./server"
 	}
 }

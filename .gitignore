@@ -2,3 +2,4 @@
 .env
 node_modules
 main.js
+*.config.js

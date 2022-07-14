@@ -26,3 +26,21 @@
 
 ### Run using script
     ./run_docker.sh
+
+## Environment variables
+### Production 
+- SESSION_SECRET
+- NODE_ENV
+
+### Required
+- PORT
+- PAGINATION_LIMIT
+- APP_URL
+- MAILER_HOST
+- MAILER_PORT
+- MAILER_ADD
+- MAILER_PASS
+- ACCESS_TOKEN_SECRET
+- MONGO_URI_TEMP
+- MONGO_URI
+- NODE_ENV

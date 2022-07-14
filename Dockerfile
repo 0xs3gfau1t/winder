@@ -7,9 +7,10 @@ COPY . .
 
 # Install packages
 RUN npm install
+RUN npm install pm2 -g
 
 # Expose client and server ports
-EXPOSE 8000
+EXPOSE 3000
 
 # Run the app
-CMD [ "npm", "run", "start" ]
+CMD [ "pm2-runtime", "start", "ecosystem.config.js", "--only", "winder", "--env", "production"]

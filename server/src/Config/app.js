@@ -26,6 +26,11 @@ app.use(
 	})
 )
 
+// Compression and helmet used here after following mdn web docs tutorial
+// https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/deployment
+app.use(require("compression")())
+app.use(require("helmet")())
+
 // HTTP SERVER
 const server = require("http").createServer(app)
 
