@@ -49,10 +49,9 @@ const App = () => {
 							exact={true}
 							path="/notification"
 							element={
-								// <PrivateRoute>
-								// 	<Notification />
-								// </PrivateRoute>
-								<Notification />
+								<PrivateRoute>
+									<Notification />
+								</PrivateRoute>
 							}
 						/>
 						<Route
@@ -77,6 +76,7 @@ const App = () => {
 				</Router>
 			</Provider>
 		</CookiesProvider>
+		
 	)
 }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import InputEmoji from "react-input-emoji"
 import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
@@ -13,27 +14,27 @@ const ChatBody = ({ user }) => {
 	const activeChat = useSelector(state => state.live.activeChat)
 	const ref = useRef(null)
 	const dispatch = useDispatch()
-
+	const [count, setCount] = useState(0)
 	useEffect(() => {
 		dispatch(fetchActiveChat(user.relnID))
+		ref.current.scrollTop = ref.current.scrollHeight
 	}, [])
 
 	useEffect(() => {
-		if (activeChat.live) {
+		setCount(count + 1)
+		if (activeChat.live || count < 5) {
+			console.log("LOL")
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
-			ref.current.scrollTop = 70
+			console.log("LOL2")
+			ref.current.scrollTop = 55
 		}
 	}, [activeChat])
 
 	const sendChat = e => {
-		if (message.trim != "") dispatch(sendMessage(message, activeChat.id))
-		setMessage("")
-	}
-
-	const enterKey = e => {
-		if (e.key === "Enter") {
-			sendChat(e)
+		if (message.trim() !== "") {
+			dispatch(sendMessage(message, activeChat.id))
+			setMessage("")
 		}
 	}
 
@@ -50,7 +51,7 @@ const ChatBody = ({ user }) => {
 						)
 					}
 				},
-				{ threshold: 1, rootMargin: "-100px 0px 0px 0px" }
+				{ threshold: 1, rootMargin: "-100px 0px -100px 0px" }
 			)
 			if (node) observer.current.observe(node)
 		},
@@ -72,7 +73,7 @@ const ChatBody = ({ user }) => {
 				</div>
 				<div
 					ref={ref}
-					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y"
+					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y scroll-smooth"
 				>
 					<ul className="space-y-2">
 						{activeChat.data.map((message, index) => {
@@ -94,15 +95,15 @@ const ChatBody = ({ user }) => {
 				</div>
 
 				<div className="flex items-center justify-between w-full p-3 border-t border-gray-300">
-					<input
+					<InputEmoji
 						type="text"
 						placeholder="Type here to send..."
 						className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
 						name="message"
 						value={message}
-						onChange={e => setMessage(e.target.value)}
-						onKeyPress={e => enterKey(e)}
-						required
+						onChange={setMessage}
+						onEnter={sendChat}
+						theme="light"
 					/>
 					<button type="submit" onClick={sendChat}>
 						<IconContext.Provider

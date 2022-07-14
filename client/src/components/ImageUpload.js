@@ -6,7 +6,7 @@ const ImageUpload = ({ settings, removePic }) => {
 	return (
 		<>
 			{!settings.isDP && (
-				<div className="flex h-50 w-52 border-2 m-4">
+				<div className="flex border-2 m-4">
 					{settings.preview2 ? (
 						<div className="border-2 rounded-xl border-amber-900">
 							<span
@@ -15,13 +15,16 @@ const ImageUpload = ({ settings, removePic }) => {
 							>
 								<GoX />
 							</span>
-							<img src={settings.preview2} />
+							<img
+								src={settings.preview2}
+								className="h-58 w-58"
+							/>
 						</div>
 					) : (
 						<>
 							<label className="" htmlFor="upload2">
-								<AiOutlinePlus className="mx-16 my-24 h-10 w-20" />
-								<span className="absolute -mt-24 mx-16">
+								<AiOutlinePlus className="mx-20 my-24 h-10 w-20" />
+								<span className="absolute -mt-24 mx-20">
 									Add Photo
 								</span>
 							</label>

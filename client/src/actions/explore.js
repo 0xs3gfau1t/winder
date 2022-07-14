@@ -35,7 +35,7 @@ export const sendLike = userid => dispatch => {
 			console.log(res.data)
 			if (res.data.matched)
 				dispatch(displayAlert("It's a match.", "success", true))
-			else dispatch(displayAlert("Match request sent.", "success", true))
+			else dispatch(displayAlert("Match request sent.", "success"))
 			dispatch({ type: EXPLORE_NEXT })
 		})
 		.catch(err => {

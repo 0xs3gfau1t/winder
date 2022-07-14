@@ -12,6 +12,7 @@ import { loadExplore, sendLike } from "../actions/explore"
 // Components
 import Carousel from "../components/Carousel"
 import UserDetails from "../components/UserDetails"
+import { Bar } from "../components"
 import Alert from "../components/Alert"
 
 // Styles
@@ -38,6 +39,7 @@ function Explore() {
 
 	return (
 		<>
+			<Bar title={"Explore"} />
 			{misc.showAlert && <Alert />}
 			<ExploreStyled>
 				<div className="outer">

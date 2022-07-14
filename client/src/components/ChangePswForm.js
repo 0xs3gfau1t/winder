@@ -34,8 +34,8 @@ const ChangePswForm = ({ handlePopupClose }) => {
 		handlePopupClose()
 	}
 	return (
-		<div className="mx-auto w-2/3">
-			{misc.showAlert && <Alert style={{ marginTop: "-1%" }} />}
+		<div className="mx-auto w-full">
+			{misc.showAlert && <Alert />}
 			<form
 				onChange={onChange}
 				onSubmit={changePassword}

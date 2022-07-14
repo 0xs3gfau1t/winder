@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Wrapper from "../assets/wrappers/NotificationPage"
 import Nav from "../components/Nav/Nav"
-import { Popup } from "../components"
+import { Popup, Bar } from "../components"
 
 function Notification() {
 	const [popUp, setPopUP] = useState({
@@ -14,10 +14,9 @@ function Notification() {
 	const relater = {
 		0: "Liked Your Profile",
 		1: "New Match Found",
-		2: "Promotion..."
+		2: "Promotion...",
 	}
 
-	
 	const dummyy = [
 		{
 			"type": 2,
@@ -134,9 +133,9 @@ function Notification() {
 
 	return (
 		<Wrapper>
+			<Bar title={"Notifications"} />
 			<div className="notifyArea">
 				<div className="notifications">
-					<h1>Notification</h1>
 					<div className="Notification-card">
 						{dummyy.map(element => {
 							return (
@@ -151,7 +150,11 @@ function Notification() {
 								</div>
 							)
 						})}
-						<Popup setClick={setClick} clicked={clicked} close={handlePopupClose}>
+						<Popup
+							setClick={setClick}
+							clicked={clicked}
+							close={handlePopupClose}
+						>
 							<h2>{relater[popUp.type]}</h2>
 							<span>{popUp.content}</span>
 						</Popup>
