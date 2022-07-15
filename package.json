@@ -6,6 +6,7 @@
 		"_": "--------- Development scripts-----------",
 		"server": "npm run devStart --prefix server",
 		"client": "npm run serve --prefix client",
+		"install": "npm install --prefix server && npm install --prefix client",
 		"__": "--------- Production scripts-----------",
 		"build": "npm run build --prefix client",
 		"prodServerStart": "npm run prodStart --prefix server"

@@ -17,7 +17,6 @@ io.on("connection", onConnectionHandler)
 
 const authenticateToken = require("./Middlewares/authenticateToken")
 const checkEmailVerification = require("./Middlewares/verifyEmail")
-const { entry } = require("client")
 
 // Endpoint for production
 // Serves production level compiled static file
