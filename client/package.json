@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "webpack.config.js",
 	"scripts": {
-		"dev": "webpack --mode development --watch --entry ./src/index.js --output-path ./static",
+		"dev": "webpack serve --mode development --entry ./src/index.js --output-path ./static --open",
 		"build": "webpack --mode production --entry ./src/index.js --output-path ./static",
 		"serve": "webpack serve --mode development --stats-error-details"
 	},
@@ -17,6 +17,7 @@
 		"@babel/preset-react": "^7.12.13",
 		"axios": "^0.27.2",
 		"babel-loader": "^8.2.2",
+		"dotenv": "^16.0.1",
 		"dotenv-webpack": "^7.1.0",
 		"normalize.css": "^8.0.1",
 		"react": "^18.1.0",
