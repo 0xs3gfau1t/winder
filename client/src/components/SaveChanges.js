@@ -9,7 +9,7 @@ const SaveChanges = ({ onSubmit }) => {
 				Changes Made!{" "}
 				<input
 					type="submit"
-					className="mx-2 bg-black rounded p-1"
+					className="cursor-pointer mx-2 bg-black rounded p-1"
 					value="Save Changes"
 				/>
 			</div>

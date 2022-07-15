@@ -146,14 +146,14 @@ function Profile() {
 				>
 					<div className="flex flex-wrap pb-4 -ml-7 container">
 						<aside className="w-full md:w-1/4  px-2  h-full float-left">
-							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[24vw] sm:w-full sm:content-center border-2 border-green-700  rounded-xl p-2 profile-form">
+							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[24vw] sm:w-full sm:content-center border-2 border-green-700 rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
 								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 w-56 h-56">
 									{!settings.preview2 && (
 										<>
 											{settings.isDP && (
 												<span
-													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white cursor-pointer"
 													name="dp"
 													onClick={e =>
 														removePic(e, "dp")
@@ -232,7 +232,7 @@ function Profile() {
 							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3  border-b-2 border-b-green-700 pb-4">
+							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3  border-b-2 border-b-green-700 pb-4 px-6">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
@@ -279,7 +279,13 @@ function Profile() {
 								<span
 									className="inline-block hover:text-red-500"
 									onClick={e => {
-										setFlags({ ...flags, editBio: true })
+										setFlags(
+											{ ...flags, editBio: true },
+											setSettings({
+												...settings,
+												bio: user.bio,
+											})
+										)
 									}}
 								>
 									<MdEdit />
@@ -298,7 +304,7 @@ function Profile() {
 										type="text"
 										name="bio"
 										cols={"40"}
-										className="block h-32 w-[96] mb-1 text-orange-700 font-bold resize-none"
+										className="block h-32 w-[96] mb-1 text-orange-700 font-bold resize-none p-4 border-2 border-slate-600 rounded-lg"
 										placeholder={user.bio}
 										value={settings.bio}
 										onChange={onChange}
@@ -341,7 +347,7 @@ function Profile() {
 									settings.passion.map((passion, index) => (
 										<div key={index}>
 											<span
-												className="mx-2 mb-4 p-1 border-2 border-green-900 cursor-pointer rounded-lg bg-green-600 text-white"
+												className="mx-2 mb-4 p-2 cursor-pointer rounded-lg bg-green-600 text-white"
 												key={index}
 											>
 												{passion}
