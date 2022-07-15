@@ -1,6 +1,6 @@
 import axios from "axios"
 import { DISPLAY_ALERT, CLEAR_ALERT, LOAD_OPTIONS } from "./types"
-const url = process.env.URL
+import { OPTIONS_URL } from "../urls"
 
 export const displayAlert =
 	(message, alertType, persist = false) =>
@@ -26,7 +26,7 @@ export const displayAlert =
 
 export const loadOptions = () => dispatch => {
 	axios
-		.get(url + "/settings/options", { withCredentials: true })
+		.get(OPTIONS_URL, { withCredentials: true })
 		.then(res => {
 			dispatch({
 				type: LOAD_OPTIONS,

@@ -19,6 +19,12 @@ module.exports = {
 		host,
 		port,
 		historyApiFallback: true,
+		proxy: {
+			"/api": {
+				target: `${process.env.BACKEND_URL}`,
+				pathRewrite: { "^/api": "" },
+			},
+		},
 	},
 	module: {
 		rules: [

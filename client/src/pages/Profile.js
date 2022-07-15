@@ -14,6 +14,7 @@ import {
 	Popup,
 	ChangePswForm,
 } from "../components"
+import { IMAGE_URL } from "../urls"
 
 function Profile() {
 	//load states from redux store
@@ -41,7 +42,7 @@ function Profile() {
 		if (user.images)
 			setSettings(prev => ({
 				...prev,
-				preview: process.env.URL + "/image/" + user.images[0],
+				preview: `${IMAGE_URL}/${user.images[0]}`,
 				ageH: user.preference.age[1],
 				ageL: user.preference.age[0],
 				passion: user.passion,
@@ -106,12 +107,11 @@ function Profile() {
 	const removePic = (e, name, image = "") => {
 		switch (name) {
 			case "dp": {
-				console.log("DP", process.env.URL + "/image/" + user.images[0])
 				setSettings({
 					...settings,
 					isDP: false,
 					file: null,
-					preview: process.env.URL + "/image/" + user.images[0],
+					preview: `${IMAGE_URL}/${user.images[0]}`,
 				})
 				break
 			}
@@ -252,10 +252,7 @@ function Profile() {
 												</span>
 												<img
 													className="h-58 w-58"
-													src={
-														process.env.URL +
-														`/image/${image}`
-													}
+													src={`${IMAGE_URL}/${image}`}
 												/>
 											</div>
 										)

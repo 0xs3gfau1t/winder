@@ -8,7 +8,7 @@ import {
 	SET_LOADING,
 	SET_LIVE_COUNT,
 } from "./types"
-const URL = process.env.URL
+import { MESSAGE_URL } from "../urls"
 
 export function connect() {
 	return { type: "CONNECT" }
@@ -36,7 +36,7 @@ export const notiUpdate = data => dispatch => {
 
 export const fetchChats = () => dispatch => {
 	axios
-		.get(URL + "/messages", { withCredentials: true })
+		.get(MESSAGE_URL, { withCredentials: true })
 		.then(res => {
 			dispatch({ type: SET_LIVE_COUNT, payload: { chat: 0 } })
 			dispatch({
@@ -55,7 +55,7 @@ export const fetchActiveChat =
 		// console.log(id, cur)
 		dispatch({ type: SET_LOADING })
 		axios
-			.get(URL + "/messages" + `/${id}?cursor=${cur}`, {
+			.get(`${MESSAGE_URL}/${id}?cursor=${cur}`, {
 				withCredentials: true,
 			})
 			.then(res => {
@@ -77,7 +77,7 @@ export const sendMessage = (text, id) => dispatch => {
 	// console.log(id)
 	axios
 		.post(
-			URL + `/messages/${id}`,
+			`${MESSAGE_URL}/${id}`,
 			{ content: text },
 			{ withCredentials: true }
 		)

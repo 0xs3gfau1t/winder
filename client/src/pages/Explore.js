@@ -15,6 +15,8 @@ import UserDetails from "../components/UserDetails"
 import { Bar } from "../components"
 import Alert from "../components/Alert"
 
+import { IMAGE_URL } from "../urls"
+
 // Styles
 import ExploreStyled from "../assets/wrappers/Explore"
 
@@ -47,7 +49,7 @@ function Explore() {
 						<Carousel
 							imgs={
 								users[current]?.images.map(
-									item => process.env.URL + "/image/" + item
+									item => `${IMAGE_URL}/${item}`
 								) || [
 									"https://via.placeholder.com/300/000000/FFFFFF/?text=No+Images+To+Load",
 								]

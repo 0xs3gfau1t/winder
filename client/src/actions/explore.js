@@ -1,11 +1,11 @@
 import axios from "axios"
 import { EXPLORE_NEXT, EXPLORE_LOAD } from "./types"
 import { displayAlert } from "./misc"
-const url = process.env.URL
+import { EXPLORE_URL, ACCEPT_URL } from "../urls"
 
 export const loadExplore = () => dispatch => {
 	axios
-		.get(url + "/explore", { withCredentials: true })
+		.get(EXPLORE_URL, { withCredentials: true })
 		.then(res => {
 			dispatch({
 				type: EXPLORE_LOAD,
@@ -26,11 +26,7 @@ export const loadExplore = () => dispatch => {
 
 export const sendLike = userid => dispatch => {
 	axios
-		.post(
-			url + "/explore/accept",
-			{ whom: userid },
-			{ withCredentials: true }
-		)
+		.post(ACCEPT_URL, { whom: userid }, { withCredentials: true })
 		.then(res => {
 			console.log(res.data)
 			if (res.data.matched)

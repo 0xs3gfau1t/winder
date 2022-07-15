@@ -5,7 +5,7 @@
 	"main": "Server.js",
 	"scripts": {
 		"devStart": "nodemon src/index.js",
-		"client": "npm run serve --prefix ../client",
+		"client": "npm run dev --prefix ../client",
 		"start": "concurrently --kill-others-on-fail \"npm run devStart\" \" npm run client\""
 	},
 	"repository": {
