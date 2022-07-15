@@ -21,9 +21,13 @@ module.exports = {
 		historyApiFallback: true,
 		proxy: {
 			"/api": {
-				target: `${process.env.BACKEND_URL}`,
+				target: process.env.BACKEND_URL,
 				pathRewrite: { "^/api": "" },
 			},
+            "/windersock": {
+                target: process.env.BACKEND_URL,
+                ws: true,
+            },
 		},
 	},
 	module: {

@@ -36,6 +36,7 @@ const io = require("socket.io")(server, {
 		// AccessControlAllowCredentials: true,
 		credentials: true,
 	},
+    path: "/windersock/",
 })
 
 module.exports = { app, io, server }

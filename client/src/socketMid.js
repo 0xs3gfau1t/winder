@@ -1,8 +1,8 @@
 import io, { Socket } from "socket.io-client"
 import * as liveActions from "./actions/live"
-import { BACKEND_URL } from "./urls"
 
-const socket = io(BACKEND_URL, {
+const socket = io("/", {
+    path: "/windersock/",
 	autoConnect: false,
 	withCredentials: true,
 })
