@@ -46,6 +46,8 @@ app.use("/forgotpassword", require("./Routes/ForgotPassword.js"))
 app.use("/image", require("./Routes/Image.js"))
 
 // Start the server specied in PORT from .env
-server.listen(process.env.PORT || 4000, () => {
-	console.log("Lisening in port " + (process.env.PORT || 4000))
+let host = process.env.HOST || "localhost"
+let port = process.env.PORT || 4000
+server.listen({ host, port }, () => {
+	console.log(`\nBackend Server Started\nHost: ${host}\nPort: ${port}\n`)
 })
