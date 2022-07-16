@@ -1,7 +1,8 @@
 import io, { Socket } from "socket.io-client"
 import * as liveActions from "./actions/live"
 
-const socket = io(process.env.URL, {
+const socket = io("/", {
+    path: "/windersock/",
 	autoConnect: false,
 	withCredentials: true,
 })

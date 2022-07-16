@@ -9,7 +9,7 @@ import {
 } from "./types"
 import { displayAlert } from "./misc"
 
-const url = process.env.URL
+import { LOGIN_URL, REGISTER_URL } from "../urls"
 
 export const register = user_data => dispatch => {
 	let data = JSON.parse(JSON.stringify(user_data))
@@ -17,7 +17,7 @@ export const register = user_data => dispatch => {
 	delete data["isMember"]
 	console.log(data)
 	axios
-		.post(url + "/auth/register", data, { withCredentials: true })
+		.post(REGISTER_URL, data, { withCredentials: true })
 		.then(res => {
 			dispatch(
 				displayAlert("Account created! Proceeding to login.", "success")
@@ -46,7 +46,7 @@ export const login =
 		const user_data = { email: email, password: password }
 		// console.log(user_data);
 		axios
-			.post(url + "/auth/login", user_data, { withCredentials: true })
+			.post(LOGIN_URL, user_data, { withCredentials: true })
 			.then(res => {
 				dispatch({
 					type: LOGIN_SUCCESS,

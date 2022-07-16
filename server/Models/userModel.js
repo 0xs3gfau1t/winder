@@ -128,7 +128,7 @@ userSchema.options.toJSON = {
 				year: "numeric",
 			})
 		const genderRevMap = { 1: "male", "-1": "female", 0: "other" }
-		if ("gender" in ret.preference)
+        if (ret.preference?.gender != undefined)
 			ret.preference.gender = genderRevMap[ret.preference.gender]
 
 		if (ret.gender) ret.gender = genderRevMap[ret.gender]

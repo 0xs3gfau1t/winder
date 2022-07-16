@@ -11,11 +11,17 @@ import { displayAlert } from "./misc"
 import { logout } from "./auth"
 import { connect } from "./live"
 
-const url = process.env.URL
+import {
+	CHANGE_PW_URL,
+	FORGOT_PW_URL,
+	IMAGE_URL,
+	SETTINGS_URL,
+	VERIFY_MAIL_URL,
+} from "../urls"
 
 export const loadUser = () => dispatch => {
 	axios
-		.get(url + "/settings", { withCredentials: true })
+		.get(SETTINGS_URL, { withCredentials: true })
 		.then(res => {
 			let data = res.data.user
 			dispatch({
@@ -45,7 +51,7 @@ export const loadUser = () => dispatch => {
 
 export const emailVerifyRequest = () => dispatch => {
 	axios
-		.post(url + "/settings/verifyemail", {}, { withCredentials: true })
+		.post(VERIFY_MAIL_URL, {}, { withCredentials: true })
 		.then(res => {
 			console.log(res)
 			dispatch(
@@ -68,7 +74,7 @@ export const emailVerifyRequest = () => dispatch => {
 
 export const verifyEmail = token => dispatch => {
 	axios
-		.post(url + `/settings/verifyemail/${token.token}`, {})
+		.post(`${VERIFY_MAIL_URL}/${token.token}`, {})
 		.then(res => {
 			dispatch(
 				displayAlert(
@@ -105,7 +111,7 @@ export const updateProfile = data => dispatch => {
 	}
 	if (data.bio.length == 0) delete update["bio"]
 	axios
-		.patch(url + `/settings`, update, { withCredentials: true })
+		.patch(SETTINGS_URL, update, { withCredentials: true })
 		.then(res => {
 			dispatch(loadUser())
 			dispatch(displayAlert("Profile Updated...", "success"))
@@ -125,7 +131,7 @@ export const updateProfile = data => dispatch => {
 			withCredentials: true,
 		}
 		axios
-			.post(url + `/image`, formData, config)
+			.post(IMAGE_URL, formData, config)
 			.then(res => {
 				dispatch(displayAlert("Profile Updated...", "success", true))
 				// setTimeout(() => window.location.reload(), 1000)
@@ -142,7 +148,7 @@ export const updateProfile = data => dispatch => {
 export const removeDp = id => dispatch => {
 	console.log("called")
 	axios
-		.delete(url + `/image/${id}`, { withCredentials: true })
+		.delete(`${IMAGE_URL}/${id}`, { withCredentials: true })
 		.then(
 			console.log("Deleted"),
 			dispatch({
@@ -161,7 +167,7 @@ export const changePass = (oldPass, new1) => dispatch => {
 	console.log(oldPass, new1)
 	axios
 		.patch(
-			url + `/settings/changepassword`,
+			CHANGE_PW_URL,
 			{ oldPassword: oldPass, newPassword: new1 },
 			{ withCredentials: true }
 		)
@@ -176,7 +182,7 @@ export const changePass = (oldPass, new1) => dispatch => {
 
 export const forgotPassword = email => dispatch => {
 	axios
-		.post(url + `/forgotpassword`, { email: email })
+		.post(FORGOT_PW_URL, { email: email })
 		.then(res => {
 			dispatch(
 				displayAlert(
@@ -194,7 +200,7 @@ export const forgotPassword = email => dispatch => {
 export const resetPassword = (password, token) => dispatch => {
 	console.log(password, token)
 	axios
-		.post(url + `/forgotpassword/${token}`, { password: password })
+		.post(`${FORGOT_PW_URL}/${token}`, { password: password })
 		.then(res => {
 			dispatch(
 				displayAlert(

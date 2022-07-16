@@ -16,6 +16,8 @@ import { Bar } from "../components"
 import Alert from "../components/Alert"
 import { ExploreSearch } from "../components/ExploreSearch"
 
+import { IMAGE_URL } from "../urls"
+
 // Styles
 import ExploreStyled from "../assets/wrappers/Explore"
 

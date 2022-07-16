@@ -20,44 +20,41 @@ const checkEmailVerification = require("./Middlewares/verifyEmail")
 
 // Endpoint for production
 // Serves production level compiled static file
-app.get("/", (req, res) => {
-	if (process.env.NODE_ENV === "production") {
-		const static_path = path.resolve(__dirname, "../../client/static")
-		const entry_file = path.join(static_path, "index.html")
-		app.use(express.static(static_path))
-		return fs.existsSync(entry_file)
-			? res.sendFile(entry_file)
-			: res.json({ message: "Hemlo, built files are not under water. Please help me. Uuuuughhh.." })
-	} else {
-		return res.json({ message: "Hemlo, I'm under the dev-water." })
-	}
-})
-
 // Routing each endpoint to respective routers
-app.use("/auth", require("./Routes/Auth.js"))
+app.use("/api/auth", require("./Routes/Auth.js"))
 app.use(
-	"/messages",
+	"/api/messages",
 	authenticateToken,
 	checkEmailVerification,
 	require("./Routes/Messages.js")
 )
 app.use(
-	"/notification",
+	"/api/notification",
 	authenticateToken,
 	checkEmailVerification,
 	require("./Routes/Notifications.js")
 )
-app.use("/settings", require("./Routes/Settings.js"))
+app.use("/api/settings", require("./Routes/Settings.js"))
 app.use(
-	"/explore",
+	"/api/explore",
 	authenticateToken,
 	checkEmailVerification,
 	require("./Routes/Explore.js")
 )
-app.use("/forgotpassword", require("./Routes/ForgotPassword.js"))
-app.use("/image", require("./Routes/Image.js"))
+app.use("/api/forgotpassword", require("./Routes/ForgotPassword.js"))
+app.use("/api/image", require("./Routes/Image.js"))
+
+// Setting static folder
+app.use("/", express.static(path.resolve(__dirname + "../../static/")))
+
+// Redirect everything other that /api/ to frontend
+app.get("*", (req, res) =>
+	res.sendFile(path.resolve(__dirname + "../../static/index.html"))
+)
 
 // Start the server specied in PORT from .env
-server.listen(process.env.PORT || 4000, () => {
-	console.log("Lisening in port " + (process.env.PORT || 4000))
+let host = process.env.BACKEND_HOST || "localhost"
+let port = process.env.BACKEND_PORT || 4000
+server.listen({ host, port }, () => {
+	console.log(`\nBackend Server\nHost: ${host}\nPort: ${port}\n`)
 })
