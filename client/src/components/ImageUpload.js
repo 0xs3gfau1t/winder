@@ -23,7 +23,7 @@ const ImageUpload = ({ settings, removePic }) => {
 					) : (
 						<>
 							<label className="" htmlFor="upload2">
-								<AiOutlinePlus className="mx-20 my-24 h-10 w-20" />
+								<AiOutlinePlus className="mx-20 my-24 h-10 w-20 cursor-pointer" />
 								<span className="absolute -mt-24 mx-20">
 									Add Photo
 								</span>

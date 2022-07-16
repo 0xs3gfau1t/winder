@@ -41,7 +41,9 @@ function Profile() {
 		if (user.images)
 			setSettings(prev => ({
 				...prev,
-				preview: process.env.URL + "/image/" + user.images[0],
+				preview: user.images[0]
+					? process.env.URL + "/image/" + user.images[0]
+					: "https://via.placeholder.com/300/000000/FFFFFF/?text=Upload+a+Profile+Picture",
 				ageH: user.preference.age[1],
 				ageL: user.preference.age[0],
 				passion: user.passion,
@@ -164,7 +166,7 @@ function Profile() {
 											)}
 											{!settings.isDP && (
 												<label
-													className="change-pic"
+													className="change-pic cursor-pointer"
 													htmlFor="upload"
 												>
 													<MdEdit />
@@ -277,7 +279,7 @@ function Profile() {
 							>
 								Bio{" "}
 								<span
-									className="inline-block hover:text-red-500"
+									className="inline-block hover:text-red-500 cursor-pointer"
 									onClick={e => {
 										setFlags(
 											{ ...flags, editBio: true },
@@ -312,7 +314,7 @@ function Profile() {
 								</div>
 							</Popup>
 
-							<p className="mt-12 cursor-pointer font-bold text-orange-700 pb-4">
+							<p className="mt-12 font-bold text-orange-700 pb-4">
 								{user.bio}
 							</p>
 
@@ -332,7 +334,7 @@ function Profile() {
 								</div>
 								<div className="grid grid-row-2">
 									<label htmlFor="age" className="form-label">
-										Programmme
+										Program
 									</label>
 									<FormSelect
 										name="program"
@@ -341,7 +343,7 @@ function Profile() {
 									/>
 								</div>
 							</div>
-							<h5 className="mt-6 mx-3">Passions</h5>
+							<div className="ml-10 py-2">Passions</div>
 							<div className="flex flex-wrap mx-7">
 								{settings.passion &&
 									settings.passion.map((passion, index) => (

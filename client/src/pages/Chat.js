@@ -18,20 +18,20 @@ function Chat() {
 	return (
 		<>
 			<Bar title={"Chats"} />
-			<div className="container ml-4">
+			<div className="container ml-4 -mt-5">
 				<div className="min-w-full border-4 rounded-xl lg:grid lg:grid-cols-3">
 					<div className="border-r border-gray-300 lg:col-span-1">
 						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600 border-b-2">
 							Chats
 						</h2>
-						<div className="overflow-auto h-[80vh] scroll-smooth">
+						<div className="overflow-auto h-[75vh] scroll-smooth">
 							{!Object.keys(chatList).length > 0 && (
-								<h5 className="mt-8 px-4 text-center">
+								<div className="mt-8 px-4 text-center text-lg">
 									<span className="text-red-700">
 										So sorry !
 									</span>{" "}
 									You got no friend to chat with...
-								</h5>
+								</div>
 							)}
 							{Object.keys(chatList).map(relation => {
 								return (
