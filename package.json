@@ -4,8 +4,8 @@
 	"description": "Tinder ko bau winder",
 	"main": "webpack.config.js",
 	"scripts": {
-		"server:dev": "nodemon server/index.js",
-		"server:prod": "node server/index.js",
+		"server:dev": "NODE_ENV=development nodemon server/index.js",
+		"server:prod": "NODE_ENV=production node server/index.js",
 		"build:dev": "webpack --config ./webpack.dev.js",
 		"build:prod": "webpack --config ./webpack.prod.js",
 		"client:dev": "webpack serve --config ./webpack.dev.js --open",

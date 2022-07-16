@@ -25,6 +25,6 @@ else
         echo -e "${GREEN}[+] Build Succeeded${ENDCOLOR}"
     fi
     echo "${YELLOW}Note: run ./run_docker.sh -h for help${ENDCOLOR}"
-    docker run -p 0.0.0.0:3000:3000 -p 0.0.0.0:8000:8000 -d $img:latest
+    docker run -p 0.0.0.0:3000:3000 -d $img:latest
     echo -e "${GREEN}[+] Done${ENDCOLOR}"
 fi

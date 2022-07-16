@@ -7,10 +7,16 @@ COPY . .
 
 # Install packages
 RUN npm install
+
+# Compile app for production
+RUN npm run build:prod
+
+# Install node process manager
 RUN npm install pm2 -g
 
-# Expose client and server ports
+# Expose server port
 EXPOSE 3000
 
 # Run the app
-CMD [ "pm2-runtime", "start", "ecosystem.config.js", "--only", "winder", "--env", "production"]
+# TODO: Use ecosystem.config.js for pm2 instead of spamming flags
+CMD [ "pm2-runtime", "start", "server/index.js", "exec_mode", "cluster", "instances", "max"]
