@@ -1,5 +1,3 @@
-export const BACKEND_URL = process.env.BACKEND_URL
-
 export const REGISTER_URL = '/api/auth/register'
 export const LOGIN_URL = '/api/auth/login'
 
