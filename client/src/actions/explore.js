@@ -48,5 +48,5 @@ export const sendLike = userid => dispatch => {
 
 export const ignoreUnliked = () => dispatch => {
 	console.log("Ignoring user")
-	dispatch({type: EXPLORE_NEXT})
+	dispatch({ type: EXPLORE_NEXT })
 }

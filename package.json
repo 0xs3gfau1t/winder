@@ -9,7 +9,8 @@
 		"install": "npm install --prefix server && npm install --prefix client",
 		"__": "--------- Production scripts-----------",
 		"build": "npm run build --prefix client",
-		"prodServerStart": "npm run prodStart --prefix server"
+		"prodServerStart": "npm run prodStart --prefix server",
+		"prodStart": "npm run build && npm run prodServerStart"
 	},
 	"repository": {
 		"type": "git",

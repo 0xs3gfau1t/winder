@@ -14,6 +14,7 @@ import Carousel from "../components/Carousel"
 import UserDetails from "../components/UserDetails"
 import { Bar } from "../components"
 import Alert from "../components/Alert"
+import { ExploreSearch } from "../components/ExploreSearch"
 
 // Styles
 import ExploreStyled from "../assets/wrappers/Explore"
@@ -39,45 +40,57 @@ function Explore() {
 		else console.log("No user to ignore")
 	}
 	if (!user.email_verified) return <Navigate to="/profile" />
-
-	return (
-		<>
-			<Bar title={"Explore"} />
-			{misc.showAlert && <Alert />}
-			<ExploreStyled>
-				<div className="outer">
-					<div className="carousel-wrapper">
-						<Carousel
-							imgs={
-								users[current]?.images.map(
-									item => process.env.URL + "/image/" + item
-								) || [
-									"https://via.placeholder.com/300/000000/FFFFFF/?text=No+Images+To+Load",
-								]
-							}
-							user={users[current]}
-						/>
+	if (!users[current]) {
+		return (
+			<>
+				<ExploreStyled>
+					<ExploreSearch />
+				</ExploreStyled>
+			</>
+		)
+	} else {
+		return (
+			<>
+				<Bar title={"Explore"} />
+				{misc.showAlert && <Alert />}
+				<ExploreStyled>
+					<div className="outer">
+						<div className="carousel-wrapper">
+							<Carousel
+								imgs={
+									users[current]?.images.map(
+										item =>
+											process.env.URL + "/image/" + item
+									) || [
+										"https://via.placeholder.com/300/000000/FFFFFF/?text=No+Images+To+Load",
+									]
+								}
+								user={users[current]}
+							/>
+						</div>
+						<div className="details">
+							<UserDetails user={users[current] || {}} />
+						</div>
 					</div>
-					<div className="details">
-						<UserDetails user={users[current] || {}} />
-					</div>
-				</div>
-				<IconContext.Provider value={{ color: "#743ad5", size: "2em" }}>
-					<div className="actions">
-						<span>
-							<ImCross onClick={ignore} color="#eb1e07" />
-						</span>
-						<span>
-							<FaHeart color="#ab0a73" />
-						</span>
-						<span>
-							<BsCheckLg onClick={accept} color="#0dbd4b" />
-						</span>
-					</div>
-				</IconContext.Provider>
-			</ExploreStyled>
-		</>
-	)
+					<IconContext.Provider
+						value={{ color: "#743ad5", size: "2em" }}
+					>
+						<div className="actions">
+							<span>
+								<ImCross onClick={ignore} color="#eb1e07" />
+							</span>
+							<span>
+								<FaHeart color="#ab0a73" />
+							</span>
+							<span>
+								<BsCheckLg onClick={accept} color="#0dbd4b" />
+							</span>
+						</div>
+					</IconContext.Provider>
+				</ExploreStyled>
+			</>
+		)
+	}
 }
 
 export default Explore
