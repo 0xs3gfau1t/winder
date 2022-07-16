@@ -7,7 +7,7 @@ import { IconContext } from "react-icons"
 import { FaHeart } from "react-icons/fa"
 import { ImCross } from "react-icons/im"
 import { BsCheckLg } from "react-icons/bs"
-import { loadExplore, sendLike } from "../actions/explore"
+import { ignoreUnliked, loadExplore, sendLike } from "../actions/explore"
 
 // Components
 import Carousel from "../components/Carousel"
@@ -34,7 +34,10 @@ function Explore() {
 		if (users[current]) dispatch(sendLike(users[current].id))
 		else console.log("No user to accept.")
 	}
-
+	const ignore = e => {
+		if (users[current]) dispatch(ignoreUnliked(users[current].id))
+		else console.log("No user to ignore")
+	}
 	if (!user.email_verified) return <Navigate to="/profile" />
 
 	return (
@@ -62,7 +65,7 @@ function Explore() {
 				<IconContext.Provider value={{ color: "#743ad5", size: "2em" }}>
 					<div className="actions">
 						<span>
-							<ImCross color="#eb1e07" />
+							<ImCross onClick={ignore} color="#eb1e07" />
 						</span>
 						<span>
 							<FaHeart color="#ab0a73" />

@@ -1,6 +1,7 @@
 import axios from "axios"
 import { EXPLORE_NEXT, EXPLORE_LOAD } from "./types"
 import { displayAlert } from "./misc"
+import { AiOutlineConsoleSql } from "react-icons/ai"
 const url = process.env.URL
 
 export const loadExplore = () => dispatch => {
@@ -43,4 +44,9 @@ export const sendLike = userid => dispatch => {
 			dispatch(displayAlert(err.response?.data.error, "danger"))
 			dispatch({ type: EXPLORE_NEXT })
 		})
+}
+
+export const ignoreUnliked = () => dispatch => {
+	console.log("Ignoring user")
+	dispatch({type: EXPLORE_NEXT})
 }
