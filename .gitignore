@@ -1,3 +1,10 @@
-*/node_modules/
-.env
-main.js
+**/node_modules/
+**/.env
+server/*.txt
+
+# Ignore build files inside static folder except index.html
+static/*
+!static/index.html
+
+# Ignore config file for node process manager
+ecosystem.config.js
