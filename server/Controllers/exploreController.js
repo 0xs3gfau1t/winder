@@ -5,6 +5,7 @@ const {
 } = require("../Models/notificationModel")
 const { relationModel } = require("../Models/relationModel")
 const { emitNoti } = require("./socket")
+const { default: mongoose } = require("mongoose")
 
 function parseBoundedDates(ageList) {
 	const currentDate = new Date()
@@ -83,7 +84,53 @@ async function getList(req, res) {
 		// To resolve: filter out those users which are already matched or pending approval.
 		// How to: query to see if the currentUser and user from userList are in relation table.
 		// Some keywords to search for: aggregate $lookup
-		const userList = await userModel
+
+        // Todo: Test with more datas
+		const userList = await userModel.aggregate([
+			{
+				$match: {
+					...filters,
+					...paginationFilter,
+					dob: ageFilter,
+				},
+			},
+			{ $limit: PAGINATION_LIMIT },
+			{
+				$lookup: {
+					from: "relations",
+					let: { userId: "$_id" },
+					pipeline: [
+						{
+							$match: {
+								$and: [
+									{ $expr: { $in: ["$$userId", "$users"] } },
+									{
+										$expr: {
+											$in: [
+												mongoose.Types.ObjectId(id),
+												"$users",
+											],
+										},
+									},
+								],
+							},
+						},
+						{ $count: "count" },
+					],
+					as: "Relation",
+				},
+			},
+			{ $match: { "Relation.count": { $exists: true } } },
+			{
+				$project: fetch.reduce(
+					(acc, curr) => ((acc[curr] = 1), acc),
+					{}
+				),
+			},
+			{ $sort: { _id: 1 } },
+		])
+
+		/*const userList = await userModel
 			.find(
 				{
 					...filters,
@@ -94,7 +141,7 @@ async function getList(req, res) {
 			)
 			.sort({ _id: 1 })
 			.limit(PAGINATION_LIMIT)
-			.lean()
+			.lean()*/
 
 		const response_list = [...userList, ...incomingUser]
 
