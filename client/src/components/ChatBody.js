@@ -23,10 +23,8 @@ const ChatBody = ({ user }) => {
 	useEffect(() => {
 		setCount(count + 1)
 		if (activeChat.live || count < 5) {
-			console.log("LOL")
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
-			console.log("LOL2")
 			ref.current.scrollTop = 55
 		}
 	}, [activeChat])
@@ -75,7 +73,7 @@ const ChatBody = ({ user }) => {
 					ref={ref}
 					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y scroll-smooth"
 				>
-					<ul className="space-y-2">
+					<ul className="space-y-2 bottom-0 relative">
 						{activeChat.data.map((message, index) => {
 							return (
 								<div

@@ -15,7 +15,7 @@ function ChatHead({ chat, onClick, relation }) {
 				src={chat.userDP ? chat.userDP : data.dp}
 				alt={chat.userName}
 			/>
-			<div className="w-full pb-2">
+			<div className="hidden lg:block w-full pb-2">
 				<div className="flex justify-between">
 					<span className="block ml-2 font-semibold text-gray-600">
 						{chat.userName}

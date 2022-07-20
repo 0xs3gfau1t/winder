@@ -20,11 +20,11 @@ function Chat() {
 			<Bar title={"Chats"} />
 			<div className="container ml-4 -mt-5">
 				<div className="min-w-full border-4 rounded-xl lg:grid lg:grid-cols-3">
-					<div className="border-r border-gray-300 lg:col-span-1">
+					<div className="border border-gray-300 lg:col-span-1">
 						<h2 className="my-2 mb-2 ml-2 text-lg text-gray-600 border-b-2">
 							Chats
 						</h2>
-						<div className="overflow-auto h-[75vh] scroll-smooth">
+						<div className="overflow-auto lg:h-[75vh] h-fit lg:block inline scroll-smooth">
 							{!Object.keys(chatList).length > 0 && (
 								<div className="mt-8 px-4 text-center text-lg">
 									<span className="text-red-700">
@@ -53,7 +53,7 @@ function Chat() {
 						{activeChat.relnID ? (
 							<ChatBody user={activeChat} />
 						) : (
-							<span className="grid h-[90vh] place-items-center text-lg">
+							<span className="grid lg:h-[90vh] md:h-screen sm:h-screen place-items-center text-lg">
 								Select a conversation to start chatting...
 							</span>
 						)}
