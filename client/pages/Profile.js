@@ -43,7 +43,7 @@ function Profile() {
 			setSettings(prev => ({
 				...prev,
 				preview: user.images[0]
-					? process.env.URL + "/image/" + user.images[0]
+					? IMAGE_URL + user.images[0]
 					: "https://via.placeholder.com/300/000000/FFFFFF/?text=Upload+a+Profile+Picture",
 				ageH: user.preference.age[1],
 				ageL: user.preference.age[0],
@@ -256,10 +256,7 @@ function Profile() {
 												</span>
 												<img
 													className="h-60 w-60"
-													src={
-														process.env.URL +
-														`/image/${image}`
-													}
+													src={IMAGE_URL + image}
 												/>
 											</div>
 										)
@@ -343,7 +340,7 @@ function Profile() {
 									/>
 								</div>
 							</div>
-							<div className="ml-10 py-2">Passions</div>
+							<div className="ml-10 py-4">Passions</div>
 							<div className="flex flex-wrap mx-7">
 								{settings.passion &&
 									settings.passion.map((passion, index) => (

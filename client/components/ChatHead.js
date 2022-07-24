@@ -12,7 +12,7 @@ function ChatHead({ chat, onClick, relation }) {
 		>
 			<img
 				className="object-cover w-10 h-10 rounded-full"
-				src={chat.userDP ? chat.userDP : data.dp}
+				src={chat.userDP ? IMAGE_URL + chat.userDP : data.dp}
 				alt={chat.userName}
 			/>
 			<div className="hidden lg:block w-full pb-2">

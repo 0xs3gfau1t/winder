@@ -5,6 +5,7 @@ import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
 import { Other, Own } from "./Messages"
+import { IMAGE_URL } from "../urls"
 
 const ChatBody = ({ user }) => {
 	const data = {
@@ -62,7 +63,7 @@ const ChatBody = ({ user }) => {
 				<div className="relative flex items-center p-3 border-b border-gray-300">
 					<img
 						className="object-cover w-10 h-10 rounded-full"
-						src={user.dp ? user.dp : data.dp}
+						src={user.dp ? IMAGE_URL + user.dp : data.dp}
 						alt={user.userName}
 					/>
 					<span className="block ml-2 font-bold text-gray-600">
