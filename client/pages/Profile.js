@@ -63,7 +63,6 @@ function Profile() {
 		}
 		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			console.log(e.target.files[0])
 			if (e.target.name == "upload1") {
 				setSettings(prev => ({
 					...prev,
