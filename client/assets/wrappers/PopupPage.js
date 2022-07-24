@@ -1,13 +1,13 @@
 import styled from "styled-components"
 
 const Wrapper = styled.main`
-	z-index: 7; //top of stact
+	z-index: 7; //top of stack
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: rgba(0, 0, 0, 0.88);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -15,13 +15,13 @@ const Wrapper = styled.main`
 	.popup-inner {
 		position: relative;
 		padding: 2vw 7vw;
-		max-width: 70vw;
-		background-color: #fff;
+		max-width: 80vw;
+		background-color: #ffffffd4;
 		border-radius: 1rem;
 	}
 
 	.popup-inner:hover {
-		box-shadow: -11px 1px 15px 12px #e652192b;
+		box-shadow: 2px 2px 12px 15px #644c4375;
 	}
 	.popup-inner .close-btn {
 		position: absolute;

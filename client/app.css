@@ -9,7 +9,7 @@
 }
 
 /* fonts */
-@import url("https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cabin&family=Merriweather:ital,wght@1,700&display=swap");
 
 html {
 	font-size: 100%;
@@ -35,7 +35,7 @@ html {
 	--green-dark: #0f5132;
 
 	/* fonts  */
-	--headingFont: "Roboto Condensed", Sans-Serif;
+	--headingFont: "Merriweather", serif;
 	--bodyFont: "Cabin", Sans-Serif;
 	--small-text: 0.875rem;
 	/* rest of the vars */
@@ -230,7 +230,7 @@ ul {
 }
 
 .change-pic {
-	@apply mt-4 ml-5 bg-black w-4 h-4 bg-black text-white;
+	@apply absolute mt-4 ml-5 bg-black w-4 h-4 bg-black text-white;
 }
 
 /* Age preferance range selector */
@@ -264,20 +264,13 @@ ul {
 	border-radius: 50%;
 }
 .slider-container > input[type="range"]::-moz-range-thumb {
-	-moz-appearance: none;
-	height: 1em;
-	width: 1em;
-	cursor: pointer;
-	border: none;
-	border-radius: 50%;
-	background-color: #3264fe;
-	pointer-events: auto;
+	@apply appearance-none border-0 rounded-full pointer-events-auto h-4 w-4 bg-slate-800 cursor-pointer;
 }
 
 .slider-values {
-	@apply bg-blue-800 relative px-2 py-1 rounded-lg text-white text-sm;
+	@apply bg-slate-800 relative px-2 py-1 rounded-lg text-white text-sm;
 }
 
 .slider-values:before {
-	@apply content-[""] absolute h-0 w-0 m-auto left-0 right-0 -bottom-2 border-x-8 border-t-8 border-x-transparent border-t-blue-800;
+	@apply content-[""] absolute h-0 w-0 m-auto left-0 right-0 -bottom-2 border-x-8 border-t-8 border-x-transparent border-t-slate-800;
 }

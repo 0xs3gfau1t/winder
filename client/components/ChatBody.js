@@ -5,6 +5,7 @@ import { fetchActiveChat, sendMessage } from "../actions/live"
 import { BiSend } from "react-icons/bi"
 import { IconContext } from "react-icons"
 import { Other, Own } from "./Messages"
+import { IMAGE_URL } from "../urls"
 
 const ChatBody = ({ user }) => {
 	const data = {
@@ -23,10 +24,8 @@ const ChatBody = ({ user }) => {
 	useEffect(() => {
 		setCount(count + 1)
 		if (activeChat.live || count < 5) {
-			console.log("LOL")
 			ref.current.scrollTop = ref.current.scrollHeight
 		} else {
-			console.log("LOL2")
 			ref.current.scrollTop = 55
 		}
 	}, [activeChat])
@@ -64,7 +63,7 @@ const ChatBody = ({ user }) => {
 				<div className="relative flex items-center p-3 border-b border-gray-300">
 					<img
 						className="object-cover w-10 h-10 rounded-full"
-						src={user.dp ? user.dp : data.dp}
+						src={user.dp ? IMAGE_URL + user.dp : data.dp}
 						alt={user.userName}
 					/>
 					<span className="block ml-2 font-bold text-gray-600">
@@ -75,7 +74,7 @@ const ChatBody = ({ user }) => {
 					ref={ref}
 					className="relative w-full p-6 overflow-y-auto justify-end h-[70vh] snap-y scroll-smooth"
 				>
-					<ul className="space-y-2">
+					<ul className="space-y-2 bottom-0 relative">
 						{activeChat.data.map((message, index) => {
 							return (
 								<div

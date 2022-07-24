@@ -7,6 +7,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "/static"),
 		filename: "main.js",
+		publicPath: "/",
 	},
 	entry: {
 		main: "./client/index.js",
@@ -36,9 +37,9 @@ module.exports = {
 		new Dotenv(),
 		new HtmlWebpackPlugin({
 			title: "Winder -- Find your soulmate",
-			script: "main.js",
+			script: "/main.js",
 			template: path.join(__dirname, "client", "index.html"),
-			inject: false
-		})
+			inject: false,
+		}),
 	],
 }

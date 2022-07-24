@@ -53,7 +53,6 @@ export const emailVerifyRequest = () => dispatch => {
 	axios
 		.post(VERIFY_MAIL_URL, {}, { withCredentials: true })
 		.then(res => {
-			console.log(res)
 			dispatch(
 				displayAlert(
 					"Please check you mail box to complete verification",
@@ -134,10 +133,11 @@ export const updateProfile = data => dispatch => {
 			.post(IMAGE_URL, formData, config)
 			.then(res => {
 				dispatch(displayAlert("Profile Updated...", "success", true))
+				dispatch({ type: ADD_PIC, payload: res.data.id })
 				// setTimeout(() => window.location.reload(), 1000)
 			})
 			.catch(err => {
-				console.log(err)
+				// console.log(err)
 				dispatch(
 					displayAlert(err.response.data.message, "danger", true)
 				)
@@ -146,11 +146,9 @@ export const updateProfile = data => dispatch => {
 }
 
 export const removeDp = id => dispatch => {
-	console.log("called")
 	axios
 		.delete(`${IMAGE_URL}/${id}`, { withCredentials: true })
 		.then(
-			console.log("Deleted"),
 			dispatch({
 				type: DELETE_PIC,
 				payload: id,
@@ -164,7 +162,6 @@ export const removeDp = id => dispatch => {
 }
 
 export const changePass = (oldPass, new1) => dispatch => {
-	console.log(oldPass, new1)
 	axios
 		.patch(
 			CHANGE_PW_URL,

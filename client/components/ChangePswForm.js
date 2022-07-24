@@ -35,6 +35,7 @@ const ChangePswForm = ({ handlePopupClose }) => {
 	}
 	return (
 		<div className="mx-auto w-full">
+			<h4 className="text-center">Change password</h4>
 			{misc.showAlert && <Alert />}
 			<form
 				onChange={onChange}

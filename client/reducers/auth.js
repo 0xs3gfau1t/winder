@@ -5,6 +5,7 @@ import {
 	LOGOUT,
 	LOAD_USER,
 	DELETE_PIC,
+	ADD_PIC,
 } from "../actions/types"
 
 const initialState = {
@@ -48,7 +49,6 @@ export default function (state = initialState, action) {
 				user: action.payload,
 			}
 		case DELETE_PIC:
-			console.log(action)
 			return {
 				...state,
 				user: {
@@ -56,6 +56,14 @@ export default function (state = initialState, action) {
 					images: state.user.images.filter(
 						img => img != action.payload
 					),
+				},
+			}
+		case ADD_PIC:
+			return {
+				...state,
+				user: {
+					...state.user,
+					images: [...state.user.images, action.payload],
 				},
 			}
 		default:

@@ -61,7 +61,7 @@ function Explore() {
 							<Carousel
 								imgs={
 									users[current]?.images.map(
-										item => `${IMAGE_URL}/${item}`
+										item => IMAGE_URL + item
 									) || [
 										"https://via.placeholder.com/300/000000/FFFFFF/?text=No+Images+To+Load",
 									]

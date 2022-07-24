@@ -21,15 +21,15 @@ const ForgotPsw = () => {
 		dispatch(forgotPassword(email))
 	}
 	return (
-		<div className="mx-auto w-2/3">
-			<h4>Forgot password?</h4>
+		<div className="w-fit bg-white pt-2 rounded-lg">
+			<h4 className="text-center">Forgot password?</h4>
 			{misc.showAlert && <Alert float={false} />}
 			<form
 				onChange={e => {
 					setEmail(e.target.value)
 				}}
 				onSubmit={forgotPass}
-				className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+				className="shadow-md rounded px-4 pt-6 pb-8 mb-4"
 			>
 				<div className="mb-4">
 					<label
@@ -39,8 +39,9 @@ const ForgotPsw = () => {
 						Enter your mail associated with Winder.
 					</label>
 					<input
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						className="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 						name="email"
+						size={"30"}
 						type="email"
 						placeholder="example@winder.com"
 					/>

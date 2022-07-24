@@ -42,7 +42,9 @@ function Profile() {
 		if (user.images)
 			setSettings(prev => ({
 				...prev,
-				preview: `${IMAGE_URL}/${user.images[0]}`,
+				preview: user.images[0]
+					? IMAGE_URL + user.images[0]
+					: "https://via.placeholder.com/300/000000/FFFFFF/?text=Upload+a+Profile+Picture",
 				ageH: user.preference.age[1],
 				ageL: user.preference.age[0],
 				passion: user.passion,
@@ -61,7 +63,6 @@ function Profile() {
 		}
 		if (e.target.type === "file") {
 			let file = e.target.files[0]
-			console.log(e.target.files[0])
 			if (e.target.name == "upload1") {
 				setSettings(prev => ({
 					...prev,
@@ -146,14 +147,14 @@ function Profile() {
 				>
 					<div className="flex flex-wrap pb-4 -ml-7 container">
 						<aside className="w-full md:w-1/4  px-2  h-full float-left">
-							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[23vw] sm:w-full sm:content-center border-2 border-green-700  rounded-xl p-2 profile-form">
+							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[24vw] sm:w-full sm:content-center border-2 border-green-700 rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 w-fit">
+								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 h-60 w-60">
 									{!settings.preview2 && (
 										<>
 											{settings.isDP && (
 												<span
-													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
+													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white cursor-pointer"
 													name="dp"
 													onClick={e =>
 														removePic(e, "dp")
@@ -162,16 +163,18 @@ function Profile() {
 													<GoX name="dp" />
 												</span>
 											)}
-											<label
-												className="change-pic"
-												htmlFor="upload"
-											>
-												<MdEdit />
-											</label>
+											{!settings.isDP && (
+												<label
+													className="change-pic cursor-pointer"
+													htmlFor="upload"
+												>
+													<MdEdit />
+												</label>
+											)}
 										</>
 									)}
 									<img
-										className="h-58 w-58"
+										className="h-56 w-56 rounded-xl"
 										src={settings.preview}
 										alt={user.firstName}
 									/>
@@ -230,13 +233,13 @@ function Profile() {
 							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
 							<h3 className="m-3">Profile</h3>
-							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-8 border-b-2 border-b-green-700 pb-6">
+							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3  border-b-2 border-b-green-700 pb-4 px-6">
 								{user.images &&
 									user.images.slice(1).map(image => {
 										return (
 											<div
 												key={image}
-												className="border-2 w-fit rounded-xl border-amber-900"
+												className="border-2 w-fit rounded-xl border-amber-900 h-60 w-60 my-1"
 											>
 												<span
 													className="absolute mt-4 ml-2 w-4 h-4 bg-black text-white"
@@ -251,8 +254,8 @@ function Profile() {
 													<GoX />
 												</span>
 												<img
-													className="h-58 w-58"
-													src={`${IMAGE_URL}/${image}`}
+													className="h-60 w-60 rounded-xl"
+													src={IMAGE_URL + image}
 												/>
 											</div>
 										)
@@ -272,9 +275,15 @@ function Profile() {
 							>
 								Bio{" "}
 								<span
-									className="inline-block hover:text-red-500"
+									className="inline-block hover:text-red-500 cursor-pointer"
 									onClick={e => {
-										setFlags({ ...flags, editBio: true })
+										setFlags(
+											{ ...flags, editBio: true },
+											setSettings({
+												...settings,
+												bio: user.bio,
+											})
+										)
 									}}
 								>
 									<MdEdit />
@@ -288,11 +297,12 @@ function Profile() {
 								clicked={flags.editBio}
 							>
 								<div className="grid grid-row-2 flex justify-center">
-									<h5 className="text-center">Edit Bio</h5>
+									<h4 className="text-center">Edit Bio</h4>
 									<textarea
 										type="text"
 										name="bio"
-										className="block h-32 w-96 my-2 text-orange-700 font-bold resize-none bg-gray-200"
+										cols={"40"}
+										className="block h-32 w-[96] mb-1 text-orange-700 font-bold resize-none p-4 border-2 border-slate-600 rounded-lg"
 										placeholder={user.bio}
 										value={settings.bio}
 										onChange={onChange}
@@ -300,7 +310,7 @@ function Profile() {
 								</div>
 							</Popup>
 
-							<p className="mt-12 cursor-pointer font-bold text-orange-700 pb-4">
+							<p className="mt-12 font-bold text-orange-700 pb-4">
 								{user.bio}
 							</p>
 
@@ -320,7 +330,7 @@ function Profile() {
 								</div>
 								<div className="grid grid-row-2">
 									<label htmlFor="age" className="form-label">
-										Programmme
+										Program
 									</label>
 									<FormSelect
 										name="program"
@@ -329,13 +339,13 @@ function Profile() {
 									/>
 								</div>
 							</div>
-							<h5 className="mt-6 mx-3">Passions</h5>
+							<div className="ml-10 py-4">Passions</div>
 							<div className="flex flex-wrap mx-7">
 								{settings.passion &&
 									settings.passion.map((passion, index) => (
 										<div key={index}>
 											<span
-												className="mx-2 mb-4 p-1 border-2 border-green-900 cursor-pointer rounded-lg bg-green-600 text-white"
+												className="mx-2 mb-4 p-2 cursor-pointer rounded-lg bg-green-600 text-white"
 												key={index}
 											>
 												{passion}
