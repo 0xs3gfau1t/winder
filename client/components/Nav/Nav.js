@@ -43,14 +43,7 @@ function Nav() {
 						>
 							<FaGrinAlt />
 						</NavLink>
-					</IconContext.Provider>
 
-					<IconContext.Provider
-						value={{
-							color: "#F24E1E",
-							size: "2em",
-						}}
-					>
 						<NavLink
 							to="/notification"
 							className={({ isActive }) =>
@@ -64,14 +57,7 @@ function Nav() {
 								<FaRegBell />
 							</span>
 						</NavLink>
-					</IconContext.Provider>
 
-					<IconContext.Provider
-						value={{
-							color: "#F24E1E",
-							size: "2em",
-						}}
-					>
 						<NavLink
 							to="/explore"
 							className={({ isActive }) =>
@@ -82,14 +68,7 @@ function Nav() {
 								<FaSearch />
 							</span>
 						</NavLink>
-					</IconContext.Provider>
 
-					<IconContext.Provider
-						value={{
-							color: "#F24E1E",
-							size: "2em",
-						}}
-					>
 						<NavLink
 							to="/chat"
 							className={({ isActive }) =>
@@ -103,14 +82,7 @@ function Nav() {
 								<FaRocketchat />
 							</span>
 						</NavLink>
-					</IconContext.Provider>
-					<IconContext.Provider
-						value={{
-							color: "#F24E1E",
-							size: "2em",
-							className: "icons",
-						}}
-					>
+
 						<NavLink to="/login" onClick={handleLogout}>
 							<span>
 								<FaDoorOpen />
