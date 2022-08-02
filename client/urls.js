@@ -12,3 +12,5 @@ export const OPTIONS_URL = "/api/settings/options"
 export const MESSAGE_URL = "/api/messages"
 export const FORGOT_PW_URL = "/api/forgotpassword"
 export const IMAGE_URL = "/api/image/"
+
+export const NOTI_URL = "/api/notification"

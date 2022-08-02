@@ -6,9 +6,11 @@ const fs = require("fs")
 const bcrypt = require("bcrypt")
 const { userModel } = require("../Models/userModel")
 const { relationModel, messagesModel } = require("../Models/relationModel")
+const { notificationModel } = require("../Models/notificationModel")
 
 const { options, genderMapper } = require("./variables")
 const path = require("path")
+const { Mongoose } = require("mongoose")
 
 const randomString = (max, min) => {
 	var length = Math.floor(Math.random() * (max - min)) + min
@@ -155,5 +157,24 @@ const populateMessage = async count => {
 	await relation.save()
 }
 
-populateDB(1000)
+const populateNoti = async (count, id) => {
+	if (id === undefined) id = await userModel.find({}, { _id: 1 })
+	for (let i = 0; i < count; i++) {
+		try {
+			const noti = notificationModel({
+				type: Math.floor(Math.random() * 2),
+				title: randomString(15, 5),
+				content: randomString(50, 20),
+				user: ObjectId(id),
+			})
+			await noti.save()
+			console.log(`[+] ${i+1}/${count}`)
+		} catch (err) {
+			console.log(`[*] ${i}/${count}`)
+		}
+	}
+}
+
+//populateDB(1000)
 //populateMessage(100)
+populateNoti(100, "62e93710690f81626a470977")
