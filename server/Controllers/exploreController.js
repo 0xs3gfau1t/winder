@@ -38,8 +38,15 @@ async function getList(req, res) {
 	const ageFilter = { $gt: farthestDate, $lt: nearestDate }
 	const paginationFilter =
 		user.pagination.newExplore === "null"
-			? { _id: { $ne: id } } // if there is no pagination
-			: { _id: { $ne: id, $gt: user.pagination.newExplore } } // if there is pagination
+			? { _id: { $ne: mongoose.Types.ObjectId(id) } } // if there is no pagination
+			: {
+					_id: {
+						$ne: mongoose.Types.ObjectId(id),
+						$gt: mongoose.Types.ObjectId(
+							user.pagination.newExplore
+						),
+					},
+			  } // if there is pagination
 
 	const incomingPagination =
 		user.pagination.incoming === "null"
@@ -94,7 +101,6 @@ async function getList(req, res) {
 					dob: ageFilter,
 				},
 			},
-			{ $limit: PAGINATION_LIMIT },
 			{
 				$lookup: {
 					from: "relations",
@@ -121,6 +127,7 @@ async function getList(req, res) {
 				},
 			},
 			{ $match: { "Relation.count": { $exists: false } } },
+			{ $limit: PAGINATION_LIMIT },
 			{
 				$project: fetch.reduce(
 					(acc, curr) => ((acc[curr] = 1), acc),

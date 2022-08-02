@@ -1,7 +1,6 @@
 import axios from "axios"
 import { EXPLORE_NEXT, EXPLORE_LOAD } from "./types"
 import { displayAlert } from "./misc"
-import { AiOutlineConsoleSql } from "react-icons/ai"
 import { EXPLORE_URL, ACCEPT_URL } from "../urls"
 
 export const loadExplore = () => dispatch => {
@@ -33,16 +32,27 @@ export const sendLike = userid => dispatch => {
 			if (res.data.matched)
 				dispatch(displayAlert("It's a match.", "success", true))
 			else dispatch(displayAlert("Match request sent.", "success"))
-			dispatch({ type: EXPLORE_NEXT })
+			dispatch(nextUser())
 		})
 		.catch(err => {
 			console.log(err)
 			dispatch(displayAlert(err.response?.data.error, "danger"))
-			dispatch({ type: EXPLORE_NEXT })
+			dispatch(nextUser())
 		})
 }
 
-export const ignoreUnliked = () => dispatch => {
+export const ignoreUnliked = () => (dispatch, getState) => {
 	console.log("Ignoring user")
+	dispatch(nextUser())
+}
+
+export const nextUser = () => (dispatch, getState) => {
+	let {
+		explore: { amount, current },
+	} = getState()
+
+    // If only 2 users are left fetch new list of users
+	if (amount - current <= 2) dispatch(loadExplore())
+
 	dispatch({ type: EXPLORE_NEXT })
 }
