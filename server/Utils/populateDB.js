@@ -7,40 +7,8 @@ const bcrypt = require("bcrypt")
 const { userModel } = require("../Models/userModel")
 const { relationModel, messagesModel } = require("../Models/relationModel")
 
-const availableOptions = {
-	university: ["TU", "PU", "KU", "PoU"],
-	gender: [-1, 0, 1],
-	program: ["BArch", "BCE", "BCT", "BEL", "BEX", "BME", "BAM", "BGE"],
-	batch: [2074, 2075, 2076, 2077, 2078],
-	passion: [
-		"Photography",
-		"Reading",
-		"Sports",
-		"Anime",
-		"Manga",
-		"Coding",
-		"Gym",
-		"Walking",
-		"Traveling",
-		"Hiking",
-		"Cricket",
-		"Football",
-		"Movies",
-		"Netflix",
-		"Skateboarding",
-		"Singing",
-		"Coffee",
-		"Electronic Music",
-		"Vlogging",
-		"Fishing",
-		"Camping",
-		"Picnicking",
-		"Yoga",
-	],
-	genderPreference: [-1, 0, 1],
-	agePreference: [18, 50],
-	dob: [1990, 1999, 1995, 2000, 1980, 1993, 2002, 2003, 2005],
-}
+const { options, genderMapper } = require("./variables")
+const path = require("path")
 
 const randomString = (max, min) => {
 	var length = Math.floor(Math.random() * (max - min)) + min
@@ -53,47 +21,109 @@ const randomString = (max, min) => {
 	return result
 }
 
+const randomDate = (low, high) => {
+	const currYear = new Date().getFullYear()
+
+	let near = new Date(new Date().setFullYear(currYear - low))
+	let far = new Date(new Date().setFullYear(currYear - high))
+
+	return new Date(+far + Math.random() * (near - far))
+}
+
 const randomProp = arr => {
 	return arr[Math.floor(Math.random() * arr.length)]
 }
 
 const populateDB = async count => {
+	const file_path = path.join(__dirname, "populateData.json")
+	let usersInfo
+	try {
+		usersInfo = require(file_path)
+	} catch (err) {
+		usersInfo = []
+	}
+
+	const genders = options.gender.map(item => genderMapper(item))
 	for (let i = 0; i < count; i++) {
 		let email = `${randomString(6, 15)}@gmail.com`
 		let password = randomString(8, 16)
-		fs.appendFile(
-			"userCreds.txt",
-			`Email: ${email}\nPassword: ${password}\n\n`,
-			err => console.log(err ? "Creds not saved" : "")
-		)
 
 		var user = userModel({
 			firstName: randomString(4, 15),
 			lastName: randomString(4, 15),
-			username: randomString(5, 10),
-			university: randomProp(availableOptions.university),
-			gender: randomProp(availableOptions.gender),
-			program: randomProp(availableOptions.program),
-			batch: randomProp(availableOptions.batch),
+			username: randomString(5, 10), // Comment if you want to create unverified users
+			university: randomProp(options.universities),
+			gender: randomProp(genders),
+			program: randomProp(options.programs),
+			batch: randomDate(0, 10).getFullYear(),
 			bio: randomString(40, 10),
-			passion: [...Array(3)].map((_, i) =>
-				randomProp(availableOptions.passion)
-			),
-			// Uncomment this if you want random preference instead of preferred ones
+			passion: [...Array(3)].map(_ => randomProp(options.passions)),
+			// Comment this if you want default preferences
 			preference: {
-				gender: randomProp(availableOptions.genderPreference),
-				program: randomProp(availableOptions.program),
-				university: randomProp(availableOptions.university),
+				gender: randomProp(genders),
+				program: randomProp(options.programs),
+				university: randomProp(options.universities),
 				age: [18, 40],
 			},
 			email,
 			password: await bcrypt.hash(password, 10),
-			dob: new Date(new Date().setFullYear(randomProp(availableOptions.dob))),
+			dob: randomDate(options.age[0], options.age[1]),
 		})
 
-		await user.save()
+		await user.save({ validateBeforeSave: false })
+
+		await uploadImg(email, password)
+
+		usersInfo.push({ ...user._doc, password })
 
 		console.log(`Saved user ${i + 1}/${count}`)
+	}
+	fs.writeFileSync(file_path, JSON.stringify(usersInfo, null, 2))
+	console.log("Saved to file")
+}
+
+const uploadImg = async (email, password) => {
+	try {
+		const BASE_URL = `http://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}`
+
+		let login_res = await fetch(`${BASE_URL}/api/auth/login/`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({ email, password }),
+		}).catch(err => console.log("Login error: ", err))
+
+		const maxImg = 3 // Change to 9
+		const num = Math.floor(Math.random() * maxImg)
+		console.log(`Uploading ${num} images for email: ${email}`)
+
+		const img_url = "https://www.thispersondoesnotexist.com/image"
+		for (let i = 0; i < num; i++) {
+			const image = await fetch(img_url)
+				.then(res => res.blob())
+				.catch(err => {
+					console.log("Image download error: ")
+					throw err
+				})
+
+			const form = new FormData()
+			form.set("file", image, "image.jpg")
+
+			await fetch(`${BASE_URL}/api/image/`, {
+				method: "POST",
+				headers: {
+					Cookie: login_res.headers.get("set-cookie"),
+				},
+				body: form,
+			})
+				.then(res => res.json())
+				.then(res => console.log(res))
+				.catch(err => {
+					console.log("Image upload error: ")
+					throw err
+				})
+		}
+	} catch (err) {
+		console.log(err)
 	}
 }
 
@@ -125,5 +155,5 @@ const populateMessage = async count => {
 	await relation.save()
 }
 
-// populateDB(100)
-populateMessage(100)
+populateDB(1000)
+//populateMessage(100)

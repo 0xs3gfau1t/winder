@@ -97,18 +97,18 @@ let userSchema = mongoose.Schema(
 
 userSchema.pre("save", function (next) {
 	// Set the gender preference based on the gender of the user.
-	if (this.preference.gender === undefined) {
+	if (this.preference.gender === undefined && this.gender) {
 		if (this.gender === -1) this.preference.gender = 1
 		else if (this.gender === 1) this.preference.gender = -1
 		else this.preference.gender = 0
 	}
 
 	// Set university preference same as the user's university
-	if (this.preference.university === undefined)
+	if (this.preference.university === undefined && this.university)
 		this.preference.university = this.university
 
 	// Set program preference same as the user's program
-	if (this.preference.program === undefined)
+	if (this.preference.program === undefined && this.program)
 		this.preference.program = this.program
 
 	next()

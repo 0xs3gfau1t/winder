@@ -33,7 +33,8 @@ router.post(
 					error: "Failed to fetch user's info.",
 				})
 			}
-			res.json({ success: false, error: "Unknown error." })
+			console.log(err)
+			return res.json({ success: false, error: "Unknown error." })
 		})
 	},
 	putImg

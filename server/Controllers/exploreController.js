@@ -120,7 +120,7 @@ async function getList(req, res) {
 					as: "Relation",
 				},
 			},
-			{ $match: { "Relation.count": { $exists: true } } },
+			{ $match: { "Relation.count": { $exists: false } } },
 			{
 				$project: fetch.reduce(
 					(acc, curr) => ((acc[curr] = 1), acc),
