@@ -12,7 +12,7 @@ router.get("/", authenticateToken, async (req, res) => {
 				user: req.userdata._id,
 				read: false,
 			},
-			["title", "type"]
+			["title", "type", "createdAt"]
 		)
 		res.json({ success: true, data: notis })
 	} catch (err) {
