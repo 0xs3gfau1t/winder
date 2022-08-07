@@ -20,9 +20,7 @@ env:
   MAILER_PORT: ${{ secrets.MAILER_PORT }}
   MAILER_ADD: ${{ secrets.MAILER_ADD }}
   MAILER_PASS: ${{ secrets.MAILER_PASS }}
-
   ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-
   MONGO_URI: ${{ secrets.MONGO_URI }}
 
 jobs:
