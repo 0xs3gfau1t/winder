@@ -15,7 +15,7 @@ env:
   CLIENT_PORT: ${{ secrets.CLIENT_PORT }}
   BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
   BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
-  FRONTEND_URL: ${{ secrets.CLIENT_HOST:secrets.CLIENT_PORT }}
+  FRONTEND_URL: '${{ secrets.CLIENT_HOST }}:${{ secrets.CLIENT_PORT }}'
   MAILER_HOST: ${{ secrets.MAILER_HOST }}
   MAILER_PORT: ${{ secrets.MAILER_PORT }}
   MAILER_ADD: ${{ secrets.MAILER_ADD }}
