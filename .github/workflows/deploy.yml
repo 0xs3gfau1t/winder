@@ -8,6 +8,23 @@ on:
     branches:
       - siyo-client
 
+env:
+  PORT: ${{ secrets.PORT }}
+  PAGINATION_LIMIT: 2
+  CLIENT_HOST: ${{ secrets.CLIENT_HOST }}
+  CLIENT_PORT: ${{ secrets.CLIENT_PORT }}
+  BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+  BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+  FRONTEND_URL: ${{ secrets.CLIENT_HOST:secrets.CLIENT_PORT }}
+  MAILER_HOST: ${{ secrets.MAILER_HOST }}
+  MAILER_PORT: ${{ secrets.MAILER_PORT }}
+  MAILER_ADD: ${{ secrets.MAILER_ADD }}
+  MAILER_PASS: ${{ secrets.MAILER_PASS }}
+
+  ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+
+  MONGO_URI: ${{ secrets.MONGO_URI }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
