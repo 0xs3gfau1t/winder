@@ -149,7 +149,7 @@ function Profile() {
 						<aside className="w-full md:w-1/4  px-2  h-full float-left">
 							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[24vw] sm:w-full sm:content-center border-2 border-green-700 rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 h-60 w-60">
+								<div className="flex border-2 rounded-xl border-amber-900 h-56 w-56">
 									{!settings.preview2 && (
 										<>
 											{settings.isDP && (
