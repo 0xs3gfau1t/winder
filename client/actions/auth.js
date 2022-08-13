@@ -9,7 +9,7 @@ import {
 } from "./types"
 import { displayAlert } from "./misc"
 
-import { LOGIN_URL, REGISTER_URL } from "../urls"
+import { LOGIN_URL, LOGOUT_URL, REGISTER_URL } from "../urls"
 
 export const register = user_data => dispatch => {
 	let data = JSON.parse(JSON.stringify(user_data))
@@ -62,7 +62,7 @@ export const login =
 	}
 
 export const logout = () => dispatch => {
-	axios.delete(url + "/auth/logout", { withCredentials: true }).then(res => {
+	axios.delete(LOGOUT_URL, { withCredentials: true }).then(res => {
 		console.log(res)
 		dispatch({
 			type: CLEAR_ALERT,
