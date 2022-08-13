@@ -232,7 +232,7 @@ function Profile() {
 							role="main"
 							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
-							<h3 className="m-3">Profile</h3>
+							<h5 className="m-3">Your details</h5>
 							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3  border-b-2 border-b-green-700 pb-4 px-6">
 								{user.images &&
 									user.images.slice(1).map(image => {
