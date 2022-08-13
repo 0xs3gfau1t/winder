@@ -95,7 +95,7 @@ const uploadImg = async (email, password) => {
 		}).catch(err => console.log("Login error: ", err))
 
 		const maxImg = 3 // Change to 9
-		const num = Math.floor(Math.random() * maxImg)
+		const num = Math.ceil(Math.random() * maxImg)
 		console.log(`Uploading ${num} images for email: ${email}`)
 
 		const img_url = "https://www.thispersondoesnotexist.com/image"
@@ -162,13 +162,13 @@ const populateNoti = async (count, id) => {
 	for (let i = 0; i < count; i++) {
 		try {
 			const noti = notificationModel({
-				type: Math.floor(Math.random() * 2),
+				type: Math.ceil(Math.random() * 2),
 				title: randomString(15, 5),
 				content: randomString(50, 20),
 				user: ObjectId(id),
 			})
 			await noti.save()
-			console.log(`[+] ${i+1}/${count}`)
+			console.log(`[+] ${i + 1}/${count}`)
 		} catch (err) {
 			console.log(`[*] ${i}/${count}`)
 		}
@@ -177,4 +177,3 @@ const populateNoti = async (count, id) => {
 
 //populateDB(1000)
 //populateMessage(100)
-populateNoti(100, "62e93710690f81626a470977")

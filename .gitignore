@@ -9,3 +9,5 @@ static/*
 
 # Ignore config file for node process manager
 ecosystem.config.js
+
+populateData.json
