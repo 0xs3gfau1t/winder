@@ -35,6 +35,9 @@ function Notification() {
 
 	function handlePopupClose() {
 		setClick(false)
+		setNotis(oldnotis => {
+			return oldnotis.filter(noti => noti._id !== popUp._id)
+		})
 	}
 
 	return (
