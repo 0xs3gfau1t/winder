@@ -43,27 +43,34 @@ function Notification() {
 			<div className="notifyArea">
 				<div className="notifications">
 					<div className="Notification-card">
-						{notis.map(element => {
-							return (
-								<div
-									key={element._id}
-									className="card"
-									onClick={() => handlePopup(element)}
-								>
-									{element.title}
-									<div className="showTime">
-										{new Date(
-											element.createdAt
-										).toLocaleString(undefined, {
-											year: "2-digit",
-											month: "short",
-											hour: "2-digit",
-											minute: "2-digit",
-										})}
+						{notis.length > 0 ? (
+							notis.map(element => {
+								return (
+									<div
+										key={element._id}
+										className="card"
+										onClick={() => handlePopup(element)}
+									>
+										{element.title}
+										<div className="showTime">
+											{new Date(
+												element.createdAt
+											).toLocaleString(undefined, {
+												year: "2-digit",
+												month: "short",
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
+										</div>
 									</div>
-								</div>
-							)
-						})}
+								)
+							})
+						) : (
+							<h5 className="h-[80vh] place-items-center grid">
+								Ohh man!
+								<br /> We got no more good news for you.
+							</h5>
+						)}
 						<Popup
 							setClick={setClick}
 							clicked={clicked}
