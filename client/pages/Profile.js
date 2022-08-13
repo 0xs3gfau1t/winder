@@ -149,7 +149,7 @@ function Profile() {
 						<aside className="w-full md:w-1/4  px-2  h-full float-left">
 							<div className="grid justify-items-center left-1 lg:fixed md:fixed md:w-[24vw] sm:w-full sm:content-center border-2 border-green-700 rounded-xl p-2 profile-form">
 								<h5>Profile Picture</h5>
-								<div className="grid grid-cols-1 border-2 rounded-xl border-amber-900 h-60 w-60">
+								<div className="flex border-2 rounded-xl border-amber-900 h-56 w-56">
 									{!settings.preview2 && (
 										<>
 											{settings.isDP && (
@@ -232,7 +232,7 @@ function Profile() {
 							role="main"
 							className="w-full md:w-3/4 pt-1 px-2 border-4 rounded-xl"
 						>
-							<h3 className="m-3">Profile</h3>
+							<h5 className="m-3">Your details</h5>
 							<div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3  border-b-2 border-b-green-700 pb-4 px-6">
 								{user.images &&
 									user.images.slice(1).map(image => {

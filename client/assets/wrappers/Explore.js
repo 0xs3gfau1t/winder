@@ -51,14 +51,8 @@ const ExploreStyled = styled.div`
 	}
 
 	.scan_container {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-
 		border-radius: 1em;
 		outline: 2px solid red;
-
 		padding: 1em;
 	}
 	.scan {
