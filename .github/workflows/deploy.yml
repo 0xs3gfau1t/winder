@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Container Instances - winderr
 on:
   push:
     branches:
-      - devops
+      - main
 
 jobs:
   build:
