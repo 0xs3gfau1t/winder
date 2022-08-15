@@ -30,8 +30,8 @@ jobs:
 
         - name: 'Build and push image'
           run: |
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,11 +46,11 @@ jobs:
         uses: 'azure/aci-deploy@v1'
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
-          dns-name-label: ${{ env.IMAGE_NAME }}
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          dns-name-label: ${{ secrets.IMAGE_NAME }}
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: ${{ env.IMAGE_NAME }}
+          name: ${{ secrets.IMAGE_NAME }}
           location: 'central india'
           secure-environment-variables: PAGINATION_LIMIT=${{ env.PAGINATION_LIMIT }} HOST=${{ env.HOST }} PORT=${{ env.PORT }} MAILER_HOST=${{ env.MAILER_HOST }} MAILER_PORT=${{ env.MAILER_PORT }} MAILER_ADD=${{ env.MAILER_ADD }} MAILER_PASS=${{ secrets.MAILER_PASS }} ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }} MONGO_URI=${{ secrets.MONGO_URI }}
