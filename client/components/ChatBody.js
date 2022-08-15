@@ -19,7 +19,7 @@ const ChatBody = ({ user }) => {
 	useEffect(() => {
 		dispatch(fetchActiveChat(user.relnID))
 		ref.current.scrollTop = ref.current.scrollHeight
-	}, [])
+	}, [user])
 
 	useEffect(() => {
 		setCount(count + 1)
