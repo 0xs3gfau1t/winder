@@ -32,6 +32,8 @@ async function getList(req, res) {
 	)
 
 	const filters = user.preference.toObject()
+	if (filters.university === "Any") delete filters["university"]
+	if (filters.program === "Any") delete filters["program"]
 	const [nearestDate, farthestDate] = parseBoundedDates(filters.age)
 	delete filters["age"]
 
