@@ -155,14 +155,12 @@ async function getList(req, res) {
 		const response_list = [...userList, ...incomingUser]
 
 		// Modify dob to change to approx age
-		for (const u of response_list) {
-			u.id = u._id
-			delete u._id
-
-			let d = Date.parse(u.dob)
-			d = new Date(new Date() - d)
-			u.dob = Math.floor(d / (1000 * 60 * 60 * 24 * 365))
-		}
+		response_list.forEach(user => {
+			user._doc.dob = Math.floor(
+				new Date(new Date() - Date.parse(user.dob)) /
+					(1000 * 60 * 60 * 24 * 365)
+			)
+		})
 
 		const newPagination = {
 			newExplore:
