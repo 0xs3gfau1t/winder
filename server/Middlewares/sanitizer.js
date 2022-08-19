@@ -36,8 +36,8 @@ const validators = {
 	},
 	gender: value => [options.gender.includes(value), genderMapper(value)],
 	username: value => [value.length > 0, value],
-	university: value => [options.universities.includes(value), value],
-	program: value => [options.programs.includes(value), value],
+	university: value => [options.universities.includes(value) && value !== "Any", value],
+	program: value => [options.programs.includes(value) && value !== "Any", value],
 	batch: value => [!isNaN(value), value],
 	bio: value => [value.length <= options.bio, value],
 	passion: value => {

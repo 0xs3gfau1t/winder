@@ -25,8 +25,9 @@ const changeableData = {
 
 const options = {
 	gender: ["male", "female", "other"],
-	programs: ["BArch", "BCE", "BCT", "BEL", "BEX", "BME", "BAM", "BGE"],
+	programs: ["Any", "BArch", "BCE", "BCT", "BEL", "BEX", "BME", "BAM", "BGE"],
 	universities: [
+		"Any",
 		"TU",
 		"PU",
 		"PoU",
