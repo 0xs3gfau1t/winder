@@ -1,10 +1,8 @@
 const path = require("path")
-require("dotenv").config({ path: path.resolve(__dirname, "./.env") })
-
 const { merge } = require("webpack-merge")
 const commonConfig = require("./webpack.common")
 
-const host = process.env.CLIENT_HOST || "localhost"
+const host = process.env.HOST || "localhost"
 const port = process.env.CLIENT_PORT || "8000"
 
 console.log(`Client Server\nHost: ${host}\nPort: ${port}\n`)
@@ -22,10 +20,10 @@ const devConfig = {
 		historyApiFallback: true,
 		proxy: {
 			"/api": {
-				target: `http://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}`,
+				target: `http://${process.env.HOST}:${process.env.PORT}`,
 			},
 			"/windersock": {
-				target: `http://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}`,
+				target: `http://${process.env.HOST}:${process.env.PORT}`,
 				ws: true,
 			},
 		},

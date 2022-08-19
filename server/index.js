@@ -53,8 +53,8 @@ app.get("*", (req, res) =>
 )
 
 // Start the server specied in PORT from .env
-let host = process.env.BACKEND_HOST || "localhost"
-let port = process.env.BACKEND_PORT || 4000
+let host = process.env.HOST || "localhost"
+let port = process.env.PORT || 80
 server.listen({ host, port }, () => {
 	console.log(`\nBackend Server\nHost: ${host}\nPort: ${port}\n`)
 })
