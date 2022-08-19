@@ -51,8 +51,14 @@ export default function reducer(state = initialState, action) {
 					id: action.id,
 					more: action.more,
 					data: action.live
-						? [state.activeChat.data, ...action.payload.reverse()]
-						: [...action.payload.reverse(), state.activeChat.data],
+						? [
+								...state.activeChat.data,
+								...action.payload.reverse(),
+						  ]
+						: [
+								...action.payload.reverse(),
+								...state.activeChat.data,
+						  ],
 				},
 				chat: action.live ? state.chat - 1 : state.chat,
 			}
