@@ -40,7 +40,6 @@ export const loadUser = () => dispatch => {
 			dispatch(connect())
 		})
 		.catch(err => {
-			console.log(err)
 			dispatch(displayAlert("Session Expired! Logging Out...", "danger"))
 			dispatch({
 				type: LOGOUT,
@@ -116,7 +115,6 @@ export const updateProfile = data => dispatch => {
 			dispatch(displayAlert("Profile Updated...", "success"))
 		})
 		.catch(err => {
-			console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger"))
 		})
 	if (data.hasOwnProperty("file")) {
@@ -156,7 +154,6 @@ export const removeDp = id => dispatch => {
 			// setTimeout(() => window.location.reload(), 1000)
 		)
 		.catch(err => {
-			console.log(err)
 			dispatch(displayAlert(err.response.data.message, "danger", true))
 		})
 }

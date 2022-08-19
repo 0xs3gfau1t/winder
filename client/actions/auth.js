@@ -62,7 +62,6 @@ export const login =
 
 export const logout = () => dispatch => {
 	axios.delete(LOGOUT_URL, { withCredentials: true }).then(res => {
-		console.log(res)
 		dispatch({
 			type: CLEAR_ALERT,
 		})
