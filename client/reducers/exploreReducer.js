@@ -12,7 +12,6 @@ export default function (state = initialState, action) {
 
 			// Append new fetched users
 			users = users.concat(action.payload)
-            console.log("New user list: ", users)
 			return {
 				...state,
 				current: 0,
