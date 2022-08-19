@@ -121,7 +121,7 @@ userSchema.options.toJSON = {
 		delete ret._id
 		delete ret.password
 		delete ret.__v
-		if (ret.dob)
+		if (ret.dob && typeof ret.dob !== "number")
 			ret.dob = ret.dob.toLocaleDateString("en-US", {
 				day: "numeric",
 				month: "long",
