@@ -15,7 +15,7 @@ RUN npm run build:prod
 RUN npm install pm2 -g
 
 # Expose server port
-EXPOSE 3000
+EXPOSE 80
 
 # Run the app
 # TODO: Use ecosystem.config.js for pm2 instead of spamming flags
