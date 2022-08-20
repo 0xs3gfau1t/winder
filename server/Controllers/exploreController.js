@@ -84,7 +84,9 @@ async function getList(req, res) {
 
 		// If there is incoming match request, get the data for that user
 		const incomingUser = incomingUserIds.length
-			? await userModel.find({ _id: incomingUserIds[0].users[0] }, fetch)
+			? await userModel
+					.find({ _id: incomingUserIds[0].users[0] }, fetch)
+					.lean()
 			: []
 
 		const PAGINATION_LIMIT =
@@ -94,7 +96,7 @@ async function getList(req, res) {
 		// How to: query to see if the currentUser and user from userList are in relation table.
 		// Some keywords to search for: aggregate $lookup
 
-        // Todo: Test with more datas
+		// Todo: Test with more datas
 		const userList = await userModel.aggregate([
 			{
 				$match: {
@@ -111,7 +113,11 @@ async function getList(req, res) {
 						{
 							$match: {
 								$and: [
-									{ $expr: { $in: ["$$userId", "$users"] } },
+									{
+										$expr: {
+											$in: ["$$userId", "$users"],
+										},
+									},
 									{
 										$expr: {
 											$in: [
@@ -139,38 +145,25 @@ async function getList(req, res) {
 			{ $sort: { _id: 1 } },
 		])
 
-		/*const userList = await userModel
-			.find(
-				{
-					...filters,
-					...paginationFilter,
-					dob: ageFilter,
-				},
-				fetch
-			)
-			.sort({ _id: 1 })
-			.limit(PAGINATION_LIMIT)
-			.lean()*/
-
 		const response_list = [...userList, ...incomingUser]
 
 		// Modify dob to change to approx age
 		response_list.forEach(user => {
-			user._doc.dob = Math.floor(
+			user.dob = Math.floor(
 				new Date(new Date() - Date.parse(user.dob)) /
 					(1000 * 60 * 60 * 24 * 365)
 			)
 		})
-
+		console.log(userList)
 		const newPagination = {
 			newExplore:
 				userList.length < PAGINATION_LIMIT
 					? "null"
-					: userList[PAGINATION_LIMIT - 1].id.toString(),
+					: userList[PAGINATION_LIMIT - 1]._id.toString(),
 			incoming:
 				incomingUserIds.length < 1
 					? "null"
-					: incomingUserIds[0].id.toString(),
+					: incomingUserIds[0]._id.toString(),
 		}
 
 		await user.updateOne({ pagination: newPagination })
