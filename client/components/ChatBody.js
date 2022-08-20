@@ -17,7 +17,7 @@ const ChatBody = ({ user }) => {
 	const dispatch = useDispatch()
 	const [count, setCount] = useState(0)
 	useEffect(() => {
-		dispatch(fetchActiveChat(user.relnID))
+		dispatch(fetchActiveChat(user.relnID, true))
 		ref.current.scrollTop = ref.current.scrollHeight
 	}, [user])
 
@@ -46,7 +46,11 @@ const ChatBody = ({ user }) => {
 				entries => {
 					if (entries[0].isIntersecting && activeChat.more) {
 						dispatch(
-							fetchActiveChat(activeChat.id, activeChat.more)
+							fetchActiveChat(
+								activeChat.id,
+								false,
+								activeChat.more
+							)
 						)
 					}
 				},

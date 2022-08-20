@@ -15,7 +15,6 @@ export const register = user_data => dispatch => {
 	let data = JSON.parse(JSON.stringify(user_data))
 	delete data["password2"]
 	delete data["isMember"]
-	console.log(data)
 	axios
 		.post(REGISTER_URL, data, { withCredentials: true })
 		.then(res => {
@@ -63,7 +62,6 @@ export const login =
 
 export const logout = () => dispatch => {
 	axios.delete(LOGOUT_URL, { withCredentials: true }).then(res => {
-		console.log(res)
 		dispatch({
 			type: CLEAR_ALERT,
 		})

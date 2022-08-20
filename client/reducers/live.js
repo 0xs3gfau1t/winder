@@ -3,6 +3,7 @@ import {
 	CHAT_UPDATE,
 	FETCH_CHAT,
 	FETCH_ACTIVE_CHAT,
+	FETCH_ACTIVE_LIVE_CHAT,
 	SEND_MESSAGE,
 	SET_LOADING,
 	SET_LIVE_COUNT,
@@ -36,6 +37,15 @@ export default function reducer(state = initialState, action) {
 		case FETCH_CHAT: {
 			return { ...state, chatList: action.payload }
 		}
+		case FETCH_ACTIVE_LIVE_CHAT: {
+			return {
+				...state,
+				activeChat: {
+					...state.activeChat,
+					data: [...state.activeChat.data, ...action.payload],
+				},
+			}
+		}
 		case FETCH_ACTIVE_CHAT: {
 			let update = state.chatList
 			if (action.id) {
@@ -43,18 +53,13 @@ export default function reducer(state = initialState, action) {
 			}
 			return {
 				...state,
-				live: action.live,
 				chatList: { ...update },
 				activeChat: {
-					live: action.live ? true : false,
 					loading: false,
 					id: action.id,
 					more: action.more,
-					data: action.live
-						? [
-								...state.activeChat.data,
-								...action.payload.reverse(),
-						  ]
+					data: action.changeConvo
+						? [...action.payload.reverse()]
 						: [
 								...action.payload.reverse(),
 								...state.activeChat.data,

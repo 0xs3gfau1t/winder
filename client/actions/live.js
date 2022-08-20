@@ -4,6 +4,7 @@ import {
 	CHAT_UPDATE,
 	NOTI_UPDATE,
 	FETCH_ACTIVE_CHAT,
+	FETCH_ACTIVE_LIVE_CHAT,
 	SEND_MESSAGE,
 	SET_LOADING,
 	SET_LIVE_COUNT,
@@ -21,16 +22,14 @@ export const chatUpdate = data => (dispatch, getState) => {
 
 	if (data.relnID === activeChat) {
 		dispatch({
-			type: FETCH_ACTIVE_CHAT,
+			type: FETCH_ACTIVE_LIVE_CHAT,
 			payload: [data],
 			id: data.relnID,
-			live: true,
 		})
 	}
 }
 
 export const notiUpdate = data => dispatch => {
-	console.log("Notification update.")
 	dispatch({ type: NOTI_UPDATE, payload: data })
 }
 
@@ -44,15 +43,12 @@ export const fetchChats = () => dispatch => {
 				payload: res.data.data,
 			})
 		})
-		.catch(err => {
-			dispatch(console.log(err))
-		})
+		.catch(err => {})
 }
 
 export const fetchActiveChat =
-	(id, cur = "") =>
+	(id, changed, cur = "") =>
 	dispatch => {
-		// console.log(id, cur)
 		dispatch({ type: SET_LOADING })
 		axios
 			.get(`${MESSAGE_URL}/${id}?cursor=${cur}`, {
@@ -64,13 +60,12 @@ export const fetchActiveChat =
 						type: FETCH_ACTIVE_CHAT,
 						payload: res.data.data,
 						id: id,
+						changeConvo: changed,
 						more: res.data.nextCursor ? res.data.nextCursor : "",
 					})
 				}, 10)
 			})
-			.catch(err => {
-				dispatch(console.log(err))
-			})
+			.catch(err => {})
 	}
 
 export const sendMessage = (text, id) => dispatch => {
@@ -88,7 +83,5 @@ export const sendMessage = (text, id) => dispatch => {
 				payload: data,
 			})
 		})
-		.catch(err => {
-			dispatch(console.log(err))
-		})
+		.catch(err => {})
 }
