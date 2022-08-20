@@ -39,6 +39,7 @@ module.exports = {
 			title: "Winder -- Find your soulmate",
 			script: "/main.js",
 			template: path.join(__dirname, "client", "index.html"),
+			favicon: path.join(__dirname, "client/assets/images/logo-head.png"),
 			inject: false,
 		}),
 	],
