@@ -38,7 +38,6 @@ export default function reducer(state = initialState, action) {
 			return { ...state, chatList: action.payload }
 		}
 		case FETCH_ACTIVE_LIVE_CHAT: {
-			console.log("Hya samma thik xa", action.payload)
 			return {
 				...state,
 				activeChat: {
