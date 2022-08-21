@@ -34,11 +34,11 @@ function Explore() {
 	}, [])
 
 	const accept = e => {
-		if (users[current]) dispatch(sendLike(users[current].id))
+		if (users[current]) dispatch(sendLike(users[current]._id))
 		else console.log("No user to accept.")
 	}
 	const ignore = e => {
-		if (users[current]) dispatch(ignoreUnliked(users[current].id))
+		if (users[current]) dispatch(ignoreUnliked(users[current]._id))
 		else console.log("No user to ignore")
 	}
 	if (!user.email_verified) return <Navigate to="/profile" />
