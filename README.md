@@ -4,22 +4,22 @@
 ### Install dependencies
     npm install
 ### Run only server (Development)
-    cd <app_dir>/server
-    npm run devStart
+    npm run server:dev
 
-### Run only client
-    cd <app_dir>/client
-    npm run serve
-### Run both client and server
-    cd <app_dir>
-    npm run start
+### Run only client(Development)
+    npm run client:dev
+### Run both client and server(Development Mode)
+    npm run start:dev
+
+### Run both client and server(Production Mode)
+    npm run start:prod
 
 ## Running app with docker
 ### Build the image
     cd <app_dir>
     docker build . -t <image_name>
 ### Run the image
-    docker run -p 0.0.0.0:3000:3000 -p 0.0.0.0:8000:8000 -d <image_name>:latest
+    docker run -p 0.0.0.0:<server_port>:<out_server_port> -p 0.0.0.0:<out_client_port>:<port> -d <image_name>:latest
 
 ### Build and run using provided script
     ./run_docker.sh build
