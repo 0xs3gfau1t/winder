@@ -179,7 +179,10 @@ async function updateAcceptStatus(req, res) {
 	const from = req.userdata._id
 	const to = req.body.whom
 
-	let r = { matched: false }
+	if (!to)
+		return res
+			.status(400)
+			.json({ success: false, error: "No user selected" })
 
 	// Check if user_from has already initiated relation with user_to
 	const relCount = await relationModel.exists({ users: [from, to] })

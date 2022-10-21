@@ -60,7 +60,12 @@ const CarouselStyled = styled.div`
 
 	.carousel-control {
 		position: absolute;
-		top: 45%;
+		top: 50%;
+		transform: translateY(-50%);
+
+		z-index: 1;
+		height: 45%;
+		width: 20%;
 
 		opacity: 0.07;
 		transition: 0.5s;
