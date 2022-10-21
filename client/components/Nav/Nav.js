@@ -24,10 +24,6 @@ function Nav() {
 	return (
 		<Wrapper className="Navbar">
 			<div className="Navbar">
-				<NavLink to="/explore" activeclassname="icons choosen_one">
-					<img className="logo_nav" src={logo} />
-				</NavLink>
-
 				<div className="navs">
 					<IconContext.Provider
 						value={{
@@ -45,31 +41,6 @@ function Nav() {
 						</NavLink>
 
 						<NavLink
-							to="/notification"
-							className={({ isActive }) =>
-								isActive ? "iconse choosen_one" : "icons"
-							}
-						>
-							{live.noti > 0 && (
-								<span className="badge">{live.noti}</span>
-							)}
-							<span>
-								<FaRegBell />
-							</span>
-						</NavLink>
-
-						<NavLink
-							to="/explore"
-							className={({ isActive }) =>
-								isActive ? "iconse choosen_one" : "icons"
-							}
-						>
-							<span>
-								<FaSearch />
-							</span>
-						</NavLink>
-
-						<NavLink
 							to="/chat"
 							className={({ isActive }) =>
 								isActive ? "iconse choosen_one" : "icons"
@@ -80,6 +51,27 @@ function Nav() {
 							)}
 							<span>
 								<FaRocketchat />
+							</span>
+						</NavLink>
+
+						<NavLink
+							to="/explore"
+							activeclassname="icons choosen_one"
+						>
+							<img className="logo_nav" src={logo} />
+						</NavLink>
+
+						<NavLink
+							to="/notification"
+							className={({ isActive }) =>
+								isActive ? "iconse choosen_one" : "icons"
+							}
+						>
+							{live.noti > 0 && (
+								<span className="badge">{live.noti}</span>
+							)}
+							<span>
+								<FaRegBell />
 							</span>
 						</NavLink>
 

@@ -103,6 +103,7 @@ async function getList(req, res) {
 					...filters,
 					...paginationFilter,
 					dob: ageFilter,
+					username: { $exists: true },
 				},
 			},
 			{

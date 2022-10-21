@@ -65,6 +65,7 @@ const options = {
 		"Camping",
 		"Picnicking",
 		"Yoga",
+		"Cycling"
 	],
 	bio: 500,
 }

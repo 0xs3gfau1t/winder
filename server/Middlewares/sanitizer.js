@@ -36,11 +36,27 @@ const validators = {
 	},
 	gender: value => [options.gender.includes(value), genderMapper(value)],
 	username: value => [value.length > 0, value],
-	university: value => [options.universities.includes(value) && value !== "Any", value],
-	program: value => [options.programs.includes(value) && value !== "Any", value],
+	university: value => [
+		options.universities.includes(value) && value !== "Any",
+		value,
+	],
+	program: value => [
+		options.programs.includes(value) && value !== "Any",
+		value,
+	],
 	batch: value => [!isNaN(value), value],
 	bio: value => [value.length <= options.bio, value],
 	passion: value => {
+		// Remove duplicate values (Nasty algo they say but it's small list so)
+		// This will not filter passions not supplied in request
+		// But already present in db since its illogical to query db in a middleware
+		// so we might have a case where multiple same passions will be shown
+		// if some oversmart dwag tries something funny
+		value = value.filter((item, pos) => {
+			return value.indexOf(item) == pos
+		})
+
+		// Check for valid passion
 		let passions = []
 		for (let val of value)
 			if (options.passions.includes(val)) passions.push(val)

@@ -325,7 +325,9 @@ function Profile() {
 									<FormSelect
 										defaultV={user.university}
 										name="university"
-										options={misc.options.universities?.filter(_=>_!="Any")}
+										options={misc.options.universities?.filter(
+											_ => _ != "Any"
+										)}
 									/>
 								</div>
 								<div className="grid grid-row-2">
@@ -335,7 +337,9 @@ function Profile() {
 									<FormSelect
 										name="program"
 										defaultV={user.program}
-										options={misc.options.programs?.filter(_=>_!="Any")}
+										options={misc.options.programs?.filter(
+											_ => _ != "Any"
+										)}
 									/>
 								</div>
 							</div>
